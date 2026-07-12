@@ -1,4 +1,4 @@
-name: Build Signed Release APK
+name: Build UnSigned Release APK
 
 on:
   push:
@@ -15,14 +15,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Validate tag format
-        run: |
-          TAG="${GITHUB_REF_NAME}"
-          if [[ ! "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta)\.[0-9]+)?$ ]]; then
-            echo "Tag '$TAG' is not supported. Expected formats: 0.9.0, 0.9.0-alpha.0, or 0.9.0-beta.0"
-            exit 1
-          fi
-
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -34,50 +26,21 @@ jobs:
 
       - name: Set up Gradle cache
         uses: gradle/actions/setup-gradle@v4
-
-      - name: Prepare release keystore
-        env:
-          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      
+      - name: Build unsigned release APK
         run: |
-          if [[ -z "$ANDROID_KEYSTORE_BASE64" ]]; then
-            echo "Missing secret: ANDROID_KEYSTORE_BASE64"
-            exit 1
-          fi
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "${RUNNER_TEMP}/release.keystore"
-
-      - name: Build signed release APK (universal)
-        env:
-          ANDROID_SIGNING_STORE_FILE: ${{ runner.temp }}/release.keystore
-          ANDROID_SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
-          ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
-          ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
-        run: |
-          for var_name in ANDROID_SIGNING_STORE_FILE ANDROID_SIGNING_STORE_PASSWORD ANDROID_SIGNING_KEY_ALIAS ANDROID_SIGNING_KEY_PASSWORD; do
-            if [[ -z "${!var_name}" ]]; then
-              echo "Missing required signing value: ${var_name}"
-              exit 1
-            fi
-          done
           ./gradlew :app:assembleRelease
-
-      - name: Rename APK with tag
-        run: |
-          APK_PATH="app/build/outputs/apk/release/app-release.apk"
-          if [[ ! -f "$APK_PATH" ]]; then
-            echo "APK not found at $APK_PATH"
-            exit 1
-          fi
-          cp "$APK_PATH" "moememos-v${GITHUB_REF_NAME}.apk"
-
+          # 注意：这样打出来的 APK 没有签名，在手机上通常是无法直接安装的，除非通过 adb 命令强行安装。
+          
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: moememos-v${{ github.ref_name }}
-          path: moememos-v${{ github.ref_name }}.apk
+          name: moememos
+          path: moememos.apk
 
       - name: Upload APK to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: moememos-v${{ github.ref_name }}.apk
+          files: moememos.apk
           generate_release_notes: true
           prerelease: ${{ contains(github.ref_name, '-') }}
