@@ -30,17 +30,37 @@ jobs:
       - name: Build unsigned release APK
         run: |
           ./gradlew :app:assembleRelease
-          # 注意：这样打出来的 APK 没有签名，在手机上通常是无法直接安装的，除非通过 adb 命令强行安装。
+
+      # 【新增步骤】把打包出来的文件复制到根目录，并换个好听的名字
+      - name: Prepare APK Artifact
+        run: |
+          # 寻找打包出来的未签名 APK
+          UNSIGNED_APK="app/build/outputs/apk/release/app-release-unsigned.apk"
+          # 有些项目的 Gradle 配置不同，可能叫 app-release.apk，这里做一个兼容兼容处理
+          if [[ ! -f "$UNSIGNED_APK" ]]; then
+            UNSIGNED_APK="app/build/outputs/apk/release/app-release.apk"
+          fi
           
+          if [[ ! -f "$UNSIGNED_APK" ]]; then
+            echo "错误：找不到编译出的 APK 文件！"
+            exit 1
+          fi
+          
+          # 复制到根目录并重命名
+          cp "$UNSIGNED_APK" "moememos-unsigned.apk"
+
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: moememos
-          path: moememos.apk
+          name: moememos-artifact
+          path: moememos-unsigned.apk
 
+      # 只有在你推 Tag（发布新版本）的时候，才去创建 GitHub Release
       - name: Upload APK to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: moememos.apk
+          files: moememos-unsigned.apk
+          name: "Release ${{ github.ref_name }}"
           generate_release_notes: true
           prerelease: ${{ contains(github.ref_name, '-') }}
