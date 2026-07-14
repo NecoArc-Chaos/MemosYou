@@ -118,7 +118,8 @@ class MemosV1Repository(
                             User(
                                 user.name,
                                 user.displayName ?: user.username,
-                                user.createTime ?: Instant.now()
+                                user.createTime ?: Instant.now(),
+                                avatarUrl = user.avatarUrl
                             )
                         }
                     }
@@ -223,8 +224,30 @@ class MemosV1Repository(
         if (resp !is ApiResponse.Success) {
             return resp.mapSuccess { emptyList<Memo>() to null }
         }
+        // Fetch user info for comment creators (same pattern as listWorkspaceMemos)
+        val users = resp.data.memos.mapNotNull { it.creator }.map { getId(it) }.toSet()
+        val userResp = coroutineScope {
+            users.map { userId ->
+                async { memosApi.getUser(userId).getOrNull() }
+            }.awaitAll()
+        }.filterNotNull()
+        val userMap = mapOf(*userResp.map { user -> user.name to user }.toTypedArray())
+
         return resp.mapSuccess {
-            this.memos.map { convertMemo(it) } to this.nextPageToken?.ifEmpty { null }
+            this.memos.map { memo ->
+                convertMemo(memo).copy(
+                    creator = memo.creator?.let { creator ->
+                        userMap[creator]?.let { user ->
+                            User(
+                                user.name,
+                                user.displayName ?: user.username,
+                                user.createTime ?: Instant.now(),
+                                avatarUrl = user.avatarUrl
+                            )
+                        }
+                    }
+                )
+            } to this.nextPageToken?.ifEmpty { null }
         }
     }
 
