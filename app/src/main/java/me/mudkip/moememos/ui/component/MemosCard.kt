@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -75,7 +76,7 @@ fun MemosCard(
     val scope = rememberCoroutineScope()
 
     val cardModifier = Modifier
-        .padding(horizontal = 15.dp, vertical = 10.dp)
+        .padding(horizontal = 16.dp, vertical = 8.dp)
         .fillMaxWidth()
         .combinedClickable(
             onClick = {
@@ -103,8 +104,12 @@ fun MemosCard(
 
     Card(
         modifier = cardModifier,
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        ),
         border = if (memo.pinned) {
-            BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+            BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
         } else {
             null
         }
@@ -112,7 +117,7 @@ fun MemosCard(
         Column {
             Row(
                 modifier = Modifier
-                    .padding(start = 15.dp)
+                    .padding(start = 20.dp, top = 16.dp, end = 4.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -122,8 +127,8 @@ fun MemosCard(
                         System.currentTimeMillis(),
                         DateUtils.SECOND_IN_MILLIS
                     ).toString(),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.outline
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 if (showSyncStatus && memo.needsSync) {
                     Icon(

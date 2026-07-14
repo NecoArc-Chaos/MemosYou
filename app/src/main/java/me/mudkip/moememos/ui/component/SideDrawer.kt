@@ -139,7 +139,15 @@ fun SideDrawer(
                         drawerState?.close()
                     }
                 },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary
+                ),
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 2.dp)
+                    .then(NavigationDrawerItemDefaults.ItemPadding)
             )
         }
         if (hasExplore) {
@@ -157,7 +165,15 @@ fun SideDrawer(
                             drawerState?.close()
                         }
                     },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    colors = NavigationDrawerItemDefaults.colors(
+                        selectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary
+                    ),
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp, vertical = 2.dp)
+                        .then(NavigationDrawerItemDefaults.ItemPadding)
                 )
             }
         }
@@ -172,7 +188,15 @@ fun SideDrawer(
                         rootNavController.navigate(RouteName.RESOURCE)
                     }
                 },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary
+                ),
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 2.dp)
+                    .then(NavigationDrawerItemDefaults.ItemPadding)
             )
         }
         item {
@@ -189,7 +213,15 @@ fun SideDrawer(
                         drawerState?.close()
                     }
                 },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary
+                ),
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 2.dp)
+                    .then(NavigationDrawerItemDefaults.ItemPadding)
             )
         }
         item {
@@ -203,7 +235,15 @@ fun SideDrawer(
                         rootNavController.navigate(RouteName.SETTINGS)
                     }
                 },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary
+                ),
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 2.dp)
+                    .then(NavigationDrawerItemDefaults.ItemPadding)
             )
         }
 
