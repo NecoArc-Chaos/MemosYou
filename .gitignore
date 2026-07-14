@@ -106,3 +106,4 @@ lint/tmp/
 
 # Serena (Claude Code MCP server)
 .serena/
+app/moememos.jks
