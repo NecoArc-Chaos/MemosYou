@@ -18,13 +18,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.CloudOff
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -79,7 +79,7 @@ fun MemoDetailPage(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = { Text(text = R.string.memo.string) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStackIfLifecycleIsResumed(lifecycleOwner) }) {
@@ -117,7 +117,7 @@ fun MemoDetailPage(
         ) {
             Row(
                 modifier = Modifier
-                    .padding(start = 15.dp, top = 10.dp, end = 15.dp)
+                    .padding(start = 20.dp, top = 16.dp, end = 20.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -127,8 +127,8 @@ fun MemoDetailPage(
                         System.currentTimeMillis(),
                         DateUtils.SECOND_IN_MILLIS
                     ).toString(),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.outline
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 if (currentAccount !is Account.Local && memo.needsSync) {
                     Icon(
