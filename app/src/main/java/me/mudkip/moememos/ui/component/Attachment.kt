@@ -15,6 +15,7 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -116,7 +117,8 @@ fun Attachment(
                 contentDescription = R.string.attachment.string,
                 Modifier.size(AssistChipDefaults.IconSize)
             )
-        }
+        },
+        shape = MaterialTheme.shapes.small
     )
 
     if (onRemove != null) {
