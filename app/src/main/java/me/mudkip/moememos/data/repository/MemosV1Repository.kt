@@ -214,4 +214,24 @@ class MemosV1Repository(
             )
         }
     }
+
+    // ─── Comments ───
+    override suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<Memo>, String?>> {
+        val resp = memosApi.listMemoComments(name = memoName, pageSize = pageSize, pageToken = pageToken)
+        if (resp !is ApiResponse.Success) {
+            return resp.mapSuccess { emptyList<Memo>() to null }
+        }
+        return resp.mapSuccess {
+            this.memos.map { convertMemo(it) } to this.nextPageToken?.ifEmpty { null }
+        }
+    }
+
+    override suspend fun createMemoComment(memoName: String, content: String): ApiResponse<Memo> {
+        return memosApi.createMemoComment(
+            name = memoName,
+            body = CreateMemoCommentRequest(
+                comment = CreateMemoCommentBody(content = content)
+            )
+        ).mapSuccess { convertMemo(this) }
+    }
 }

@@ -46,4 +46,7 @@ abstract class RemoteRepository {
 
     abstract suspend fun deleteResource(remoteId: String): ApiResponse<Unit>
     abstract suspend fun getCurrentUser(): ApiResponse<User>
+
+    abstract suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<Memo>, String?>>
+    abstract suspend fun createMemoComment(memoName: String, content: String): ApiResponse<Memo>
 }

@@ -134,4 +134,6 @@
     <string name="pinned_only">Show only pinned items.</string>
     <string name="max_items">Maximum items to show</string>
     <string name="refresh">Refresh</string>
+    <string name="comment">Comment</string>
+    <string name="no_comments">No comments yet.</string>
 </resources>

@@ -947,6 +947,10 @@ class SyncingRepository(
         operationScope.cancel()
     }
 
+    // ─── Comments (delegate to remote) ───
+    override suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<Memo, String?>> = remoteRepository.listMemoComments(memoName, pageSize, pageToken)
+    override suspend fun createMemoComment(memoName: String, content: String): ApiResponse<Memo> = remoteRepository.createMemoComment(memoName, content)
+
     companion object {
         private const val ATTACHMENT_UPLOAD_FAILED_MESSAGE =
             "Failed to upload one or more attachments during sync"

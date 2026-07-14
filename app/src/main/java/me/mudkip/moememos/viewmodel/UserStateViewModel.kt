@@ -34,7 +34,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserStateViewModel @Inject constructor(
-    private val accountService: AccountService
+    internal val accountService: AccountService
 ) : ViewModel() {
 
     var currentUser: User? by mutableStateOf(null)

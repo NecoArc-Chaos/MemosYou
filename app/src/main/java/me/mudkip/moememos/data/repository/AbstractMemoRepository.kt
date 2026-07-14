@@ -34,6 +34,13 @@ abstract class AbstractMemoRepository {
 
     abstract suspend fun getCurrentUser(): ApiResponse<User>
 
+    open suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<me.mudkip.moememos.data.model.Memo>, String?>> {
+        return ApiResponse.Success(emptyList<me.mudkip.moememos.data.model.Memo>() to null)
+    }
+    open suspend fun createMemoComment(memoName: String, content: String): ApiResponse<me.mudkip.moememos.data.model.Memo> {
+        return ApiResponse.exception(RuntimeException("Comments not supported"))
+    }
+
     open fun observeMemos(): Flow<List<MemoEntity>> = emptyFlow()
 
     open suspend fun cacheResourceFile(identifier: String, downloadedUri: Uri): ApiResponse<Unit> {

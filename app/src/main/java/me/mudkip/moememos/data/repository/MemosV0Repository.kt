@@ -179,8 +179,16 @@ class MemosV0Repository (
     }
 
     override suspend fun getCurrentUser(): ApiResponse<User> {
-        return memosApi.me().mapSuccess {
-            toUser()
-        }
+        return memosApi.me().mapSuccess { it.toUser() }
+    }
+
+    // ─── Comments (not supported in V0) ───
+    override suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<Memo>, String?>> {
+        return ApiResponse.Success(emptyList<Memo>() to null)
+    }
+    override suspend fun createMemoComment(memoName: String, content: String): ApiResponse<Memo> {
+        return ApiResponse.exception(MoeMemosException("Comments not supported in Memos V0 API"))
+    }
+}
     }
 }

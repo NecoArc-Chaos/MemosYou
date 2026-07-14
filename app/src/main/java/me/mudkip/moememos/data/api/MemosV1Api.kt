@@ -56,6 +56,20 @@ interface MemosV1Api {
 
     @GET("api/v1/users/{id}:getStats")
     suspend fun getUserStats(@Path("id") userId: String): ApiResponse<MemosV1Stats>
+
+    // ─── Comments ───
+    @GET("api/v1/{name}/comments")
+    suspend fun listMemoComments(
+        @Path("name", encoded = true) name: String,
+        @Query("pageSize") pageSize: Int? = null,
+        @Query("pageToken") pageToken: String? = null
+    ): ApiResponse<ListMemoCommentsResponse>
+
+    @POST("api/v1/{name}/comments")
+    suspend fun createMemoComment(
+        @Path("name", encoded = true) name: String,
+        @Body body: CreateMemoCommentRequest
+    ): ApiResponse<MemosV1Memo>
 }
 
 @Serializable
@@ -179,4 +193,21 @@ enum class MemosV1State {
 @Serializable
 data class MemosV1Stats(
     val tagCount: Map<String, Int>,
+)
+
+// ─── Comments ───
+@Serializable
+data class CreateMemoCommentRequest(
+    val comment: CreateMemoCommentBody
+)
+
+@Serializable
+data class CreateMemoCommentBody(
+    val content: String
+)
+
+@Serializable
+data class ListMemoCommentsResponse(
+    val memos: List<MemosV1Memo>,
+    val nextPageToken: String? = null
 )
