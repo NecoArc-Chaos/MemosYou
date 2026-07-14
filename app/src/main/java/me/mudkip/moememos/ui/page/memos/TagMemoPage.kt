@@ -1,48 +1,65 @@
 package me.mudkip.moememos.ui.page.memos
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Tag
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
 import me.mudkip.moememos.R
-import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
 import me.mudkip.moememos.ext.string
-import java.net.URLDecoder
+import me.mudkip.moememos.ui.page.common.RouteName
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TagMemoPage(
-    navController: NavHostController,
-    tag: String
+    drawerState: DrawerState? = null,
+    tag: String,
+    navController: NavHostController
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
+    val scope = rememberCoroutineScope()
+    val normalizedCurrentTag = remember(tag) { normalizeTag(tag) }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = URLDecoder.decode(tag, "UTF-8")) },
+                title = { Text(tag) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStackIfLifecycleIsResumed(lifecycleOwner) }) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = R.string.back.string)
+                    if (drawerState != null) {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(Icons.Filled.Menu, contentDescription = R.string.menu.string)
+                        }
+                    }
+                },
+            )
+        },
+
+        content = { innerPadding ->
+            MemosList(
+                contentPadding = innerPadding,
+                tag = tag,
+                onTagClick = { clickedTag ->
+                    if (normalizeTag(clickedTag) == normalizedCurrentTag) {
+                        return@MemosList
+                    }
+                    navController.navigate("${RouteName.TAG}/${java.net.URLEncoder.encode(clickedTag, "UTF-8")}") {
+                        launchSingleTop = true
+                        restoreState = true
                     }
                 }
             )
         }
-    ) { innerPadding ->
-        MemosList(
-            tag = tag,
-            contentPadding = innerPadding
-        )
-    }
+    )
+}
+
+private fun normalizeTag(tag: String): String {
+    return tag.removePrefix("#")
 }
