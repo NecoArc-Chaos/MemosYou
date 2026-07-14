@@ -35,6 +35,7 @@ import me.mudkip.moememos.data.model.Settings
 import me.mudkip.moememos.ext.settingsDataStore
 import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.ui.component.MemosCard
+import me.mudkip.moememos.ui.component.UserProfileHeader
 import me.mudkip.moememos.ui.page.common.LocalRootNavController
 import me.mudkip.moememos.ui.util.edgeToEdgeContentPadding
 import me.mudkip.moememos.ui.page.common.RouteName
@@ -132,6 +133,17 @@ fun MemosList(
             state = lazyListState,
             contentPadding = listContentPadding
         ) {
+            // ── Social-style profile header (only on home, not on tag/search filters) ──
+            if (tag == null && searchString == null) {
+                item(key = "user_profile_header") {
+                    UserProfileHeader(
+                        onNewMemo = {
+                            navController.navigate(RouteName.INPUT)
+                        }
+                    )
+                }
+            }
+
             items(filteredMemos, key = { it.identifier }) { memo ->
                 MemosCard(
                     memo = memo,

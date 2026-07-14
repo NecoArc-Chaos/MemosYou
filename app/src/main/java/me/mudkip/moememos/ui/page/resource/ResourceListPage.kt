@@ -15,6 +15,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -101,9 +102,9 @@ fun ResourceListPage(
                     columns = StaggeredGridCells.Fixed(2),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    verticalItemSpacing = 10.dp,
+                        .padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalItemSpacing = 8.dp,
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     staggeredGridItems(imageResources, key = { it.identifier }) { resource ->
@@ -112,7 +113,7 @@ fun ResourceListPage(
                             resourceIdentifier = resource.identifier,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
+                                .clip(MaterialTheme.shapes.medium)
                         )
                     }
                 }
