@@ -74,7 +74,7 @@ interface MemosV1Api {
     @POST("api/v1/{name}/comments")
     suspend fun createMemoComment(
         @Path("name", encoded = true) name: String,
-        @Body body: CreateMemoCommentRequest
+        @Body body: CreateMemoCommentBody
     ): ApiResponse<MemosV1Memo>
 }
 

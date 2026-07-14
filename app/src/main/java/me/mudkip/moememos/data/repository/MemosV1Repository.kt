@@ -14,7 +14,6 @@ import me.mudkip.moememos.data.api.MemosV1Resource
 import me.mudkip.moememos.data.api.MemosV1State
 import me.mudkip.moememos.data.api.MemosVisibility
 import me.mudkip.moememos.data.api.UpdateMemoRequest
-import me.mudkip.moememos.data.api.CreateMemoCommentRequest
 import me.mudkip.moememos.data.api.CreateMemoCommentBody
 import me.mudkip.moememos.data.api.InstanceSettingResponse
 import me.mudkip.moememos.data.constant.MoeMemosException
@@ -255,9 +254,7 @@ class MemosV1Repository(
     override suspend fun createMemoComment(memoName: String, content: String): ApiResponse<Memo> {
         return memosApi.createMemoComment(
             name = memoName,
-            body = CreateMemoCommentRequest(
-                comment = CreateMemoCommentBody(content = content)
-            )
+            body = CreateMemoCommentBody(content = content)
         ).mapSuccess { convertMemo(this) }
     }
 
