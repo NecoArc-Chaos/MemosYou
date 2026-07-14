@@ -16,6 +16,7 @@ import me.mudkip.moememos.data.api.MemosVisibility
 import me.mudkip.moememos.data.api.UpdateMemoRequest
 import me.mudkip.moememos.data.api.CreateMemoCommentRequest
 import me.mudkip.moememos.data.api.CreateMemoCommentBody
+import me.mudkip.moememos.data.api.InstanceSettingResponse
 import me.mudkip.moememos.data.constant.MoeMemosException
 import me.mudkip.moememos.data.model.Account
 import me.mudkip.moememos.data.model.Memo
@@ -258,5 +259,10 @@ class MemosV1Repository(
                 comment = CreateMemoCommentBody(content = content)
             )
         ).mapSuccess { convertMemo(this) }
+    }
+
+    // ─── Instance Settings ───
+    suspend fun getInstanceSetting(name: String): ApiResponse<InstanceSettingResponse> {
+        return memosApi.getInstanceSetting(name)
     }
 }

@@ -57,6 +57,12 @@ interface MemosV1Api {
     @GET("api/v1/users/{id}:getStats")
     suspend fun getUserStats(@Path("id") userId: String): ApiResponse<MemosV1Stats>
 
+    // ─── Instance Settings ───
+    @GET("api/v1/{name}")
+    suspend fun getInstanceSetting(
+        @Path("name", encoded = true) name: String
+    ): ApiResponse<InstanceSettingResponse>
+
     // ─── Comments ───
     @GET("api/v1/{name}/comments")
     suspend fun listMemoComments(
@@ -210,4 +216,22 @@ data class CreateMemoCommentBody(
 data class ListMemoCommentsResponse(
     val memos: List<MemosV1Memo>,
     val nextPageToken: String? = null
+)
+
+// ─── Instance Settings ───
+@Serializable
+data class InstanceSettingResponse(
+    val name: String = "",
+    val generalSetting: InstanceGeneralSetting? = null
+)
+
+@Serializable
+data class InstanceGeneralSetting(
+    val customProfile: InstanceCustomProfile? = null
+)
+
+@Serializable
+data class InstanceCustomProfile(
+    val title: String = "",
+    val logoUrl: String = ""
 )

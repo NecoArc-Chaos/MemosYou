@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.Home
@@ -29,15 +32,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil3.compose.AsyncImage
+import com.skydoves.sandwich.getOrNull
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.mudkip.moememos.R
 import me.mudkip.moememos.data.model.Account
+import me.mudkip.moememos.data.repository.MemosV1Repository
 import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.ui.page.common.LocalRootNavController
 import me.mudkip.moememos.ui.page.common.RouteName
@@ -71,6 +80,25 @@ fun SideDrawer(
     val rootNavController = LocalRootNavController.current
     val navBackStackEntry by memosNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+
+    // Server branding (logo + title from instance settings)
+    var serverTitle by remember { mutableStateOf("") }
+    var serverLogoUrl by remember { mutableStateOf("") }
+
+    LaunchedEffect(userStateViewModel.host) {
+        if (hasExplore && userStateViewModel.host.isNotBlank()) {
+            try {
+                val repo = userStateViewModel.accountService.getRepository()
+                if (repo is me.mudkip.moememos.data.repository.MemosV1Repository) {
+                    val setting = repo.getInstanceSetting("instance/settings/GENERAL").getOrNull()
+                    setting?.generalSetting?.customProfile?.let { profile ->
+                        serverTitle = profile.title.ifBlank { "Memos" }
+                        serverLogoUrl = profile.logoUrl
+                    }
+                }
+            } catch (_: Exception) { }
+        }
+    }
 
     fun isSelected(route: String): Boolean {
         return currentDestination?.hierarchy?.any { it.route == route } == true
@@ -119,11 +147,28 @@ fun SideDrawer(
         }
 
         item {
-            Text(
-                R.string.moe_memos.string,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(20.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (serverLogoUrl.isNotBlank()) {
+                    AsyncImage(
+                        model = serverLogoUrl,
+                        contentDescription = serverTitle,
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Fit
+                    )
+                    Spacer(Modifier.width(12.dp))
+                }
+                Text(
+                    text = serverTitle.ifBlank { R.string.moe_memos.string },
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
         item {
             NavigationDrawerItem(
