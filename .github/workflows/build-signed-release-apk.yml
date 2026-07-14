@@ -50,8 +50,17 @@ jobs:
 
       - name: Prepare APK Artifact
         run: |
-          APK=$(find app/build/outputs/apk/release -name "*.apk" | head -1)
-          [ -z "$APK" ] && echo "No APK found!" && exit 1
+          # Prefer signed APK, fall back to unsigned
+          APK="app/build/outputs/apk/release/app-release.apk"
+          if [ ! -f "$APK" ]; then
+            APK="app/build/outputs/apk/release/app-release-unsigned.apk"
+          fi
+          if [ ! -f "$APK" ]; then
+            echo "❌ No APK found!"
+            ls -la app/build/outputs/apk/release/ 2>/dev/null || echo "No apk dir"
+            exit 1
+          fi
+          echo "📦 Using APK: $APK"
           cp "$APK" moememos-release.apk
 
       - name: Upload workflow artifact

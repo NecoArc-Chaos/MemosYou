@@ -104,15 +104,12 @@ fun ExploreMemoCard(
         )
     ) {
         Column(modifier = Modifier.padding(bottom = 4.dp)) {
-            // ── Header row with avatar ──
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Creator avatar
-                val avatarUrl = memo.creator?.avatarUrl
+// ── Header row with avatar ──
+                // Creator avatar — prepend host if relative URL
+                val avatarUrl = memo.creator?.avatarUrl?.let { url ->
+                    if (url.startsWith("http")) url
+                    else userStateViewModel.host.trimEnd('/') + "/" + url.trimStart('/')
+                }
                 val creatorName = memo.creator?.name
                 if (!avatarUrl.isNullOrBlank()) {
                     AsyncImage(

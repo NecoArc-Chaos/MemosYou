@@ -72,8 +72,11 @@ fun UserProfileHeader(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Avatar
-                val avatarUrl = user?.avatarUrl
+                // Avatar — prepend host if relative
+                val avatarUrl = user?.avatarUrl?.let { url ->
+                    if (url.startsWith("http")) url
+                    else userStateViewModel.host.trimEnd('/') + "/" + url.trimStart('/')
+                }
                 if (!avatarUrl.isNullOrBlank()) {
                     AsyncImage(
                         model = avatarUrl,

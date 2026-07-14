@@ -155,8 +155,10 @@ fun SideDrawer(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (serverLogoUrl.isNotBlank()) {
+                    val fullLogoUrl = if (serverLogoUrl.startsWith("http")) serverLogoUrl
+                    else userStateViewModel.host.trimEnd('/') + "/" + serverLogoUrl.trimStart('/')
                     AsyncImage(
-                        model = serverLogoUrl,
+                        model = fullLogoUrl,
                         contentDescription = serverTitle,
                         modifier = Modifier
                             .size(36.dp)
