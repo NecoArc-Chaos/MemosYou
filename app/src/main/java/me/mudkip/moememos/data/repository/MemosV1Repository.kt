@@ -14,6 +14,8 @@ import me.mudkip.moememos.data.api.MemosV1Resource
 import me.mudkip.moememos.data.api.MemosV1State
 import me.mudkip.moememos.data.api.MemosVisibility
 import me.mudkip.moememos.data.api.UpdateMemoRequest
+import me.mudkip.moememos.data.api.CreateMemoCommentRequest
+import me.mudkip.moememos.data.api.CreateMemoCommentBody
 import me.mudkip.moememos.data.constant.MoeMemosException
 import me.mudkip.moememos.data.model.Account
 import me.mudkip.moememos.data.model.Memo

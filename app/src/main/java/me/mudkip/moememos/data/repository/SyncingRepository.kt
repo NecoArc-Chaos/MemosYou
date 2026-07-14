@@ -948,7 +948,7 @@ class SyncingRepository(
     }
 
     // ─── Comments (delegate to remote) ───
-    override suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<Memo, String?>> = remoteRepository.listMemoComments(memoName, pageSize, pageToken)
+    override suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<Memo>, String?>> = remoteRepository.listMemoComments(memoName, pageSize, pageToken)
     override suspend fun createMemoComment(memoName: String, content: String): ApiResponse<Memo> = remoteRepository.createMemoComment(memoName, content)
 
     companion object {
