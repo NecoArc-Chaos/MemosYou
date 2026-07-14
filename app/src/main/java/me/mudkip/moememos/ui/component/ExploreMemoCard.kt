@@ -117,7 +117,7 @@ fun ExploreMemoCard(
                 if (!avatarUrl.isNullOrBlank()) {
                     AsyncImage(
                         model = avatarUrl,
-                        contentDescription = creatorName,
+                        contentDescription = creatorName ?: "Avatar",
                         modifier = Modifier
                             .size(32.dp)
                             .clip(CircleShape),
@@ -152,7 +152,7 @@ fun ExploreMemoCard(
                 Column(modifier = Modifier.weight(1f)) {
                     if (memo.creator != null && !TextUtils.isEmpty(creatorName)) {
                         Text(
-                            creatorName,
+                            creatorName ?: "",
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
