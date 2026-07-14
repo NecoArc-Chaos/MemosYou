@@ -7,6 +7,8 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +17,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.Card
@@ -36,15 +40,27 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.skydoves.sandwich.ApiResponse
-import com.skydoves.sandwich.suspendOnSuccess
+import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 import me.mudkip.moememos.R
 import me.mudkip.moememos.data.model.Account
 import me.mudkip.moememos.data.model.Memo
 import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.viewmodel.LocalUserState
+
+/**
+ * Extract memos/{uid} from a full resource name like users/1/memos/abc.
+ */
+private fun memoCommentName(remoteId: String?): String {
+    if (remoteId == null) return ""
+    val idx = remoteId.lastIndexOf("/memos/")
+    return if (idx >= 0) remoteId.substring(idx + 1) else remoteId
+}
 
 @Composable
 fun ExploreMemoCard(
@@ -57,6 +73,26 @@ fun ExploreMemoCard(
     var showComments by remember { mutableStateOf(false) }
     var commentText by remember { mutableStateOf("") }
     var comments by remember { mutableStateOf<List<Memo>>(emptyList()) }
+    var loadingComments by remember { mutableStateOf(false) }
+
+    fun loadComments() {
+        if (loadingComments) return
+        val name = memoCommentName(memo.remoteId)
+        scope.launch {
+            loadingComments = true
+            try {
+                userStateViewModel.accountService.getRepository()
+                    .listMemoComments(name, pageSize = 20, pageToken = null)
+                    .let { resp ->
+                        if (resp is com.skydoves.sandwich.ApiResponse.Success) {
+                            comments = resp.data.first
+                        }
+                    }
+            } finally {
+                loadingComments = false
+            }
+        }
+    }
 
     Card(
         modifier = Modifier
@@ -68,28 +104,67 @@ fun ExploreMemoCard(
         )
     ) {
         Column(modifier = Modifier.padding(bottom = 4.dp)) {
-            // ── Header row ──
+            // ── Header row with avatar ──
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp, top = 16.dp, bottom = 6.dp),
+                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    DateUtils.getRelativeTimeSpanString(
-                        memo.date.toEpochMilli(),
-                        System.currentTimeMillis(),
-                        DateUtils.SECOND_IN_MILLIS
-                    ).toString(),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                if (memo.creator != null && !TextUtils.isEmpty(memo.creator.name)) {
+                // Creator avatar
+                val avatarUrl = memo.creator?.avatarUrl
+                val creatorName = memo.creator?.name
+                if (!avatarUrl.isNullOrBlank()) {
+                    AsyncImage(
+                        model = avatarUrl,
+                        contentDescription = creatorName,
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(
+                                Brush.linearGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colorScheme.primary,
+                                        MaterialTheme.colorScheme.tertiary
+                                    )
+                                )
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.Filled.Person,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                            tint = Color.White
+                        )
+                    }
+                }
+
+                Spacer(Modifier.width(10.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
+                    if (memo.creator != null && !TextUtils.isEmpty(creatorName)) {
+                        Text(
+                            creatorName,
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                     Text(
-                        "@${memo.creator.name}",
-                        modifier = Modifier.padding(start = 10.dp),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.primary
+                        DateUtils.getRelativeTimeSpanString(
+                            memo.date.toEpochMilli(),
+                            System.currentTimeMillis(),
+                            DateUtils.SECOND_IN_MILLIS
+                        ).toString(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -108,16 +183,11 @@ fun ExploreMemoCard(
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Comment button
                 if (isRemote) {
                     TextButton(onClick = {
                         showComments = !showComments
-                        if (showComments && comments.isEmpty()) {
-                            scope.launch {
-                                val repo = userStateViewModel.accountService.getRepository()
-                                repo.listMemoComments(memo.remoteId ?: "", pageSize = 20, pageToken = null)
-                                    .suspendOnSuccess { comments = data.first }
-                            }
+                        if (showComments && comments.isEmpty() && !loadingComments) {
+                            loadComments()
                         }
                     }) {
                         Icon(
@@ -127,7 +197,7 @@ fun ExploreMemoCard(
                         )
                         Spacer(Modifier.width(6.dp))
                         Text(
-                            if (comments.isNotEmpty()) "${comments.size}" else R.string.comment.string,
+                            R.string.comment.string,
                             style = MaterialTheme.typography.labelMedium
                         )
                     }
@@ -143,18 +213,24 @@ fun ExploreMemoCard(
                 Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
-                    // Comments list
-                    comments.forEach { commentMemo ->
-                        CommentItem(commentMemo)
-                    }
-
-                    if (comments.isEmpty() && isRemote) {
+                    if (loadingComments) {
+                        Text(
+                            "Loading\u2026",
+                            modifier = Modifier.padding(vertical = 12.dp),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    } else if (comments.isEmpty()) {
                         Text(
                             R.string.no_comments.string,
                             modifier = Modifier.padding(vertical = 12.dp),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                    } else {
+                        comments.forEach { commentMemo ->
+                            CommentItem(commentMemo)
+                        }
                     }
 
                     // Comment input
@@ -182,13 +258,13 @@ fun ExploreMemoCard(
                             IconButton(
                                 onClick = {
                                     if (commentText.isNotBlank()) {
+                                        val text = commentText.trim()
                                         scope.launch {
+                                            val name = memoCommentName(memo.remoteId)
                                             val repo = userStateViewModel.accountService.getRepository()
-                                            repo.createMemoComment(
-                                                memo.remoteId ?: "",
-                                                commentText.trim()
-                                            ).suspendOnSuccess {
-                                                comments = comments + data
+                                            val resp = repo.createMemoComment(name, text)
+                                            if (resp is com.skydoves.sandwich.ApiResponse.Success) {
+                                                comments = comments + resp.data
                                                 commentText = ""
                                             }
                                         }
