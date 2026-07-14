@@ -1,10 +1,6 @@
 package me.mudkip.moememos.ui.page.memos
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -20,66 +16,76 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import me.mudkip.moememos.R
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import me.mudkip.moememos.ui.page.common.LocalRootNavController
+import androidx.navigation.NavHostController
+import kotlinx.coroutines.delay
+import me.mudkip.moememos.R
+import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
+import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.ui.page.common.RouteName
+import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchPage(navController: NavHostController) {
+    var searchText by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue())
+    }
+
     val lifecycleOwner = LocalLifecycleOwner.current
-    val layoutDirection = LocalLayoutDirection.current
-    val rootNavController = LocalRootNavController.current
-    var searchText by rememberSaveable { mutableStateOf("") }
+    val focusRequester = remember { FocusRequester() }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     OutlinedTextField(
+                        modifier = Modifier
+                            .padding(end = 15.dp)
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester),
                         value = searchText,
                         onValueChange = { searchText = it },
-                        placeholder = { Text(R.string.search.string) },
                         singleLine = true,
-                        shape = ShapeDefaults.Large
+                        placeholder = { Text(R.string.search.string) },
+                        shape = ShapeDefaults.ExtraLarge,
+                        leadingIcon = {
+                            IconButton(onClick = { navController.popBackStackIfLifecycleIsResumed(lifecycleOwner) }) {
+                                Icon(
+                                    Icons.AutoMirrored.Outlined.ArrowBack,
+                                    contentDescription = R.string.back.string
+                                )
+                            }
+                        }
                     )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStackIfLifecycleIsResumed(lifecycleOwner) }) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = R.string.back.string)
-                    }
                 }
             )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .consumeWindowInsets(innerPadding)
-                .padding(
-                    start = innerPadding.calculateStartPadding(layoutDirection),
-                    top = innerPadding.calculateTopPadding(),
-                    end = innerPadding.calculateEndPadding(layoutDirection)
-                )
-        ) {
+        },
+
+        content = { innerPadding ->
             MemosList(
-                searchString = searchText,
+                contentPadding = innerPadding,
+                searchString = searchText.text,
                 onTagClick = { tag ->
-                    rootNavController.navigate("${RouteName.TAG}/${java.net.URLEncoder.encode(tag, "UTF-8")}") {
+                    navController.navigate("${RouteName.TAG}/${URLEncoder.encode(tag, "UTF-8")}") {
                         launchSingleTop = true
                         restoreState = true
                     }
                 }
             )
         }
+    )
+
+    LaunchedEffect(Unit) {
+        delay(300)
+        focusRequester.requestFocus()
     }
 }

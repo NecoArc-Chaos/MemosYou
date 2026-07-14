@@ -146,8 +146,8 @@ fun SideDrawer(
                 ),
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
+                    .padding(NavigationDrawerItemDefaults.ItemPadding)
                     .padding(horizontal = 12.dp, vertical = 2.dp)
-                    .then(NavigationDrawerItemDefaults.ItemPadding)
             )
         }
         if (hasExplore) {
@@ -172,8 +172,8 @@ fun SideDrawer(
                     ),
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
+                        .padding(NavigationDrawerItemDefaults.ItemPadding)
                         .padding(horizontal = 12.dp, vertical = 2.dp)
-                        .then(NavigationDrawerItemDefaults.ItemPadding)
                 )
             }
         }
@@ -195,8 +195,8 @@ fun SideDrawer(
                 ),
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
+                    .padding(NavigationDrawerItemDefaults.ItemPadding)
                     .padding(horizontal = 12.dp, vertical = 2.dp)
-                    .then(NavigationDrawerItemDefaults.ItemPadding)
             )
         }
         item {
@@ -220,8 +220,8 @@ fun SideDrawer(
                 ),
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
+                    .padding(NavigationDrawerItemDefaults.ItemPadding)
                     .padding(horizontal = 12.dp, vertical = 2.dp)
-                    .then(NavigationDrawerItemDefaults.ItemPadding)
             )
         }
         item {
@@ -242,8 +242,8 @@ fun SideDrawer(
                 ),
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
+                    .padding(NavigationDrawerItemDefaults.ItemPadding)
                     .padding(horizontal = 12.dp, vertical = 2.dp)
-                    .then(NavigationDrawerItemDefaults.ItemPadding)
             )
         }
 

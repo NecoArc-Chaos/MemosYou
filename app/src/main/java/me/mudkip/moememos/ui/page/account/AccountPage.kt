@@ -1,124 +1,153 @@
 package me.mudkip.moememos.ui.page.account
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
+import com.skydoves.sandwich.onSuccess
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import me.mudkip.moememos.R
-import me.mudkip.moememos.data.model.MemoVisibility
-import me.mudkip.moememos.ext.icon
+import me.mudkip.moememos.data.model.Account
+import me.mudkip.moememos.data.model.MemosAccount
 import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
 import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ext.titleResource
-import me.mudkip.moememos.ext.visibilityList
-import me.mudkip.moememos.ui.component.MemosIcon
-import me.mudkip.moememos.ui.component.SelectablePreference
-import me.mudkip.moememos.ui.page.common.LocalRootNavController
 import me.mudkip.moememos.ui.page.common.RouteName
+import me.mudkip.moememos.viewmodel.AccountViewModel
 import me.mudkip.moememos.viewmodel.LocalUserState
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountPage(
     navController: NavHostController,
-    currentAccountKey: String?
+    selectedAccountKey: String
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val layoutDirection = LocalLayoutDirection.current
-    val userStateViewModel = LocalUserState.current
-    val rootNavController = LocalRootNavController.current
-    val accounts by userStateViewModel.sortedAccounts.collectAsState()
-    val currentAccountKeyState by userStateViewModel.currentAccount.collectAsState()
-    val displayedAccountKey = currentAccountKey ?: currentAccountKeyState?.accountKey ?: ""
-    val currentAccount = remember(accounts, displayedAccountKey) {
-        accounts.firstOrNull { it.accountKey == displayedAccountKey }
+    val viewModel = hiltViewModel<AccountViewModel, AccountViewModel.AccountViewModelFactory> { factory ->
+        factory.create(selectedAccountKey)
     }
-
-    LaunchedEffect(currentAccount) {
-        if (currentAccount == null) {
-            navController.popBackStackIfLifecycleIsResumed(lifecycleOwner)
+    val userStateViewModel = LocalUserState.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val selectedAccount by viewModel.selectedAccountState.collectAsState()
+    val currentAccount by userStateViewModel.currentAccount.collectAsState()
+    val memosAccount = selectedAccount.toMemosAccount()
+    val isLocalAccount = selectedAccountKey == Account.Local().accountKey() || selectedAccount is Account.Local
+    val showSwitchAccountButton = selectedAccountKey != currentAccount?.accountKey()
+    val coroutineScope = rememberCoroutineScope()
+    val exportLauncher = rememberLauncherForActivityResult(CreateDocument("application/zip")) { uri ->
+        if (uri == null) {
+            return@rememberLauncherForActivityResult
+        }
+        coroutineScope.launch {
+            val result = viewModel.exportLocalAccount(uri)
+            result.onSuccess {
+                Toast.makeText(navController.context, R.string.local_export_success.string, Toast.LENGTH_SHORT).show()
+            }.onFailure { error ->
+                val message = error.localizedMessage ?: R.string.local_export_failed.string
+                Toast.makeText(navController.context, message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = currentAccount?.getAccountInfo()?.host ?: R.string.account.string) },
+                title = { Text(text = R.string.account_detail.string) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStackIfLifecycleIsResumed(lifecycleOwner) }) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = R.string.back.string)
+                    IconButton(onClick = {
+                        navController.popBackStackIfLifecycleIsResumed(lifecycleOwner)
+                    }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = R.string.back.string)
+                    }
+                },
+            )
+        },
+    ) { innerPadding ->
+        if (isLocalAccount) {
+            LocalAccountPage(
+                innerPadding = innerPadding,
+                showSwitchAccountButton = showSwitchAccountButton,
+                onSwitchAccount = {
+                    coroutineScope.launch {
+                        userStateViewModel.switchAccount(selectedAccountKey)
+                            .onSuccess {
+                                navController.popBackStackIfLifecycleIsResumed(lifecycleOwner)
+                            }
+                    }
+                },
+                onExportLocalAccount = {
+                    val filename = "MoeMemos-Export-${exportTimestamp(Instant.now())}.zip"
+                    exportLauncher.launch(filename)
+                }
+            )
+        } else if (memosAccount != null) {
+            MemosAccountPage(
+                innerPadding = innerPadding,
+                account = memosAccount,
+                profile = viewModel.instanceProfile,
+                okHttpClient = userStateViewModel.okHttpClient,
+                showSwitchAccountButton = showSwitchAccountButton,
+                onSwitchAccount = {
+                    coroutineScope.launch {
+                        userStateViewModel.switchAccount(selectedAccountKey)
+                            .onSuccess {
+                                navController.popBackStackIfLifecycleIsResumed(lifecycleOwner)
+                            }
+                    }
+                },
+                onSignOut = {
+                    coroutineScope.launch {
+                        userStateViewModel.logout(selectedAccountKey)
+                        if (userStateViewModel.currentAccount.first() == null) {
+                            navController.navigate(RouteName.ADD_ACCOUNT) {
+                                popUpTo(navController.graph.id) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        } else {
+                            navController.popBackStackIfLifecycleIsResumed(lifecycleOwner)
+                        }
                     }
                 }
             )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .consumeWindowInsets(innerPadding)
-                .padding(
-                    start = innerPadding.calculateStartPadding(layoutDirection),
-                    top = innerPadding.calculateTopPadding(),
-                    end = innerPadding.calculateEndPadding(layoutDirection)
-                )
-                .verticalScroll(rememberScrollState())
-        ) {
-            SelectablePreference(
-                title = R.string.default_visibility.string,
-                values = MemoVisibility.visibilityList.map { stringResource(it.titleResource) },
-                currentIndex = MemoVisibility.visibilityList.indexOf(currentAccount?.getAccountInfo()?.defaultVisibility ?: MemoVisibility.PRIVATE),
-                onSelect = { index ->
-                    userStateViewModel.updateVisibilitySetting(
-                        MemoVisibility.visibilityList[index],
-                        displayedAccountKey
-                    )
-                }
-            )
-
-            SelectablePreference(
-                title = R.string.edit_gesture.string,
-                values = listOf(
-                    R.string.double_click.string,
-                    R.string.long_press.string,
-                    R.string.single_click.string,
-                    R.string.off.string
-                ),
-                currentIndex = (currentAccount?.getAccountInfo()?.memoEditGesture?.ordinal ?: 0),
-                onSelect = { index ->
-                    userStateViewModel.updateEditGestureSetting(
-                        index,
-                        displayedAccountKey
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(innerPadding.calculateBottomPadding()))
+        } else {
+            LazyColumn(contentPadding = innerPadding) {}
         }
     }
+
+    LaunchedEffect(selectedAccountKey) {
+        viewModel.loadInstanceProfile()
+    }
+}
+
+private fun exportTimestamp(instant: Instant): String {
+    return DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss", Locale.US)
+        .withZone(ZoneId.systemDefault())
+        .format(instant)
+}
+
+private fun Account?.toMemosAccount(): MemosAccount? = when (this) {
+    is Account.MemosV0 -> info
+    is Account.MemosV1 -> info
+    else -> null
 }
