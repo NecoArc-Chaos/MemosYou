@@ -2,6 +2,7 @@ package me.mudkip.moememos.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+// ── Light Color Scheme (Expressive: 更丰富的 Container 色调) ──
 val md_theme_light_primary = Color(0xFF006D42)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
 val md_theme_light_primaryContainer = Color(0xFF93F7BB)
@@ -25,12 +26,21 @@ val md_theme_light_onSurface = Color(0xFF191C1A)
 val md_theme_light_surfaceVariant = Color(0xFFDCE5DC)
 val md_theme_light_onSurfaceVariant = Color(0xFF404942)
 val md_theme_light_outline = Color(0xFF717972)
+val md_theme_light_outlineVariant = Color(0xFFC1C9C1)
 val md_theme_light_inverseOnSurface = Color(0xFFF0F1ED)
 val md_theme_light_inverseSurface = Color(0xFF2E312E)
 val md_theme_light_inversePrimary = Color(0xFF77DAA1)
-val md_theme_light_shadow = Color(0xFF000000)
 val md_theme_light_surfaceTint = Color(0xFF006D42)
 
+// Surface Container 层级 (Expressive: 营造深度与层次)
+val md_theme_light_surfaceContainerLowest = Color(0xFFFFFFFF)
+val md_theme_light_surfaceContainerLow = Color(0xFFF5F8F2)
+val md_theme_light_surfaceContainer = Color(0xFFF0F3ED)
+val md_theme_light_surfaceContainerHigh = Color(0xFFEAEDE8)
+val md_theme_light_surfaceContainerHighest = Color(0xFFE4E8E2)
+
+
+// ── Dark Color Scheme (Expressive: 更温暖的暗色) ──
 val md_theme_dark_primary = Color(0xFF77DAA1)
 val md_theme_dark_onPrimary = Color(0xFF003920)
 val md_theme_dark_primaryContainer = Color(0xFF005230)
@@ -54,11 +64,17 @@ val md_theme_dark_onSurface = Color(0xFFE1E3DE)
 val md_theme_dark_surfaceVariant = Color(0xFF404942)
 val md_theme_dark_onSurfaceVariant = Color(0xFFC0C9C0)
 val md_theme_dark_outline = Color(0xFF8A938B)
+val md_theme_dark_outlineVariant = Color(0xFF404942)
 val md_theme_dark_inverseOnSurface = Color(0xFF191C1A)
 val md_theme_dark_inverseSurface = Color(0xFFE1E3DE)
 val md_theme_dark_inversePrimary = Color(0xFF006D42)
-val md_theme_dark_shadow = Color(0xFF000000)
 val md_theme_dark_surfaceTint = Color(0xFF77DAA1)
 
+// Surface Container 层级 (暗色)
+val md_theme_dark_surfaceContainerLowest = Color(0xFF0E110F)
+val md_theme_dark_surfaceContainerLow = Color(0xFF191C1A)
+val md_theme_dark_surfaceContainer = Color(0xFF1D201E)
+val md_theme_dark_surfaceContainerHigh = Color(0xFF282B28)
+val md_theme_dark_surfaceContainerHighest = Color(0xFF333633)
 
 val seed = Color(0xFF006D42)
