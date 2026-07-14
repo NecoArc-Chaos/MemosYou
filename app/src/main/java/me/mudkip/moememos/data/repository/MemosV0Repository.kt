@@ -179,8 +179,7 @@ class MemosV0Repository (
     }
 
     override suspend fun getCurrentUser(): ApiResponse<User> {
-        val response = memosApi.me()
-        return response.mapSuccess { user -> user.toUser() }
+        return memosApi.me().mapSuccess { toUser() }
     }
 
     // ─── Comments (not supported in V0) ───
