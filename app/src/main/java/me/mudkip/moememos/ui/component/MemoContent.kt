@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -65,7 +64,7 @@ fun MemoContent(
     }
 
     Column(
-        modifier = Modifier.padding(start = 15.dp, end = 15.dp, bottom = 10.dp)
+        modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 16.dp)
     ) {
         Markdown(
             text,
@@ -262,7 +261,7 @@ fun MemoResourceContent(memo: MemoRepresentable) {
                                 modifier = Modifier
                                     .aspectRatio(1f)
                                     .padding(2.dp)
-                                    .clip(RoundedCornerShape(4.dp)),
+                                    .clip(MaterialTheme.shapes.medium),
                                 resourceIdentifier = (imageList[index] as? ResourceEntity)?.identifier,
                                 onClick = {
                                     context.startActivity(
