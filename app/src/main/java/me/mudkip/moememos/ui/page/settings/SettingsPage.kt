@@ -203,7 +203,7 @@ fun SettingsPage(
                     Text(R.string.close.string)
                 }
             }
-        )
+            item {
     }
 }
 
