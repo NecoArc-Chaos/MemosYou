@@ -50,8 +50,6 @@ import me.mudkip.moememos.ext.settingsDataStore
 import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.ui.component.MemosIcon
 import me.mudkip.moememos.ui.component.ThemePresetPicker
-import me.mudkip.moememos.ui.component.ColorPalettePicker
-import me.mudkip.moememos.ui.page.common.RouteName
 import me.mudkip.moememos.ui.security.AppLockAuthenticator
 import me.mudkip.moememos.ui.security.AppLockSession
 import me.mudkip.moememos.viewmodel.LocalUserState
