@@ -28,7 +28,7 @@ import java.time.Instant
 private const val PAGE_SIZE = 200
 
 class MemosV1Repository(
-    private val memosApi: MemosV1Api,
+    internal val memosApi: MemosV1Api,
     private val account: Account.MemosV1
 ): RemoteRepository() {
     private val remoteUserIdentifier = account.info.remoteIdentifier
