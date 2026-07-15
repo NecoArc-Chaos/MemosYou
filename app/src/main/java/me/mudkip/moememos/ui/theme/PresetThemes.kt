@@ -11,17 +11,8 @@ data class PresetTheme(val id: String, val name: String, val light: ColorScheme,
 
 fun presetById(id: String): PresetTheme? = Presets.find { it.id == id }
 
-// ═══════════════════════════════════════════
-// Rikkahub Presets — adapted for MoeMemos
-// ═══════════════════════════════════════════
-
-val Presets = listOf(Sakura, Ocean, Spring, Autumn, Black)
-
-val Default = Sakura
-
 // ─── Sakura ───
 private val Sakura = PresetTheme("sakura", "Sakura",
-    light = lightColorScheme(
         primary = Color(0xFF8E4955), onPrimary = Color.White, primaryContainer = Color(0xFFFFD9DD), onPrimaryContainer = Color(0xFF72333E),
         secondary = Color(0xFF76565A), onSecondary = Color.White, secondaryContainer = Color(0xFFFFD9DD), onSecondaryContainer = Color(0xFF5C3F43),
         tertiary = Color(0xFF785831), onTertiary = Color.White, tertiaryContainer = Color(0xFFFFDDB8), onTertiaryContainer = Color(0xFF5E411C),
@@ -148,3 +139,6 @@ private val Black = PresetTheme("black", "Black",
         surfaceContainerHigh = Color(0xFF343434), surfaceContainerHighest = Color(0xFF3F3F3F),
     )
 )
+
+val Presets = listOf(Sakura, Ocean, Spring, Autumn, Black)
+val Default = Sakura
