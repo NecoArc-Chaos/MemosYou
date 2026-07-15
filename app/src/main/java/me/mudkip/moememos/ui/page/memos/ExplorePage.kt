@@ -1,5 +1,11 @@
 package me.mudkip.moememos.ui.page.memos
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Dns
@@ -8,20 +14,30 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import com.skydoves.sandwich.getOrNull
 import kotlinx.coroutines.launch
 import me.mudkip.moememos.R
+import me.mudkip.moememos.data.repository.MemosV1Repository
 import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.viewmodel.LocalUserState
 
@@ -36,6 +52,34 @@ fun ExplorePage(
     val host = userStateViewModel.host
     var showServerMenu by remember { mutableStateOf(false) }
 
+    // Server branding from instance settings
+    var serverTitle by remember { mutableStateOf("") }
+    var serverLogoUrl by remember { mutableStateOf("") }
+
+    LaunchedEffect(host) {
+        if (host.isNotBlank()) {
+            try {
+                val repo = userStateViewModel.accountService.getRepository()
+                if (repo is MemosV1Repository) {
+                    val setting = repo.getInstanceSetting("instance/settings/GENERAL").getOrNull()
+                    setting?.generalSetting?.customProfile?.let { profile ->
+                        serverTitle = profile.title.ifBlank { "" }
+                        serverLogoUrl = profile.logoUrl
+                    }
+                }
+            } catch (_: Exception) { }
+        }
+    }
+
+    val displayHost = host.removePrefix("https://").removePrefix("http://").trimEnd('/')
+    val displayTitle = serverTitle.ifBlank {
+        if (host.isNotBlank()) displayHost else "Memos"
+    }
+    val fullLogoUrl = if (serverLogoUrl.isNotBlank()) {
+        if (serverLogoUrl.startsWith("http")) serverLogoUrl
+        else host.trimEnd('/') + "/" + serverLogoUrl.trimStart('/')
+    } else ""
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -48,13 +92,23 @@ fun ExplorePage(
                     }
                 },
                 actions = {
-                    // Server icon
                     IconButton(onClick = { showServerMenu = true }) {
-                        Icon(
-                            Icons.Outlined.Dns,
-                            contentDescription = "Server",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        if (fullLogoUrl.isNotBlank()) {
+                            AsyncImage(
+                                model = fullLogoUrl,
+                                contentDescription = displayTitle,
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .clip(RoundedCornerShape(6.dp)),
+                                contentScale = ContentScale.Fit
+                            )
+                        } else {
+                            Icon(
+                                Icons.Outlined.Dns,
+                                contentDescription = "Server",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                     DropdownMenu(
                         expanded = showServerMenu,
@@ -62,18 +116,42 @@ fun ExplorePage(
                     ) {
                         DropdownMenuItem(
                             text = {
-                                Text(
-                                    host.ifBlank { "Local" }
-                                        .removePrefix("https://")
-                                        .removePrefix("http://"),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
+                                Column {
+                                    Text(
+                                        displayTitle,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Spacer(Modifier.height(2.dp))
+                                    Text(
+                                        if (host.isNotBlank()) displayHost else "Local",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
                             },
                             onClick = { showServerMenu = false },
                             leadingIcon = {
-                                Icon(Icons.Outlined.Dns, contentDescription = null)
+                                if (fullLogoUrl.isNotBlank()) {
+                                    AsyncImage(
+                                        model = fullLogoUrl,
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(32.dp)
+                                            .clip(RoundedCornerShape(6.dp)),
+                                        contentScale = ContentScale.Fit
+                                    )
+                                } else {
+                                    Icon(
+                                        Icons.Outlined.Dns,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
                             }
                         )
+                        HorizontalDivider(Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
                     }
                 }
             )
