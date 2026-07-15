@@ -236,9 +236,6 @@ fun ExploreMemoCard(memo: Memo) {
                             onClick = { addReaction(emoji) },
                             label = { Text("$emoji ${items.size}") },
                             shape = RoundedCornerShape(16.dp),
-                            border = AssistChipDefaults.assistChipBorder(
-                                borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-                            ),
                             colors = AssistChipDefaults.assistChipColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
                             )

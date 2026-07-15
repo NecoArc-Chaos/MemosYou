@@ -114,7 +114,7 @@ fun ColorPalettePicker(
                 selectedColor ?: Brush.horizontalGradient(
                     listOf(Color.Red, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta)
                 )
-            ).border(2.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape))
+            ))
             Spacer(Modifier.width(12.dp))
             OutlinedTextField(
                 value = hexInput,
