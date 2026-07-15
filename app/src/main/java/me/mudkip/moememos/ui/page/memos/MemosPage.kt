@@ -43,7 +43,7 @@ fun MemosPage() {
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
-                ModalDrawerSheet(Modifier.width(320.dp).fillMaxWidth(0.8f)) {
+                ModalDrawerSheet(Modifier.fillMaxWidth(2f/3f)) {
                     SideDrawer(memosNavController, drawerState)
                 }
             },

@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.outlined.PushPin
+import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
@@ -105,14 +106,7 @@ fun MemosCard(
     Card(
         modifier = cardModifier,
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-        ),
-        border = if (memo.pinned) {
-            BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-        } else {
-            null
-        }
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
     ) {
         Column {
             Row(
@@ -151,6 +145,14 @@ fun MemosCard(
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
+                if (memo.pinned) {
+                    Icon(
+                        Icons.Outlined.PushPin,
+                        contentDescription = "Pinned",
+                        modifier = Modifier.padding(end = 4.dp).size(18.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
                 MemosCardActionButton(memo)
             }
 

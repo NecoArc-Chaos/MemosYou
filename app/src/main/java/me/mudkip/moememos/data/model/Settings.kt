@@ -7,5 +7,5 @@ data class Settings(
     val usersList: List<UserData> = emptyList(),
     val currentUser: String = "",
     val appLockEnabled: Boolean = false,
-    val accentColorHex: String = "",
+    val presetThemeId: String = "",
 )
