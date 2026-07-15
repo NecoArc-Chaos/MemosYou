@@ -133,7 +133,13 @@ fun MemosList(
             state = lazyListState,
             contentPadding = listContentPadding
         ) {
-            // ── Social-style profile header (only on home, not on tag/search filters) ──
+            // Skeleton loading state
+            if (filteredMemos.isEmpty() && isRefreshing) {
+                items(4) { me.mudkip.moememos.ui.component.ExpressiveSkeletonCard() }
+                item { me.mudkip.moememos.ui.component.ExpressiveWaveProgress(Modifier.fillMaxSize().padding(16.dp)) }
+            }
+
+            // ── Social-style profile header ──
             if (tag == null && searchString == null) {
                 item(key = "user_profile_header") {
                     UserProfileHeader(
