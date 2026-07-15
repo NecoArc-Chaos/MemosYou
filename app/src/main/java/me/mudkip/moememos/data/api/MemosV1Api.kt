@@ -76,6 +76,18 @@ interface MemosV1Api {
         @Path("name", encoded = true) name: String,
         @Body body: CreateMemoCommentBody
     ): ApiResponse<MemosV1Memo>
+
+    // ─── Reactions ───
+    @GET("api/v1/{name}/reactions")
+    suspend fun listMemoReactions(
+        @Path("name", encoded = true) name: String
+    ): ApiResponse<ListReactionsResponse>
+
+    @POST("api/v1/{name}/reactions")
+    suspend fun upsertMemoReaction(
+        @Path("name", encoded = true) name: String,
+        @Body body: UpsertReactionRequest
+    ): ApiResponse<ReactionItem>
 }
 
 @Serializable
@@ -216,6 +228,26 @@ data class CreateMemoCommentBody(
 data class ListMemoCommentsResponse(
     val memos: List<MemosV1Memo>,
     val nextPageToken: String? = null
+)
+
+// ─── Reactions ───
+@Serializable
+data class ListReactionsResponse(
+    val reactions: List<ReactionItem>
+)
+
+@Serializable
+data class ReactionItem(
+    val name: String = "",
+    val creator: String = "",
+    val reactionType: String = "",
+    @Serializable(with = Rfc3339InstantSerializer::class)
+    val createTime: Instant? = null
+)
+
+@Serializable
+data class UpsertReactionRequest(
+    val reactionType: String
 )
 
 // ─── Instance Settings ───
