@@ -1,7 +1,6 @@
 package me.mudkip.moememos.ui.page.memos
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DrawerValue
@@ -35,7 +34,7 @@ fun MemosPage() {
     if (windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)) {
         PermanentNavigationDrawer(
             drawerContent = {
-                PermanentDrawerSheet { SideDrawer(memosNavController = memosNavController) }
+                PermanentDrawerSheet { SideDrawer(memosNavController) }
             }
         ) {
             MemosNavigation(navController = memosNavController)
@@ -44,7 +43,13 @@ fun MemosPage() {
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
-                ModalDrawerSheet(modifier = Modifier.width(320.dp).fillMaxWidth(0.8f)) {
-                    SideDrawer(memosNavController = memosNavController, drawerState = drawerState)
+                ModalDrawerSheet(Modifier.width(320.dp).fillMaxWidth(0.8f)) {
+                    SideDrawer(memosNavController, drawerState)
                 }
             },
+            scrimColor = Color.Black.copy(alpha = 0.32f)
+        ) {
+            MemosNavigation(drawerState = drawerState, navController = memosNavController)
+        }
+    }
+}
