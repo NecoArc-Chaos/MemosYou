@@ -1,6 +1,11 @@
 package me.mudkip.moememos.ui.page.memos
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -10,6 +15,9 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowSizeClass
 import kotlinx.coroutines.launch
@@ -23,41 +31,32 @@ fun MemosPage() {
     val memosNavController = rememberNavController()
 
     BackHandler(enabled = drawerState.isOpen) {
-        scope.launch {
-            drawerState.close()
-        }
+        scope.launch { drawerState.close() }
     }
 
     if (windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)) {
         PermanentNavigationDrawer(
             drawerContent = {
-                PermanentDrawerSheet {
-                    SideDrawer(
-                        memosNavController = memosNavController,
-                    )
-                }
+                PermanentDrawerSheet { SideDrawer(memosNavController = memosNavController) }
             }
         ) {
-            MemosNavigation(
-                navController = memosNavController
-            )
+            MemosNavigation(navController = memosNavController)
         }
     } else {
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
-                ModalDrawerSheet {
-                    SideDrawer(
-                        memosNavController = memosNavController,
-                        drawerState = drawerState
-                    )
+                ModalDrawerSheet(modifier = Modifier.width(320.dp).fillMaxWidth(0.8f)) {
+                    SideDrawer(memosNavController = memosNavController, drawerState = drawerState)
                 }
-            }
+            },
+            drawerAnimationSpec = spring(
+                dampingRatio = Spring.DampingRatioLowBouncy,
+                stiffness = Spring.StiffnessMediumLow
+            ),
+            scrimColor = Color.Black.copy(alpha = 0.32f)
         ) {
-            MemosNavigation(
-                drawerState = drawerState,
-                navController = memosNavController
-            )
+            MemosNavigation(drawerState = drawerState, navController = memosNavController)
         }
     }
 }

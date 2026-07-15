@@ -1,16 +1,16 @@
 package me.mudkip.moememos.ui.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
@@ -22,25 +22,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 
-data class PalettePreset(val name: String, val seed: Color)
+data class PalettePreset(val name: String, val colors: List<Color>)
 
-val MD3E_PRESETS = listOf(
-    PalettePreset("Sapphire", Color(0xFF415F91)),
-    PalettePreset("Ruby", Color(0xFF9C4146)),
-    PalettePreset("Emerald", Color(0xFF3B6E46)),
-    PalettePreset("Amber", Color(0xFF9E6100)),
-    PalettePreset("Violet", Color(0xFF7B4FBF)),
-    PalettePreset("Rose", Color(0xFFB93C66)),
-    PalettePreset("Teal", Color(0xFF006B5E)),
-    PalettePreset("Slate", Color(0xFF5E6068)),
-    PalettePreset("Coral", Color(0xFFCD5B3F)),
-    PalettePreset("Lavender", Color(0xFF8A6DC7)),
-    PalettePreset("Mint", Color(0xFF3F8E6B)),
-    PalettePreset("Sky", Color(0xFF3B6EB5)),
+val MD3E_THEMES = listOf(
+    PalettePreset("Ocean", listOf(Color(0xFF386A97), Color(0xFF5E7D9C), Color(0xFFBC6C25))),
+    PalettePreset("Forest", listOf(Color(0xFF386A20), Color(0xFF5A7D42), Color(0xFF9C6B3F))),
+    PalettePreset("Berry", listOf(Color(0xFF8E254D), Color(0xFF6A4078), Color(0xFF3D6A80))),
+    PalettePreset("Sunset", listOf(Color(0xFFB04A30), Color(0xFF8B504A), Color(0xFF3C6B6B))),
+    PalettePreset("Lavender", listOf(Color(0xFF6C4EA0), Color(0xFF5A5D8C), Color(0xFF3C7A6A))),
+    PalettePreset("Slate", listOf(Color(0xFF4A5D73), Color(0xFF5E6A7E), Color(0xFF8B6A4A))),
 )
 
 @Composable
@@ -52,51 +45,40 @@ fun ColorPalettePicker(
         if (selectedColorHex.isNotBlank()) Color(android.graphics.Color.parseColor(selectedColorHex)) else null
     } catch (_: Exception) { null }
 
-    fun hex(p: PalettePreset) = String.format("#%06X", 0xFFFFFF and p.seed.toArgb())
-    fun isSel(p: PalettePreset) = selectedColor?.toArgb() == p.seed.toArgb()
-
     Column {
-        Text("Presets",
-            style = MaterialTheme.typography.labelMedium,
+        Text("MD3 Expressive Themes", style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.outline,
             modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp))
 
-        ColorCircle(null, selectedColor == null, "Auto") { onColorSelected("") }
-
-        Spacer(Modifier.height(8.dp))
-
-        MD3E_PRESETS.forEach { preset ->
-            ColorCircle(preset.seed, isSel(preset), preset.name) { onColorSelected(hex(preset)) }
-        }
-    }
-}
-
-@Composable
-private fun ColorCircle(
-    color: Color?,
-    isSelected: Boolean,
-    label: String,
-    onClick: () -> Unit
-) {
-    val brush: Brush = if (color != null) SolidColor(color)
-    else Brush.sweepGradient(listOf(Color.Red, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta, Color.Red))
-
-    val mod = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 2.dp, horizontal = 4.dp)
-        .clip(MaterialTheme.shapes.small)
-        .clickable(onClick = onClick)
-        .padding(vertical = 10.dp, horizontal = 12.dp)
-
-    androidx.compose.foundation.layout.Column(modifier = mod) {
-        Box(Modifier.size(32.dp).clip(CircleShape).background(brush)
-            .then(if (isSelected) Modifier.border(2.dp, MaterialTheme.colorScheme.primary, CircleShape) else Modifier),
-            contentAlignment = Alignment.Center
+        // Auto/default option
+        Row(modifier = Modifier.fillMaxWidth().clickable { onColorSelected("") }
+            .padding(vertical = 8.dp, horizontal = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            if (isSelected) Icon(Icons.Filled.Check, null, Modifier.size(16.dp), tint = Color.White)
+            Icon(Icons.Filled.Check, null, Modifier.size(16.dp),
+                tint = if (selectedColor == null) MaterialTheme.colorScheme.primary else Color.Transparent)
+            Spacer(Modifier.width(8.dp))
+            Text("Dynamic (System)", style = MaterialTheme.typography.bodyMedium)
         }
-        Spacer(Modifier.height(4.dp))
-        Text(label, style = MaterialTheme.typography.bodyMedium,
-            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface)
+
+        MD3E_THEMES.forEach { theme ->
+            val isSelected = selectedColor?.toArgb() == theme.colors[0].toArgb()
+            Row(modifier = Modifier.fillMaxWidth().clickable { onColorSelected(String.format("#%06X", 0xFFFFFF and theme.colors[0].toArgb())) }
+                .padding(vertical = 8.dp, horizontal = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Filled.Check, null, Modifier.size(16.dp),
+                    tint = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+                Spacer(Modifier.width(8.dp))
+                // Three color dots horizontal
+                theme.colors.forEach { c ->
+                    Spacer(Modifier.size(24.dp).clip(RoundedCornerShape(6.dp)).background(c))
+                    Spacer(Modifier.width(6.dp))
+                }
+                Spacer(Modifier.width(4.dp))
+                Text(theme.name, style = MaterialTheme.typography.bodyMedium,
+                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface)
+            }
+        }
     }
 }

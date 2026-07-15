@@ -181,8 +181,8 @@ fun SideDrawer(
                 onClick = {
                     scope.launch {
                         memosNavController.navigate(RouteName.MEMOS) {
+                            popUpTo(RouteName.MEMOS) { inclusive = true }
                             launchSingleTop = true
-                            restoreState = true
                         }
                         drawerState?.close()
                     }
@@ -208,6 +208,7 @@ fun SideDrawer(
                         scope.launch {
                             memosNavController.navigate(RouteName.EXPLORE) {
                                 launchSingleTop = true
+                            popUpTo(RouteName.MEMOS)
                                 restoreState = true
                             }
                             drawerState?.close()
@@ -234,6 +235,7 @@ fun SideDrawer(
                     scope.launch {
                         drawerState?.close()
                         rootNavController.navigate(RouteName.RESOURCE)
+                        memosNavController.navigate(RouteName.MEMOS) { popUpTo(RouteName.MEMOS) { inclusive = true }; launchSingleTop = true }
                     }
                 },
                 colors = NavigationDrawerItemDefaults.colors(
@@ -256,6 +258,7 @@ fun SideDrawer(
                     scope.launch {
                         memosNavController.navigate(RouteName.ARCHIVED) {
                             launchSingleTop = true
+                            popUpTo(RouteName.MEMOS)
                             restoreState = true
                         }
                         drawerState?.close()
