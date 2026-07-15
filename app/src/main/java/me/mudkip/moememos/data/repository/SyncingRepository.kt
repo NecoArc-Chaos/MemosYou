@@ -5,6 +5,7 @@ import androidx.core.net.toUri
 import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.StatusCode
 import com.skydoves.sandwich.getOrNull
+import com.skydoves.sandwich.mapSuccess
 import com.skydoves.sandwich.retrofit.statusCode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +21,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import me.mudkip.moememos.data.constant.MoeMemosException
+import me.mudkip.moememos.data.api.ReactionItem
+import me.mudkip.moememos.data.api.UpsertReactionRequest
 import me.mudkip.moememos.data.local.FileStorage
 import me.mudkip.moememos.data.local.dao.MemoDao
 import me.mudkip.moememos.data.local.entity.MemoEntity
@@ -950,6 +953,18 @@ class SyncingRepository(
     // ─── Comments (delegate to remote) ───
     override suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<Memo>, String?>> = remoteRepository.listMemoComments(memoName, pageSize, pageToken)
     override suspend fun createMemoComment(memoName: String, content: String): ApiResponse<Memo> = remoteRepository.createMemoComment(memoName, content)
+
+    // ─── Reactions (delegate to remote) ───
+    suspend fun listReactions(memoName: String): ApiResponse<List<ReactionItem>> {
+        return if (remoteRepository is MemosV1Repository) {
+            (remoteRepository as MemosV1Repository).memosApi.listMemoReactions(memoName).mapSuccess { it.reactions }
+        } else ApiResponse.Success(emptyList())
+    }
+    suspend fun upsertReaction(memoName: String, reactionType: String) {
+        if (remoteRepository is MemosV1Repository) {
+            (remoteRepository as MemosV1Repository).memosApi.upsertMemoReaction(memoName, UpsertReactionRequest(reactionType))
+        }
+    }
 
     companion object {
         private const val ATTACHMENT_UPLOAD_FAILED_MESSAGE =

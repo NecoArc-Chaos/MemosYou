@@ -80,6 +80,7 @@ import me.mudkip.moememos.data.api.UpsertReactionRequest
 import me.mudkip.moememos.data.model.Account
 import me.mudkip.moememos.data.model.Memo
 import me.mudkip.moememos.data.repository.MemosV1Repository
+import me.mudkip.moememos.data.repository.SyncingRepository
 import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.viewmodel.LocalUserState
 
@@ -119,13 +120,11 @@ fun ExploreMemoCard(memo: Memo) {
     LaunchedEffect(memo.remoteId) {
         if (isRemote && memo.remoteId != null) {
             try {
+                val name = memoCommentName(memo.remoteId)
                 val repo = userStateViewModel.accountService.getRepository()
-                if (repo is MemosV1Repository) {
-                    val name = memoCommentName(memo.remoteId)
-                    val resp = repo.memosApi.listMemoReactions(name)
-                    if (resp is ApiResponse.Success) {
-                        reactions = resp.data.reactions
-                    }
+                if (repo is SyncingRepository) {
+                    val resp = repo.listReactions(name)
+                    if (resp is ApiResponse.Success) reactions = resp.data
                 }
             } catch (_: Exception) { }
         }
@@ -149,13 +148,12 @@ fun ExploreMemoCard(memo: Memo) {
     fun addReaction(emoji: String) {
         scope.launch {
             try {
+                val name = memoCommentName(memo.remoteId)
                 val repo = userStateViewModel.accountService.getRepository()
-                if (repo is MemosV1Repository) {
-                    val name = memoCommentName(memo.remoteId)
-                    repo.memosApi.upsertMemoReaction(name, UpsertReactionRequest(emoji))
-                    // Refresh reactions
-                    val resp = repo.memosApi.listMemoReactions(name)
-                    if (resp is ApiResponse.Success) reactions = resp.data.reactions
+                if (repo is SyncingRepository) {
+                    repo.upsertReaction(name, emoji)
+                    val resp = repo.listReactions(name)
+                    if (resp is ApiResponse.Success) reactions = resp.data
                 }
             } catch (_: Exception) { }
         }
