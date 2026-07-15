@@ -2,10 +2,8 @@ package me.mudkip.moememos.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -61,23 +58,23 @@ fun ColorPalettePicker(
         if (selectedColorHex.isNotBlank()) Color(android.graphics.Color.parseColor(selectedColorHex)) else null
     } catch (_: Exception) { null }
 
+    fun hex(p: PalettePreset) = String.format("#%06X", 0xFFFFFF and p.seed.toArgb())
+    fun isSel(p: PalettePreset) = selectedColor?.toArgb() == p.seed.toArgb()
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Text("Presets", style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.outline,
             modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp))
 
-        Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-            ) {
-            PaletteSwatch(null, selectedColor == null, "Auto") { onColorSelected("") }
-            MD3E_PRESETS.take(6).forEach { preset ->
-                PaletteSwatch(preset.seed, selectedColor?.toArgb() == preset.seed.toArgb(), preset.name) { onColorSelected(String.format("#%06X", 0xFFFFFF and preset.seed.toArgb())) }
-            }
-        }
-        Spacer(Modifier.height(8.dp))
-        Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-            ) {
-            MD3E_PRESETS.drop(6).forEach { preset ->
-                PaletteSwatch(preset.seed, selectedColor?.toArgb() == preset.seed.toArgb(), preset.name) { onColorSelected(String.format("#%06X", 0xFFFFFF and preset.seed.toArgb())) }
+        PaletteSwatch(null, selectedColor == null, "Auto") { onColorSelected("") }
+
+        val presets = MD3E_PRESETS
+        val chunked = presets.chunked(6)
+        chunked.forEach { row ->
+            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 6.dp)) {
+                row.forEach { p ->
+                    PaletteSwatch(p.seed, isSel(p), p.name) { onColorSelected(hex(p)) }
+                }
             }
         }
 
@@ -107,7 +104,7 @@ fun ColorPalettePicker(
 
 @Composable
 private fun PaletteSwatch(color: Color?, isSelected: Boolean, label: String, onClick: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(end = 12.dp)) {
         Box(modifier = Modifier
             .size(44.dp)
             .clip(CircleShape)
