@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,7 +52,6 @@ val MD3E_PRESETS = listOf(
     PalettePreset("Sky", Color(0xFF3B6EB5)),
 )
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ColorPalettePicker(
     selectedColorHex: String,
@@ -68,13 +66,23 @@ fun ColorPalettePicker(
             color = MaterialTheme.colorScheme.outline,
             modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp))
 
-        FlowRow(
+        Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             PaletteSwatch(null, selectedColor == null, "Auto") { onColorSelected("") }
-            MD3E_PRESETS.forEach { preset ->
+            MD3E_PRESETS.take(6).forEach { preset ->
+                PaletteSwatch(preset.seed, selectedColor?.toArgb() == preset.seed.toArgb(), preset.name) {
+                    onColorSelected(String.format("#%06X", 0xFFFFFF and preset.seed.toArgb()))
+                }
+            }
+        }
+        Spacer(Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            MD3E_PRESETS.drop(6).forEach { preset ->
                 PaletteSwatch(preset.seed, selectedColor?.toArgb() == preset.seed.toArgb(), preset.name) {
                     onColorSelected(String.format("#%06X", 0xFFFFFF and preset.seed.toArgb()))
                 }
