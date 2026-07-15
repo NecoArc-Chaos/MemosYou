@@ -49,6 +49,7 @@ import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
 import me.mudkip.moememos.ext.settingsDataStore
 import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.ui.component.MemosIcon
+import me.mudkip.moememos.ui.component.ColorPalettePicker
 import me.mudkip.moememos.ui.page.common.RouteName
 import me.mudkip.moememos.ui.security.AppLockAuthenticator
 import me.mudkip.moememos.ui.security.AppLockSession
@@ -187,6 +188,17 @@ fun SettingsPage(
                         .padding(24.dp, 10.dp),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.outline
+                )
+            }
+
+            item {
+                ColorPalettePicker(
+                    selectedColorHex = settings.accentColorHex,
+                    onColorSelected = { color ->
+                        scope.launch(Dispatchers.IO) {
+                            context.settingsDataStore.updateData { it.copy(accentColorHex = color) }
+                        }
+                    }
                 )
             }
 

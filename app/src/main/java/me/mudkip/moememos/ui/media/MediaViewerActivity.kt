@@ -123,7 +123,7 @@ class MediaViewerActivity : FragmentActivity() {
         val caption = intent.getStringExtra(EXTRA_CAPTION).orEmpty()
 
         setContent {
-            MoeMemosTheme(darkTheme = true, dynamicColor = false) {
+            MoeMemosTheme(darkTheme = true) {
                 AppLockGate {
                     MediaViewerScreen(
                         imageUrls = imageUrls,

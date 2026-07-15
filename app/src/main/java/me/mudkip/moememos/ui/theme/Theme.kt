@@ -1,8 +1,8 @@
 package me.mudkip.moememos.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import android.graphics.Color
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -13,13 +13,17 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color as ComposeColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import me.mudkip.moememos.data.model.Settings
+import me.mudkip.moememos.ext.settingsDataStore
 
-// ═══ Material You Expressive Shapes ═══
-// 比标准 Material 3 更圆润、更有亲和力的形状系统
+// ═══ Expressive Shapes ═══
 val ExpressiveShapes = Shapes(
     extraSmall = RoundedCornerShape(8.dp),
     small = RoundedCornerShape(12.dp),
@@ -28,7 +32,7 @@ val ExpressiveShapes = Shapes(
     extraLarge = RoundedCornerShape(36.dp),
 )
 
-private val DarkColorScheme = darkColorScheme(
+private val FallbackDarkScheme = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,
@@ -64,7 +68,7 @@ private val DarkColorScheme = darkColorScheme(
     surfaceContainerHighest = md_theme_dark_surfaceContainerHighest,
 )
 
-private val LightColorScheme = lightColorScheme(
+private val FallbackLightScheme = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     primaryContainer = md_theme_light_primaryContainer,
@@ -103,17 +107,32 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun MoeMemosTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    val context = LocalContext.current
+    val settings by context.settingsDataStore.data.collectAsState(initial = Settings())
+
+    // Parse user's accent color
+    val accentColor: ComposeColor? = try {
+        if (settings.accentColorHex.isNotBlank())
+            ComposeColor(Color.parseColor(settings.accentColorHex)) else null
+    } catch (_: Exception) { null }
+
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
+        // User picked accent → generate scheme from it
+        accentColor != null -> {
+            if (darkTheme) darkColorScheme(primary = accentColor)
+            else lightColorScheme(primary = accentColor)
+        }
+        // No accent + Android 12+ → dynamic colors
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        // Fallback
+        darkTheme -> FallbackDarkScheme
+        else -> FallbackLightScheme
     }
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
