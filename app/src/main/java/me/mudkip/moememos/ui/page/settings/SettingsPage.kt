@@ -50,6 +50,7 @@ import me.mudkip.moememos.ext.settingsDataStore
 import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.ui.component.MemosIcon
 import me.mudkip.moememos.ui.component.ThemePresetPicker
+import me.mudkip.moememos.ui.component.ColorPalettePicker
 import me.mudkip.moememos.ui.page.common.RouteName
 import me.mudkip.moememos.ui.security.AppLockAuthenticator
 import me.mudkip.moememos.ui.security.AppLockSession
@@ -200,10 +201,143 @@ fun SettingsPage(
                         }
                     }
                 )
+            }
+
+            item {
+                SettingItem(
+                    icon = Icons.Outlined.Edit,
+                    text = R.string.edit_gesture.string,
+                    trailingIcon = {
+                        Text(
+                            text = currentEditGesture.titleResource.string,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                ) {
+                    showEditGestureDialog = true
+                }
+            }
+
+            item {
+                Text(
+                    R.string.security.string,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp, 10.dp),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
+
+            item {
+                val appLockToggleEnabled = appLockSupported || settings.appLockEnabled
+                SettingItem(
+                    icon = Icons.Outlined.Lock,
+                    text = R.string.app_lock.string,
+                    subtitle = if (appLockSupported) {
+                        R.string.app_lock_summary.string
+                    } else {
+                        R.string.app_lock_unavailable_short.string
+                    },
+                    trailingIcon = {
+                        Switch(
+                            checked = settings.appLockEnabled,
+                            onCheckedChange = null,
+                            enabled = appLockToggleEnabled,
+                        )
+                    },
+                    enabled = appLockToggleEnabled,
+                ) {
+                    setAppLockEnabled(!settings.appLockEnabled)
+                }
+            }
+
+            item {
+                Text(
+                    R.string.about.string,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp, 10.dp),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
+
+            item {
+                SettingItem(icon = Icons.Outlined.Web, text = R.string.website.string) {
+                    uriHandler.openUri("https://memos.moe")
+                }
+            }
+
+            item {
+                SettingItem(icon = Icons.Outlined.Lock, text = R.string.privacy_policy.string) {
+                    uriHandler.openUri("https://memos.moe/privacy")
+                }
+            }
+
+            item {
+                SettingItem(icon = Icons.Outlined.Source, text = R.string.acknowledgements.string) {
+                    uriHandler.openUri("https://memos.moe/android-acknowledgements")
+                }
+            }
+
+            item {
+                SettingItem(icon = Icons.Outlined.BugReport, text = R.string.report_an_issue.string) {
+                    uriHandler.openUri("https://github.com/mudkipme/MoeMemosAndroid/issues")
+                }
+            }
+        }
+    }
+
+    if (showEditGestureDialog) {
+        AlertDialog(
+            onDismissRequest = { showEditGestureDialog = false },
+            title = { Text(R.string.edit_gesture.string) },
+            text = {
+                LazyColumn {
+                    items(MemoEditGesture.entries.size) { index ->
+                        val gesture = MemoEditGesture.entries[index]
+                        TextButton(
+                            onClick = {
+                                showEditGestureDialog = false
+                                scope.launch(Dispatchers.IO) {
+                                    context.settingsDataStore.updateData { existingSettings ->
+                                        val userIndex = existingSettings.usersList.indexOfFirst { user ->
+                                            user.accountKey == existingSettings.currentUser
+                                        }
+                                        if (userIndex == -1) {
+                                            return@updateData existingSettings
+                                        }
+                                        val users = existingSettings.usersList.toMutableList()
+                                        val user = users[userIndex]
+                                        users[userIndex] = user.copy(
+                                            settings = user.settings.copy(editGesture = gesture)
+                                        )
+                                        existingSettings.copy(usersList = users)
+                                    }
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = gesture.titleResource.string,
+                                color = if (gesture == currentEditGesture) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.onSurface
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showEditGestureDialog = false }) {
                     Text(R.string.close.string)
                 }
             }
-            item {
+        )
     }
 }
 
