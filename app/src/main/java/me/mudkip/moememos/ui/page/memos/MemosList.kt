@@ -136,7 +136,7 @@ fun MemosList(
             // Skeleton loading state
             if (filteredMemos.isEmpty() && isRefreshing) {
                 items(4) { me.mudkip.moememos.ui.component.ExpressiveSkeletonCard() }
-                item { me.mudkip.moememos.ui.component.ExpressiveWaveProgress(Modifier.fillMaxSize().padding(16.dp)) }
+                item { me.mudkip.moememos.ui.component.ExpressiveWaveProgress(Modifier.fillMaxWidth()) }
             }
 
             // ── Social-style profile header ──
