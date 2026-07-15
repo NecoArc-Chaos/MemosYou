@@ -1,7 +1,6 @@
 package me.mudkip.moememos.ui.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,11 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -34,13 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
-// ═══ MD3 Expressive Presets ═══
 data class PalettePreset(val name: String, val seed: Color)
 
 val MD3E_PRESETS = listOf(
@@ -69,9 +64,7 @@ fun ColorPalettePicker(
     } catch (_: Exception) { null }
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        // ── Preset colors ──
-        Text("Presets",
-            style = MaterialTheme.typography.labelMedium,
+        Text("Presets", style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.outline,
             modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp))
 
@@ -80,90 +73,53 @@ fun ColorPalettePicker(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // "Default" option
-            PaletteSwatch(
-                color = null,
-                isSelected = selectedColor == null,
-                label = "Auto",
-                onClick = { onColorSelected("") }
-            )
+            PaletteSwatch(null, selectedColor == null, "Auto") { onColorSelected("") }
             MD3E_PRESETS.forEach { preset ->
-                PaletteSwatch(
-                    color = preset.seed,
-                    isSelected = selectedColor?.toArgb() == preset.seed.toArgb(),
-                    label = preset.name,
-                    onClick = { onColorSelected(String.format("#%06X", 0xFFFFFF and preset.seed.toArgb())) }
-                )
+                PaletteSwatch(preset.seed, selectedColor?.toArgb() == preset.seed.toArgb(), preset.name) {
+                    onColorSelected(String.format("#%06X", 0xFFFFFF and preset.seed.toArgb()))
+                }
             }
         }
 
-        // ── Custom hex input ──
         Spacer(Modifier.height(16.dp))
-        Text("Custom",
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.outline,
-            modifier = Modifier.padding(horizontal = 4.dp))
+        Text("Custom", style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.outline, modifier = Modifier.padding(horizontal = 4.dp))
 
-        var hexInput by remember(selectedColorHex) {
-            mutableStateOf(selectedColorHex.ifBlank { "" })
-        }
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 8.dp),
+        var hexInput by remember(selectedColorHex) { mutableStateOf(selectedColorHex.ifBlank { "" }) }
+        Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(Modifier.size(36.dp).clip(CircleShape).background(
                 selectedColor ?: Brush.horizontalGradient(
-                    listOf(Color.Red, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta)
-                )
-            ))
+                    listOf(Color.Red, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta))))
             Spacer(Modifier.width(12.dp))
-            OutlinedTextField(
-                value = hexInput,
-                onValueChange = { v ->
-                    hexInput = v.take(7)
-                    if (v.length == 7 && v.startsWith("#")) {
-                        try { android.graphics.Color.parseColor(v); onColorSelected(v) } catch (_: Exception) { }
-                    }
-                },
-                modifier = Modifier.weight(1f),
+            OutlinedTextField(value = hexInput, onValueChange = { v ->
+                hexInput = v.take(7)
+                if (v.length == 7 && v.startsWith("#")) {
+                    try { android.graphics.Color.parseColor(v); onColorSelected(v) } catch (_: Exception) { }
+                }
+            }, modifier = Modifier.weight(1f),
                 placeholder = { Text("#RRGGBB", style = MaterialTheme.typography.bodySmall) },
-                singleLine = true,
-                textStyle = MaterialTheme.typography.bodyMedium
-            )
+                singleLine = true, textStyle = MaterialTheme.typography.bodyMedium)
         }
     }
 }
 
 @Composable
-private fun PaletteSwatch(
-    color: Color?,
-    isSelected: Boolean,
-    label: String,
-    onClick: () -> Unit
-) {
+private fun PaletteSwatch(color: Color?, isSelected: Boolean, label: String, onClick: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(
-            modifier = Modifier
-                .size(44.dp)
-                .clip(CircleShape)
-                .then(
-                    if (color != null) Modifier.background(color)
-                    else Modifier.background(
-                        Brush.sweepGradient(listOf(Color.Red, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta, Color.Red))
-                    )
-                )
-                .border(
-                    width = if (isSelected) 3.dp else 1.dp,
-                    brush = SolidColor(if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant),
-                    shape = CircleShape
-                )
-                .clickable(onClick = onClick),
+        Box(modifier = Modifier
+            .size(44.dp)
+            .clip(CircleShape)
+            .then(if (color != null) Modifier.background(color)
+            else Modifier.background(
+                Brush.sweepGradient(listOf(Color.Red, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta, Color.Red))))
+            .clickable(onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
-            if (isSelected) {
-                Icon(Icons.Filled.Check, null, modifier = Modifier.size(20.dp),
+            if (isSelected)
+                Icon(Icons.Filled.Check, null, Modifier.size(20.dp),
                     tint = if (color != null) Color.White else MaterialTheme.colorScheme.primary)
-            }
         }
         Spacer(Modifier.height(4.dp))
         Text(label, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center,
