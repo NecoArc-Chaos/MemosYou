@@ -957,7 +957,7 @@ class SyncingRepository(
     // ─── Reactions (delegate to remote) ───
     suspend fun listReactions(memoName: String): ApiResponse<List<ReactionItem>> {
         return if (remoteRepository is MemosV1Repository) {
-            (remoteRepository as MemosV1Repository).memosApi.listMemoReactions(memoName).mapSuccess { it.reactions }
+            (remoteRepository as MemosV1Repository).memosApi.listMemoReactions(memoName).mapSuccess { reactions }
         } else ApiResponse.Success(emptyList())
     }
     suspend fun upsertReaction(memoName: String, reactionType: String) {
