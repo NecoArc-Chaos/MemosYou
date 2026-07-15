@@ -66,26 +66,18 @@ fun ColorPalettePicker(
             color = MaterialTheme.colorScheme.outline,
             modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+            ) {
             PaletteSwatch(null, selectedColor == null, "Auto") { onColorSelected("") }
             MD3E_PRESETS.take(6).forEach { preset ->
-                PaletteSwatch(preset.seed, selectedColor?.toArgb() == preset.seed.toArgb(), preset.name) {
-                    onColorSelected(String.format("#%06X", 0xFFFFFF and preset.seed.toArgb()))
-                }
+                PaletteSwatch(preset.seed, selectedColor?.toArgb() == preset.seed.toArgb(), preset.name) { onColorSelected(String.format("#%06X", 0xFFFFFF and preset.seed.toArgb())) }
             }
         }
         Spacer(Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+            ) {
             MD3E_PRESETS.drop(6).forEach { preset ->
-                PaletteSwatch(preset.seed, selectedColor?.toArgb() == preset.seed.toArgb(), preset.name) {
-                    onColorSelected(String.format("#%06X", 0xFFFFFF and preset.seed.toArgb()))
-                }
+                PaletteSwatch(preset.seed, selectedColor?.toArgb() == preset.seed.toArgb(), preset.name) { onColorSelected(String.format("#%06X", 0xFFFFFF and preset.seed.toArgb())) }
             }
         }
 
