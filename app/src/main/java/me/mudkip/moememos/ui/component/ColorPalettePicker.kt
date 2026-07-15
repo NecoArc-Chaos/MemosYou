@@ -154,7 +154,7 @@ private fun PaletteSwatch(
                 )
                 .border(
                     width = if (isSelected) 3.dp else 1.dp,
-                    color = SolidColor(if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant),
+                    brush = SolidColor(if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant),
                     shape = CircleShape
                 )
                 .clickable(onClick = onClick),
