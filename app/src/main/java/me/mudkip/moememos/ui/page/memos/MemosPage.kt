@@ -1,8 +1,6 @@
 package me.mudkip.moememos.ui.page.memos
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
@@ -50,13 +48,3 @@ fun MemosPage() {
                     SideDrawer(memosNavController = memosNavController, drawerState = drawerState)
                 }
             },
-            drawerAnimationSpec = spring(
-                dampingRatio = Spring.DampingRatioLowBouncy,
-                stiffness = Spring.StiffnessMediumLow
-            ),
-            scrimColor = Color.Black.copy(alpha = 0.32f)
-        ) {
-            MemosNavigation(drawerState = drawerState, navController = memosNavController)
-        }
-    }
-}
