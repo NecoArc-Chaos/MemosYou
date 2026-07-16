@@ -172,7 +172,7 @@ fun SideDrawer(
                     }
                     Spacer(Modifier.width(12.dp))
                     Column {
-                        Text(text = serverTitle.ifBlank { R.string.moe_memos.string },
+                        Text(text = serverTitle.ifBlank { R.string.memos_you.string },
                             style = MaterialTheme.typography.titleMedium)
                         if (displayHost.isNotBlank()) Text(text = displayHost,
                             style = MaterialTheme.typography.labelSmall,

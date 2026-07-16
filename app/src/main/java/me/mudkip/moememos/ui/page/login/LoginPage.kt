@@ -169,7 +169,7 @@ fun LoginPage(
         },
         topBar = {
             LargeTopAppBar(
-                title = { Text(text = if (userStateViewModel.currentUser != null) R.string.add_account.string else R.string.moe_memos.string) },
+                title = { Text(text = if (userStateViewModel.currentUser != null) R.string.add_account.string else R.string.memos_you.string) },
                 navigationIcon = {
                     if (userStateViewModel.currentUser != null) {
                         IconButton(onClick = {

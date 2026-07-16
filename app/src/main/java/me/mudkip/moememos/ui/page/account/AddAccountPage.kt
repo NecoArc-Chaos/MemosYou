@@ -65,7 +65,7 @@ fun AddAccountPage(
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = if (accounts.isEmpty()) R.string.moe_memos.string else R.string.add_account.string
+                        text = if (accounts.isEmpty()) R.string.memos_you.string else R.string.add_account.string
                     )
                 },
                 navigationIcon = {
