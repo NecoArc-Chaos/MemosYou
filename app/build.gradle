@@ -29,7 +29,6 @@ android {
 
     defaultConfig {
         applicationId = "me.mudkip.moememos"
-        archivesBaseName = "MemosYou"
         minSdk = 26
         targetSdk = 36
         versionCode = 48
