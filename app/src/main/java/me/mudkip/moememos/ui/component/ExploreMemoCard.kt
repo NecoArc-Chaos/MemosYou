@@ -36,7 +36,7 @@ import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.EmojiEmotions
+import androidx.compose.material.icons.outlined.AddReaction
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.AlertDialog
@@ -261,11 +261,18 @@ fun ExploreMemoCard(memo: Memo) {
             ) {
                 if (isRemote) {
                     IconButton(onClick = { reactionPickerExpanded = true }) {
-                        Icon(Icons.Outlined.EmojiEmotions, "Reaction", Modifier.size(22.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Icon(Icons.Outlined.AddReaction, "Reaction", Modifier.size(22.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     DropdownMenu(expanded = reactionPickerExpanded, onDismissRequest = { reactionPickerExpanded = false }) {
-                        Row { availableReactions.take(4).forEach { emoji -> DropdownMenuItem(text = { Text(emoji, style = MaterialTheme.typography.headlineSmall) }, onClick = { toggleReaction(emoji); reactionPickerExpanded = false }) } }
-                        if (availableReactions.size > 4) Row { availableReactions.drop(4).forEach { emoji -> DropdownMenuItem(text = { Text(emoji, style = MaterialTheme.typography.headlineSmall) }, onClick = { toggleReaction(emoji); reactionPickerExpanded = false }) } }
+                        Column(Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
+                            availableReactions.chunked(4).forEach { rowItems ->
+                                Row { rowItems.forEach { emoji ->
+                                    Box(Modifier.size(48.dp).clickable { toggleReaction(emoji); reactionPickerExpanded = false }, contentAlignment = Alignment.Center) {
+                                        Text(emoji, style = MaterialTheme.typography.headlineMedium)
+                                    }
+                                } }
+                            }
+                        }
                     }
                     Spacer(Modifier.width(4.dp))
                     TextButton(onClick = {
