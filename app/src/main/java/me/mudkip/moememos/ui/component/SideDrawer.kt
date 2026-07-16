@@ -152,23 +152,35 @@ fun SideDrawer(
                     .padding(horizontal = 20.dp, vertical = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (serverLogoUrl.isNotBlank()) {
-                    val fullLogoUrl = if (serverLogoUrl.startsWith("http")) serverLogoUrl
-                    else userStateViewModel.host.trimEnd('/') + "/" + serverLogoUrl.trimStart('/')
-                    AsyncImage(
-                        model = fullLogoUrl,
-                        contentDescription = serverTitle,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Fit
-                    )
+            // Server branding section
+            val showLogo = serverLogoUrl.isNotBlank()
+            val fullLogo = if (showLogo) {
+                if (serverLogoUrl.startsWith("http")) serverLogoUrl
+                else userStateViewModel.host.trimEnd('/') + "/" + serverLogoUrl.trimStart('/')
+            } else ""
+            val displayHost = userStateViewModel.host.removePrefix("https://").removePrefix("http://").trimEnd('/')
+
+            Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (showLogo) {
+                        AsyncImage(model = fullLogo, contentDescription = serverTitle,
+                            modifier = Modifier.size(40.dp).clip(RoundedCornerShape(10.dp)),
+                            contentScale = ContentScale.Fit)
+                    } else {
+                        Icon(Icons.Outlined.Home, null, Modifier.size(40.dp).padding(4.dp),
+                            tint = MaterialTheme.colorScheme.primary)
+                    }
                     Spacer(Modifier.width(12.dp))
+                    Column {
+                        Text(text = serverTitle.ifBlank { R.string.moe_memos.string },
+                            style = MaterialTheme.typography.titleMedium)
+                        if (displayHost.isNotBlank()) Text(text = displayHost,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                 }
-                Text(
-                    text = serverTitle.ifBlank { R.string.moe_memos.string },
-                    style = MaterialTheme.typography.titleMedium
-                )
+            }
+            HorizontalDivider(Modifier.padding(horizontal = 16.dp))
             }
         }
         item {
