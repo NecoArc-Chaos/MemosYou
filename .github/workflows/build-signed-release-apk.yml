@@ -35,8 +35,8 @@ jobs:
           KEY_PASS: ${{ secrets.KEY_PASSWORD }}
         run: |
           if [ -n "$KEYSTORE_B64" ]; then
-            echo "$KEYSTORE_B64" | base64 -d > app/moememos.jks
-            echo "ANDROID_SIGNING_STORE_FILE=moememos.jks" >> $GITHUB_ENV
+            echo "$KEYSTORE_B64" | base64 -d > app/memosyou.jks
+            echo "ANDROID_SIGNING_STORE_FILE=memosyou.jks" >> $GITHUB_ENV
             echo "ANDROID_SIGNING_STORE_PASSWORD=$KS_PASS" >> $GITHUB_ENV
             echo "ANDROID_SIGNING_KEY_ALIAS=$KS_ALIAS" >> $GITHUB_ENV
             echo "ANDROID_SIGNING_KEY_PASSWORD=$KEY_PASS" >> $GITHUB_ENV
@@ -61,19 +61,19 @@ jobs:
             exit 1
           fi
           echo "📦 Using APK: $APK"
-          cp "$APK" moememos-release.apk
+          cp "$APK" memosyou-release.apk
 
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: moememos-artifact
-          path: moememos-release.apk
+          name: memosyou-artifact
+          path: memosyou-release.apk
 
       - name: Upload APK to GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: moememos-release.apk
-          name: "Release ${{ github.ref_name }}"
+          files: memosyou-release.apk
+          name: "MemosYou ${{ github.ref_name }}"
           generate_release_notes: true
           prerelease: ${{ contains(github.ref_name, '-') }}
