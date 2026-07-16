@@ -26,6 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import me.mudkip.moememos.ui.theme.PresetTheme
 import me.mudkip.moememos.ui.theme.Presets
@@ -36,32 +38,46 @@ fun ThemePresetPicker(selectedId: String, onSelect: (String) -> Unit) {
         modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        Presets.forEach { theme ->
-            ThemePresetButton(theme = theme, selected = theme.id == selectedId, onClick = { onSelect(theme.id) })
-        }
-    }
-}
-
-@Composable
-private fun ThemePresetButton(theme: PresetTheme, selected: Boolean, onClick: () -> Unit) {
-    val scheme = theme.get(false)
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .clip(RoundedCornerShape(16.dp))
-            .clickable(remember { MutableInteractionSource() }, LocalIndication.current, onClick = onClick)
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Canvas(Modifier.clip(CircleShape).size(48.dp)) {
-                drawRect(color = scheme.primaryContainer, size = size)
-                drawRect(color = scheme.secondaryContainer, size = size, topLeft = Offset(size.width / 2, 0f))
-                drawRect(color = scheme.tertiaryContainer, size = size, topLeft = Offset(size.width / 2, size.height / 2))
-                drawCircle(color = scheme.primary, radius = if (selected) 12.dp.toPx() else 8.dp.toPx(), center = Offset(size.width / 2, size.height / 2))
+        // Auto / System
+        val isAuto = selectedId.isBlank() || selectedId == "auto"
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.clip(RoundedCornerShape(16.dp))
+                .clickable(remember { MutableInteractionSource() }, LocalIndication.current, onClick = { onSelect("auto") })
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Canvas(Modifier.clip(CircleShape).size(48.dp)) {
+                    drawCircle(Brush.sweepGradient(listOf(Color.Red, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta, Color.Red)))
+                    drawCircle(color = Color.White, radius = if (isAuto) 12.dp.toPx() else 6.dp.toPx(), center = Offset(size.width / 2, size.height / 2))
+                }
+                if (isAuto) Icon(Icons.Filled.Check, null, Modifier.size(18.dp), tint = Color.Black)
             }
-            if (selected) Icon(Icons.Filled.Check, null, Modifier.size(18.dp), tint = scheme.onPrimary)
+            Text("Auto", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
         }
-        Text(theme.name, style = MaterialTheme.typography.labelMedium, color = scheme.primary)
+
+        Presets.forEach { theme ->
+            val sel = theme.id == selectedId
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.clip(RoundedCornerShape(16.dp))
+                    .clickable(remember { MutableInteractionSource() }, LocalIndication.current, onClick = { onSelect(theme.id) })
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    val s = theme.get(false)
+                    Canvas(Modifier.clip(CircleShape).size(48.dp)) {
+                        drawRect(color = s.primaryContainer, size = size)
+                        drawRect(color = s.secondaryContainer, size = size, topLeft = Offset(size.width / 2, 0f))
+                        drawRect(color = s.tertiaryContainer, size = size, topLeft = Offset(size.width / 2, size.height / 2))
+                        drawCircle(color = s.primary, radius = if (sel) 12.dp.toPx() else 8.dp.toPx(), center = Offset(size.width / 2, size.height / 2))
+                    }
+                    if (sel) Icon(Icons.Filled.Check, null, Modifier.size(18.dp), tint = s.onPrimary)
+                }
+                Text(theme.name, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+            }
+        }
     }
 }

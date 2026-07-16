@@ -36,6 +36,7 @@ import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.EmojiEmotions
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.AlertDialog
@@ -259,32 +260,14 @@ fun ExploreMemoCard(memo: Memo) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (isRemote) {
-                    // Emoji popup button
-                    Box {
-                        TextButton(onClick = { reactionPickerExpanded = true }) {
-                            Text("😀", style = MaterialTheme.typography.bodyLarge)
-                        }
-                        DropdownMenu(
-                            expanded = reactionPickerExpanded,
-                            onDismissRequest = { reactionPickerExpanded = false }
-                        ) {
-                            // Grid: 4 columns
-                            val cols = 4
-                            availableReactions.chunked(cols).forEach { row ->
-                                Row {
-                                    row.forEach { emoji ->
-                                        DropdownMenuItem(
-                                            text = { Text(emoji, style = MaterialTheme.typography.headlineSmall) },
-                                            onClick = { toggleReaction(emoji); reactionPickerExpanded = false }
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                    IconButton(onClick = { reactionPickerExpanded = true }) {
+                        Icon(Icons.Outlined.EmojiEmotions, "Reaction", Modifier.size(22.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                }
-                Spacer(Modifier.weight(1f))
-                if (isRemote) {
+                    DropdownMenu(expanded = reactionPickerExpanded, onDismissRequest = { reactionPickerExpanded = false }) {
+                        Row { availableReactions.take(4).forEach { emoji -> DropdownMenuItem(text = { Text(emoji, style = MaterialTheme.typography.headlineSmall) }, onClick = { toggleReaction(emoji); reactionPickerExpanded = false }) } }
+                        if (availableReactions.size > 4) Row { availableReactions.drop(4).forEach { emoji -> DropdownMenuItem(text = { Text(emoji, style = MaterialTheme.typography.headlineSmall) }, onClick = { toggleReaction(emoji); reactionPickerExpanded = false }) } }
+                    }
+                    Spacer(Modifier.width(4.dp))
                     TextButton(onClick = {
                         showComments = !showComments
                         if (showComments && comments.isEmpty() && !loadingComments) loadComments()
