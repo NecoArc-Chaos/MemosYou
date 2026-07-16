@@ -281,6 +281,8 @@ fun SettingsPage(
 
             item {
                 SettingItem(
+                    icon = Icons.Outlined.Edit,
+                    text = R.string.edit_gesture.string,
                     trailingIcon = {
                         Text(
                             text = currentEditGesture.titleResource.string,
