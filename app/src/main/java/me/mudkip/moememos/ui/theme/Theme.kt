@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import me.mudkip.moememos.data.model.DarkMode
 import me.mudkip.moememos.data.model.Settings
 import me.mudkip.moememos.ext.settingsDataStore
 
@@ -27,9 +28,15 @@ val ExpressiveShapes = Shapes(
 )
 
 @Composable
-fun MoeMemosTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun MoeMemosTheme(content: @Composable () -> Unit) {
     val context = LocalContext.current
     val settings by context.settingsDataStore.data.collectAsState(initial = Settings())
+    val systemDark = isSystemInDarkTheme()
+    val darkTheme = when (settings.darkMode) {
+        DarkMode.SYSTEM -> systemDark
+        DarkMode.LIGHT -> false
+        DarkMode.DARK -> true
+    }
 
     val preset = if (settings.presetThemeId.isNotBlank() && settings.presetThemeId != "auto") presetById(settings.presetThemeId) else null
 

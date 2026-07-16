@@ -23,6 +23,7 @@ import me.mudkip.moememos.data.constant.MoeMemosException
 import me.mudkip.moememos.data.model.Account
 import me.mudkip.moememos.data.model.LocalAccount
 import me.mudkip.moememos.data.model.MemosAccount
+import me.mudkip.moememos.data.model.MemoVisibility
 import me.mudkip.moememos.data.model.User
 import me.mudkip.moememos.data.model.UserData
 import me.mudkip.moememos.data.service.AccountService
@@ -65,6 +66,10 @@ class UserStateViewModel @Inject constructor(
         }.suspendOnNotLogin {
             currentUser = null
         }
+    }
+
+    suspend fun updateDefaultVisibility(visibility: MemoVisibility) = withContext(viewModelScope.coroutineContext) {
+        currentUser = currentUser?.copy(defaultVisibility = visibility)
     }
 
     suspend fun hasAnyAccount(): Boolean = withContext(viewModelScope.coroutineContext) {
