@@ -122,12 +122,13 @@ fun ExploreMemoCard(memo: Memo) {
     LaunchedEffect(memo.remoteId) {
         if (isRemote && memo.remoteId != null) {
             try {
-                val repo = userStateViewModel.accountService.getRepository()
-                if (repo is SyncingRepository) {
-                    val name = memoCommentName(memo.remoteId)
-                    val resp = repo.listReactions(name)
-                    if (resp is ApiResponse.Success) reactions = resp.data
-                    availableReactions = repo.getAvailableReactions()
+                val name = memoCommentName(memo.remoteId)
+                val remote = userStateViewModel.accountService.getRemoteRepository()
+                if (remote is MemosV1Repository) {
+                    val resp = remote.memosApi.listMemoReactions(name)
+                    if (resp is ApiResponse.Success) reactions = resp.data.reactions
+                    val setting = remote.getInstanceSetting("instance/settings/MEMO_RELATED").getOrNull()
+                    availableReactions = setting?.memoRelatedSetting?.reactions?.ifEmpty { null } ?: listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")
                 }
             } catch (_: Exception) { }
         }
@@ -152,19 +153,16 @@ fun ExploreMemoCard(memo: Memo) {
         scope.launch {
             try {
                 val name = memoCommentName(memo.remoteId)
-                val repo = userStateViewModel.accountService.getRepository()
-                if (repo is SyncingRepository) {
+                val remote = userStateViewModel.accountService.getRemoteRepository()
+                if (remote is MemosV1Repository) {
                     val myReactions = reactions.filter { it.reactionType == emoji }
                     if (myReactions.isNotEmpty()) {
-                        // Delete existing reaction
-                        myReactions.forEach { repo.deleteReaction(it.name) }
+                        myReactions.forEach { remote.memosApi.deleteMemoReaction(it.name) }
                     } else {
-                        // Add new reaction
-                        repo.upsertReaction(name, emoji)
+                        remote.memosApi.upsertMemoReaction(name, UpsertReactionRequest(emoji))
                     }
-                    // Refresh
-                    val resp = repo.listReactions(name)
-                    if (resp is ApiResponse.Success) reactions = resp.data
+                    val resp = remote.memosApi.listMemoReactions(name)
+                    if (resp is ApiResponse.Success) reactions = resp.data.reactions
                 }
             } catch (_: Exception) { }
         }
