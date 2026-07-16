@@ -37,7 +37,7 @@ import coil3.compose.AsyncImage
 import com.skydoves.sandwich.getOrNull
 import kotlinx.coroutines.launch
 import me.mudkip.moememos.R
-import me.mudkip.moememos.data.repository.MemosV1Repository
+import me.mudkip.moememos.data.repository.SyncingRepository
 import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.viewmodel.LocalUserState
 
@@ -60,12 +60,10 @@ fun ExplorePage(
         if (host.isNotBlank()) {
             try {
                 val repo = userStateViewModel.accountService.getRepository()
-                if (repo is MemosV1Repository) {
-                    val setting = repo.getInstanceSetting("instance/settings/GENERAL").getOrNull()
-                    setting?.generalSetting?.customProfile?.let { profile ->
-                        serverTitle = profile.title.ifBlank { "" }
-                        serverLogoUrl = profile.logoUrl
-                    }
+                if (repo is SyncingRepository) {
+                    val (title, logo) = repo.getServerBranding()
+                    serverTitle = title.ifBlank { "" }
+                    serverLogoUrl = logo
                 }
             } catch (_: Exception) { }
         }

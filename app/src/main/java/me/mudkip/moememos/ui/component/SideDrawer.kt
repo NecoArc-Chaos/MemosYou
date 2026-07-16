@@ -47,7 +47,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.mudkip.moememos.R
 import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.data.repository.MemosV1Repository
+import me.mudkip.moememos.data.repository.SyncingRepository
 import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.ui.page.common.LocalRootNavController
 import me.mudkip.moememos.ui.page.common.RouteName
@@ -90,12 +90,10 @@ fun SideDrawer(
         if (hasExplore && userStateViewModel.host.isNotBlank()) {
             try {
                 val repo = userStateViewModel.accountService.getRepository()
-                if (repo is me.mudkip.moememos.data.repository.MemosV1Repository) {
-                    val setting = repo.getInstanceSetting("instance/settings/GENERAL").getOrNull()
-                    setting?.generalSetting?.customProfile?.let { profile ->
-                        serverTitle = profile.title.ifBlank { "Memos" }
-                        serverLogoUrl = profile.logoUrl
-                    }
+                if (repo is SyncingRepository) {
+                    val (title, logo) = repo.getServerBranding()
+                    serverTitle = title.ifBlank { "" }
+                    serverLogoUrl = logo
                 }
             } catch (_: Exception) { }
         }

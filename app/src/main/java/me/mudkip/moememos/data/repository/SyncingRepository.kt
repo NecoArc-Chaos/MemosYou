@@ -973,6 +973,14 @@ class SyncingRepository(
         return setting?.memoRelatedSetting?.reactions?.ifEmpty { null } ?: listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")
     }
 
+    suspend fun getServerBranding(): Pair<String, String> {
+        if (remoteRepository !is MemosV1Repository) return "" to ""
+        val setting = (remoteRepository as MemosV1Repository).getInstanceSetting("instance/settings/GENERAL").getOrNull()
+        val title = setting?.generalSetting?.customProfile?.title ?: ""
+        val logo = setting?.generalSetting?.customProfile?.logoUrl ?: ""
+        return title to logo
+    }
+
     companion object {
         private const val ATTACHMENT_UPLOAD_FAILED_MESSAGE =
             "Failed to upload one or more attachments during sync"

@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Intent
 import android.text.format.DateUtils
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +14,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.ContentCopy
@@ -46,10 +50,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.skydoves.sandwich.suspendOnSuccess
+import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 import me.mudkip.moememos.R
 import me.mudkip.moememos.data.local.entity.MemoEntity
@@ -74,7 +83,13 @@ fun MemosCard(
 ) {
     val memosViewModel = LocalMemos.current
     val rootNavController = LocalRootNavController.current
+    val userStateViewModel = LocalUserState.current
     val scope = rememberCoroutineScope()
+    val currentUser = userStateViewModel.currentUser
+    val avatarUrl = currentUser?.avatarUrl?.let { url ->
+        if (url.startsWith("http")) url
+        else userStateViewModel.host.trimEnd('/') + "/" + url.trimStart('/')
+    }
 
     val cardModifier = Modifier
         .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -111,10 +126,23 @@ fun MemosCard(
         Column {
             Row(
                 modifier = Modifier
-                    .padding(start = 20.dp, top = 16.dp, end = 4.dp)
+                    .padding(start = 16.dp, top = 16.dp, end = 4.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // User avatar
+                if (!avatarUrl.isNullOrBlank()) {
+                    AsyncImage(model = avatarUrl, contentDescription = null,
+                        modifier = Modifier.size(28.dp).clip(CircleShape), contentScale = ContentScale.Crop)
+                    Spacer(Modifier.width(8.dp))
+                } else {
+                    Box(Modifier.size(28.dp).clip(CircleShape).background(
+                        Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary))),
+                        contentAlignment = Alignment.Center) {
+                        Icon(Icons.Filled.Person, null, Modifier.size(16.dp), tint = Color.White)
+                    }
+                    Spacer(Modifier.width(8.dp))
+                }
                 Text(
                     DateUtils.getRelativeTimeSpanString(
                         memo.date.toEpochMilli(),
