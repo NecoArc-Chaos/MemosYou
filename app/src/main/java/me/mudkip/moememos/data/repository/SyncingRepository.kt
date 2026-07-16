@@ -956,14 +956,21 @@ class SyncingRepository(
 
     // ─── Reactions (delegate to remote) ───
     suspend fun listReactions(memoName: String): ApiResponse<List<ReactionItem>> {
-        return if (remoteRepository is MemosV1Repository) {
-            (remoteRepository as MemosV1Repository).memosApi.listMemoReactions(memoName).mapSuccess { reactions }
-        } else ApiResponse.Success(emptyList())
+        if (remoteRepository !is MemosV1Repository) return ApiResponse.Success(emptyList())
+        return (remoteRepository as MemosV1Repository).memosApi.listMemoReactions(memoName).mapSuccess { reactions }
     }
-    suspend fun upsertReaction(memoName: String, reactionType: String) {
-        if (remoteRepository is MemosV1Repository) {
-            (remoteRepository as MemosV1Repository).memosApi.upsertMemoReaction(memoName, UpsertReactionRequest(reactionType))
-        }
+    suspend fun upsertReaction(memoName: String, reactionType: String): ApiResponse<ReactionItem> {
+        if (remoteRepository !is MemosV1Repository) return ApiResponse.exception(Exception("Not a V1 repo"))
+        return (remoteRepository as MemosV1Repository).memosApi.upsertMemoReaction(memoName, UpsertReactionRequest(reactionType))
+    }
+    suspend fun deleteReaction(reactionName: String): ApiResponse<Unit> {
+        if (remoteRepository !is MemosV1Repository) return ApiResponse.exception(Exception("Not a V1 repo"))
+        return (remoteRepository as MemosV1Repository).memosApi.deleteMemoReaction(reactionName)
+    }
+    suspend fun getAvailableReactions(): List<String> {
+        if (remoteRepository !is MemosV1Repository) return listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")
+        val setting = (remoteRepository as MemosV1Repository).getInstanceSetting("instance/settings/MEMO_RELATED").getOrNull()
+        return setting?.memoRelatedSetting?.reactions?.ifEmpty { null } ?: listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")
     }
 
     companion object {

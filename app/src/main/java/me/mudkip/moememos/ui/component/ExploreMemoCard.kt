@@ -112,19 +112,21 @@ fun ExploreMemoCard(memo: Memo) {
     var comments by remember { mutableStateOf<List<Memo>>(emptyList()) }
     var loadingComments by remember { mutableStateOf(false) }
     var reactions by remember { mutableStateOf<List<ReactionItem>>(emptyList()) }
+    var availableReactions by remember { mutableStateOf(listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")) }
     var menuExpanded by remember { mutableStateOf(false) }
-    var showReactionPicker by remember { mutableStateOf(false) }
+    var reactionPickerExpanded by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    // Load reactions for this memo
+    // Load reactions + available reactions for this memo
     LaunchedEffect(memo.remoteId) {
         if (isRemote && memo.remoteId != null) {
             try {
-                val name = memoCommentName(memo.remoteId)
                 val repo = userStateViewModel.accountService.getRepository()
                 if (repo is SyncingRepository) {
+                    val name = memoCommentName(memo.remoteId)
                     val resp = repo.listReactions(name)
                     if (resp is ApiResponse.Success) reactions = resp.data
+                    availableReactions = repo.getAvailableReactions()
                 }
             } catch (_: Exception) { }
         }
@@ -145,13 +147,21 @@ fun ExploreMemoCard(memo: Memo) {
         }
     }
 
-    fun addReaction(emoji: String) {
+    fun toggleReaction(emoji: String) {
         scope.launch {
             try {
                 val name = memoCommentName(memo.remoteId)
                 val repo = userStateViewModel.accountService.getRepository()
                 if (repo is SyncingRepository) {
-                    repo.upsertReaction(name, emoji)
+                    val myReactions = reactions.filter { it.reactionType == emoji }
+                    if (myReactions.isNotEmpty()) {
+                        // Delete existing reaction
+                        myReactions.forEach { repo.deleteReaction(it.name) }
+                    } else {
+                        // Add new reaction
+                        repo.upsertReaction(name, emoji)
+                    }
+                    // Refresh
                     val resp = repo.listReactions(name)
                     if (resp is ApiResponse.Success) reactions = resp.data
                 }
@@ -231,7 +241,7 @@ fun ExploreMemoCard(memo: Memo) {
                     val grouped = reactions.groupBy { it.reactionType }
                     grouped.forEach { (emoji, items) ->
                         AssistChip(
-                            onClick = { addReaction(emoji) },
+                            onClick = { toggleReaction(emoji) },
                             label = { Text("$emoji ${items.size}") },
                             shape = RoundedCornerShape(16.dp),
                             colors = AssistChipDefaults.assistChipColors(
@@ -249,11 +259,27 @@ fun ExploreMemoCard(memo: Memo) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (isRemote) {
-                    // Quick reaction emojis
-                    Row(Modifier.padding(start = 4.dp)) {
-                        QUICK_EMOJIS.take(4).forEach { emoji ->
-                            Text(emoji, Modifier.clickable { addReaction(emoji) }.padding(horizontal = 6.dp, vertical = 8.dp),
-                                style = MaterialTheme.typography.bodyLarge)
+                    // Emoji popup button
+                    Box {
+                        TextButton(onClick = { reactionPickerExpanded = true }) {
+                            Text("😀", style = MaterialTheme.typography.bodyLarge)
+                        }
+                        DropdownMenu(
+                            expanded = reactionPickerExpanded,
+                            onDismissRequest = { reactionPickerExpanded = false }
+                        ) {
+                            // Grid: 4 columns
+                            val cols = 4
+                            availableReactions.chunked(cols).forEach { row ->
+                                Row {
+                                    row.forEach { emoji ->
+                                        DropdownMenuItem(
+                                            text = { Text(emoji, style = MaterialTheme.typography.headlineSmall) },
+                                            onClick = { toggleReaction(emoji); reactionPickerExpanded = false }
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }

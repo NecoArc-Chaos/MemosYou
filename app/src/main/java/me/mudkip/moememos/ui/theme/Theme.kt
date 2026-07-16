@@ -31,7 +31,7 @@ fun MoeMemosTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composab
     val context = LocalContext.current
     val settings by context.settingsDataStore.data.collectAsState(initial = Settings())
 
-    val preset = if (settings.presetThemeId.isNotBlank()) presetById(settings.presetThemeId) else null
+    val preset = if (settings.presetThemeId.isNotBlank() && settings.presetThemeId != "auto") presetById(settings.presetThemeId) else null
 
     val colorScheme = when {
         preset != null -> preset.get(darkTheme)

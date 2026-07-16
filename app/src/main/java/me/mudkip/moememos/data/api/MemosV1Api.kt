@@ -88,6 +88,11 @@ interface MemosV1Api {
         @Path("name", encoded = true) name: String,
         @Body body: UpsertReactionRequest
     ): ApiResponse<ReactionItem>
+
+    @DELETE("api/v1/{name}")
+    suspend fun deleteMemoReaction(
+        @Path("name", encoded = true) name: String
+    ): ApiResponse<Unit>
 }
 
 @Serializable
@@ -254,7 +259,13 @@ data class UpsertReactionRequest(
 @Serializable
 data class InstanceSettingResponse(
     val name: String = "",
-    val generalSetting: InstanceGeneralSetting? = null
+    val generalSetting: InstanceGeneralSetting? = null,
+    val memoRelatedSetting: InstanceMemoRelatedSetting? = null
+)
+
+@Serializable
+data class InstanceMemoRelatedSetting(
+    val reactions: List<String> = emptyList()
 )
 
 @Serializable
