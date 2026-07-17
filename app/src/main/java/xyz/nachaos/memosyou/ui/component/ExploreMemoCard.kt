@@ -165,7 +165,7 @@ fun ExploreMemoCard(memo: Memo) {
                         val requestBody = UpsertReactionRequest(contentId = memo.remoteId ?: name, reactionType = emoji)
                         Log.d("ExploreMemoCard", "upsertMemoReaction request: name=$name, body=$requestBody")
                         val resp = remote.memosApi.upsertMemoReaction(name, requestBody)
-                        Log.d("ExploreMemoCard", "upsertMemoReaction response: code=${resp.code}, message=${resp.message}, body=${resp.body}")
+                        Log.d("ExploreMemoCard", "upsertMemoReaction response: $resp")
                     }
                     val resp = remote.memosApi.listMemoReactions(name)
                     if (resp is ApiResponse.Success) {
