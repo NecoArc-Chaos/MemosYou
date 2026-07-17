@@ -160,7 +160,7 @@ fun ExploreMemoCard(memo: Memo) {
                     if (myReactions.isNotEmpty()) {
                         myReactions.forEach { remote.memosApi.deleteMemoReaction(it.name) }
                     } else {
-                        remote.memosApi.upsertMemoReaction(name, UpsertReactionRequest(emoji))
+                        remote.memosApi.upsertMemoReaction(name, UpsertReactionRequest(contentId = memo.remoteId ?: name, reactionType = emoji))
                     }
                     val resp = remote.memosApi.listMemoReactions(name)
                     if (resp is ApiResponse.Success) reactions = resp.data.reactions
@@ -278,13 +278,13 @@ fun ExploreMemoCard(memo: Memo) {
                         showComments = !showComments
                         if (showComments && comments.isEmpty() && !loadingComments) loadComments()
                     }) {
-                        Box {
+                        Box(modifier = Modifier.size(24.dp)) {
                             Icon(Icons.Outlined.ChatBubbleOutline, R.string.comment.string, Modifier.size(22.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                             if (comments.isNotEmpty()) {
                                 Box(Modifier.align(Alignment.TopEnd).background(
                                     MaterialTheme.colorScheme.primary, CircleShape
-                                ).padding(horizontal = 4.dp)) {
-                                    Text("${comments.size}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onPrimary)
+                                ).size(14.dp), contentAlignment = Alignment.Center) {
+                                    Text("${comments.size}", style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.dp.value), color = MaterialTheme.colorScheme.onPrimary)
                                 }
                             }
                         }
