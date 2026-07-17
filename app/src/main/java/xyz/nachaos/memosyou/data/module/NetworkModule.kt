@@ -25,7 +25,7 @@ object NetworkModule {
         
         // Only enable logging in debug builds
         if (BuildConfig.DEBUG) {
-            val loggingInterceptor = LoggingInterceptor().apply {
+            val loggingInterceptor = LoggingInterceptor("MemosYou-API").apply {
                 level = LoggingInterceptor.Level.BODY
             }
             builder.addInterceptor(loggingInterceptor)
