@@ -27,7 +27,7 @@ import xyz.nachaos.memosyou.ui.page.common.LocalRootNavController
 import xyz.nachaos.memosyou.ui.page.common.RouteName
 import xyz.nachaos.memosyou.ui.media.MediaViewerActivity
 import xyz.nachaos.memosyou.viewmodel.LocalUserState
-import xyz.nachaos.memosyou.util.Markdown
+import xyz.nachaos.memosyou.ui.component.Markdown
 import org.intellij.markdown.IElementType
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
