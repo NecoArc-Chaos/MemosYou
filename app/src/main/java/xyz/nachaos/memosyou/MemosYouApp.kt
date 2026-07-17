@@ -10,7 +10,7 @@ import dagger.hilt.android.HiltAndroidApp
 import xyz.nachaos.memosyou.ui.security.AppLockSession
 
 @HiltAndroidApp
-class MoeMemosApp: Application() {
+class MemosYouApp: Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var CONTEXT: Context
