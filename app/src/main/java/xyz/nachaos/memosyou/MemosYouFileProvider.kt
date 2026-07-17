@@ -6,7 +6,7 @@ import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import java.io.File
 
-class MoeMemosFileProvider: FileProvider(
+class MemosYouFileProvider: FileProvider(
     R.xml.file_paths
 ) {
     companion object {

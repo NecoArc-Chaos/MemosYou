@@ -31,7 +31,7 @@ import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import xyz.nachaos.memosyou.MoeMemosFileProvider
+import xyz.nachaos.memosyou.MemosYouFileProvider
 import xyz.nachaos.memosyou.data.model.MemoVisibility
 import xyz.nachaos.memosyou.data.model.ShareContent
 import xyz.nachaos.memosyou.ext.popBackStackIfLifecycleIsResumed
@@ -186,7 +186,7 @@ fun MemoInputPage(
                 },
                 onTakePhoto = {
                     try {
-                        val uri = MoeMemosFileProvider.getImageUri(navController.context)
+                        val uri = MemosYouFileProvider.getImageUri(navController.context)
                         photoImageUri = uri
                         takePhoto.launch(uri)
                     } catch (e: ActivityNotFoundException) {

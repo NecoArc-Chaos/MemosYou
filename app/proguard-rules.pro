@@ -110,3 +110,12 @@
 -dontwarn org.conscrypt.**
 -dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
+
+# Keep Application class
+-keep class xyz.nachaos.memosyou.MemosYouApp { *; }
+-keep class xyz.nachaos.memosyou.MainActivity { *; }
+-keep class xyz.nachaos.memosyou.MemosYouFileProvider { *; }
+
+# Keep Hilt generated classes
+-keep class dagger.hilt.** { *; }
+-keep class xyz.nachaos.memosyou.** { *; }

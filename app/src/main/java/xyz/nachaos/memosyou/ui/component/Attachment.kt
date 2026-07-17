@@ -31,7 +31,7 @@ import com.skydoves.sandwich.ApiResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import xyz.nachaos.memosyou.MoeMemosFileProvider
+import xyz.nachaos.memosyou.MemosYouFileProvider
 import xyz.nachaos.memosyou.R
 import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
 import xyz.nachaos.memosyou.data.model.ResourceRepresentable
@@ -79,7 +79,7 @@ fun Attachment(
                     Toast.makeText(context, R.string.failed_to_open_attachment.string, Toast.LENGTH_SHORT).show()
                     return@launch
                 }
-                val fileUri = MoeMemosFileProvider.getFileUri(context, localFile)
+                val fileUri = MemosYouFileProvider.getFileUri(context, localFile)
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = resolveMimeType(resource, localFile)
                     putExtra(Intent.EXTRA_STREAM, fileUri)
