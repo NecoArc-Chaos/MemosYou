@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -151,7 +151,7 @@ fun MemosList(
                 }
             }
 
-            items(filteredMemos, key = { it.identifier }) { memo ->
+            itemsIndexed(filteredMemos, key = { _, item -> item.identifier }) { index, memo ->
                 MemosCard(
                     memo = memo,
                     onClick = { selectedMemo ->
@@ -162,6 +162,7 @@ fun MemosList(
                     editGesture = editGesture ?: MemoEditGesture.NONE,
                     previewMode = true,
                     showSyncStatus = currentAccount !is Account.Local,
+                    showAvatar = index == 0,
                     onTagClick = onTagClick
                 )
             }

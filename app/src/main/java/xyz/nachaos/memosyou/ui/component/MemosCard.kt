@@ -4,6 +4,10 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.text.format.DateUtils
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.time.ZoneId
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -79,6 +83,7 @@ fun MemosCard(
     editGesture: MemoEditGesture = MemoEditGesture.NONE,
     previewMode: Boolean = false,
     showSyncStatus: Boolean = false,
+    showAvatar: Boolean = true,
     onTagClick: ((String) -> Unit)? = null
 ) {
     val memosViewModel = LocalMemos.current
@@ -131,24 +136,28 @@ fun MemosCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // User avatar
-                if (!avatarUrl.isNullOrBlank()) {
-                    AsyncImage(model = avatarUrl, contentDescription = null,
-                        modifier = Modifier.size(28.dp).clip(CircleShape), contentScale = ContentScale.Crop)
-                    Spacer(Modifier.width(8.dp))
-                } else {
-                    Box(Modifier.size(28.dp).clip(CircleShape).background(
-                        Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary))),
-                        contentAlignment = Alignment.Center) {
-                        Icon(Icons.Filled.Person, null, Modifier.size(16.dp), tint = Color.White)
+                if (showAvatar) {
+                    if (!avatarUrl.isNullOrBlank()) {
+                        AsyncImage(model = avatarUrl, contentDescription = null,
+                            modifier = Modifier.size(28.dp).clip(CircleShape), contentScale = ContentScale.Crop)
+                    } else {
+                        Box(Modifier.size(28.dp).clip(CircleShape).background(
+                            Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary))),
+                            contentAlignment = Alignment.Center) {
+                            Icon(Icons.Filled.Person, null, Modifier.size(16.dp), tint = Color.White)
+                        }
                     }
                     Spacer(Modifier.width(8.dp))
                 }
+                val relativeTime = DateUtils.getRelativeTimeSpanString(
+                    memo.date.toEpochMilli(),
+                    System.currentTimeMillis(),
+                    DateUtils.SECOND_IN_MILLIS
+                ).toString()
+                val exactTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                    .format(Date(memo.date.toEpochMilli()))
                 Text(
-                    DateUtils.getRelativeTimeSpanString(
-                        memo.date.toEpochMilli(),
-                        System.currentTimeMillis(),
-                        DateUtils.SECOND_IN_MILLIS
-                    ).toString(),
+                    "$relativeTime ($exactTime)",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

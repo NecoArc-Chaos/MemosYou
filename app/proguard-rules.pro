@@ -6,9 +6,10 @@
 -keep class xyz.nachaos.memosyou.MemosYouFileProvider { *; }
 
 # Keep widget classes (referenced via reflection)
--keep class xyz.nachaos.memosyou.widget.MemosYouGlanceWidgetReceiver { *; }
--keep class xyz.nachaos.memosyou.widget.MemosYouGlanceWidget { *; }
 -keep class xyz.nachaos.memosyou.widget.MoeMemosGlanceWidgetReceiver { *; }
+
+-keep class xyz.nachaos.memosyou.widget.MemoryGlanceWidgetReceiver { *; }
+-keep class xyz.nachaos.memosyou.widget.MemoryGlanceWidget { *; }
 -keep class xyz.nachaos.memosyou.widget.MoeMemosGlanceWidget { *; }
 -keep class xyz.nachaos.memosyou.widget.WidgetUpdateScheduler { *; }
 
