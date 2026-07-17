@@ -13,8 +13,6 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.Source
-import androidx.compose.material.icons.outlined.Sort
-import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.Web
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,9 +45,7 @@ import me.mudkip.moememos.R
 import me.mudkip.moememos.data.model.Account
 import me.mudkip.moememos.data.model.DarkMode as DarkModePref
 import me.mudkip.moememos.data.model.MemoEditGesture
-import me.mudkip.moememos.data.model.MemoVisibility
 import me.mudkip.moememos.data.model.Settings
-import me.mudkip.moememos.data.model.SortOrder
 import me.mudkip.moememos.data.model.displayTitle
 import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
 import me.mudkip.moememos.ext.settingsDataStore
@@ -233,50 +229,8 @@ fun SettingsPage(
                     }
                 }
             }
-
-            item {
-                SettingItem(
-                    icon = Icons.Outlined.Sort,
-                    text = "Sort order",
-                    trailingIcon = {
-                        Text(
-                            text = when (settings.sortOrder) {
-                                SortOrder.NEWEST -> "Newest first"
-                                SortOrder.OLDEST -> "Oldest first"
-                            },
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                ) {
-                    scope.launch(Dispatchers.IO) {
-                        val next = if (settings.sortOrder == SortOrder.NEWEST) SortOrder.OLDEST else SortOrder.NEWEST
-                        context.settingsDataStore.updateData { it.copy(sortOrder = next) }
-                    }
                 }
             }
-
-            item {
-                SettingItem(
-                    icon = Icons.Outlined.Visibility,
-                    text = "Default visibility",
-                    trailingIcon = {
-                        Text(
-                            text = (userStateViewModel.currentUser?.defaultVisibility ?: MemoVisibility.PRIVATE).name.lowercase().replaceFirstChar { it.uppercase() },
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                ) {
-                    // Cycle through visibility options
-                    val current = userStateViewModel.currentUser?.defaultVisibility ?: MemoVisibility.PRIVATE
-                    val next = when (current) {
-                        MemoVisibility.PRIVATE -> MemoVisibility.PROTECTED
-                        MemoVisibility.PROTECTED -> MemoVisibility.PUBLIC
-                        MemoVisibility.PUBLIC -> MemoVisibility.PRIVATE
-                    }
-                    scope.launch(Dispatchers.IO) {
-                        userStateViewModel.updateDefaultVisibility(next)
-                    }
-                }
             }
 
             item {

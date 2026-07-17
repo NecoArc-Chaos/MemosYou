@@ -8,9 +8,6 @@ enum class DarkMode {
 }
 
 @Serializable
-enum class SortOrder {
-    NEWEST, OLDEST
-}
 
 @Serializable
 data class Settings(
@@ -19,5 +16,4 @@ data class Settings(
     val appLockEnabled: Boolean = false,
     val presetThemeId: String = "",
     val darkMode: DarkMode = DarkMode.SYSTEM,
-    val sortOrder: SortOrder = SortOrder.NEWEST,
 )
