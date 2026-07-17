@@ -75,7 +75,7 @@
         
         <!-- Widget Receiver -->
         <receiver
-            android:name=".widget.MemosYouGlanceWidgetReceiver"
+            android:name=".widget.MoeMemosGlanceWidgetReceiver"
             android:label="@string/memos_widget_title"
             android:exported="true">
             <intent-filter>
