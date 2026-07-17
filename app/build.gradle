@@ -30,7 +30,7 @@ android {
     defaultConfig {
         applicationId = "xyz.nachaos.memosyou"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 49
         versionName = System.getenv("GITHUB_TAG_NAME") ?: "dev"
 
