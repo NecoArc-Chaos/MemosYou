@@ -74,7 +74,7 @@ android {
         }
     }
 
-    namespace = 'me.mudkip.moememos'
+    namespace = 'xyz.nachaos.memosyou'
 }
 
 dependencies {
