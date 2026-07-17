@@ -90,7 +90,13 @@ import xyz.nachaos.memosyou.viewmodel.LocalUserState
 private fun memoCommentName(remoteId: String?): String {
     if (remoteId == null) return ""
     val idx = remoteId.lastIndexOf("/memos/")
-    return if (idx >= 0) remoteId.substring(idx + 1) else remoteId
+    return if (idx >= 0) {
+        remoteId.substring(idx + 1)
+    } else if (remoteId.startsWith("memos/")) {
+        remoteId.substring(6)
+    } else {
+        remoteId
+    }
 }
 
 private fun resolveUrl(host: String, url: String?): String {
