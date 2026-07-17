@@ -83,7 +83,7 @@ fun MemosCard(
     editGesture: MemoEditGesture = MemoEditGesture.NONE,
     previewMode: Boolean = false,
     showSyncStatus: Boolean = false,
-    showAvatar: Boolean = true,
+    showAvatar: Boolean = false,
     onTagClick: ((String) -> Unit)? = null
 ) {
     val memosViewModel = LocalMemos.current

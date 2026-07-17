@@ -162,7 +162,6 @@ fun MemosList(
                     editGesture = editGesture ?: MemoEditGesture.NONE,
                     previewMode = true,
                     showSyncStatus = currentAccount !is Account.Local,
-                    showAvatar = index == 0,
                     onTagClick = onTagClick
                 )
             }
