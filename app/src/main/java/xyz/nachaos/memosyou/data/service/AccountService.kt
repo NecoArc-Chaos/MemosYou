@@ -378,7 +378,7 @@ class AccountService @Inject constructor(
                 }
             }
             // Add logging interceptor for debugging
-            val loggingInterceptor = HttpLoggingInterceptor("MemosYou-API").apply {
+            val loggingInterceptor = HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             }
             addInterceptor(loggingInterceptor)
