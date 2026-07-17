@@ -42,6 +42,30 @@ import xyz.nachaos.memosyou.data.repository.RemoteRepository
 import xyz.nachaos.memosyou.data.repository.SyncingRepository
 import xyz.nachaos.memosyou.ext.settingsDataStore
 import xyz.nachaos.memosyou.ext.string
+import me.mudkip.moememos.R
+import me.mudkip.moememos.data.api.MemosV0Api
+import me.mudkip.moememos.data.api.MemosV1Api
+import me.mudkip.moememos.data.constant.MemosVersionSupport
+import me.mudkip.moememos.data.constant.MemosVersionSupport.MEMOS_V0_MIN_VERSION
+import me.mudkip.moememos.data.constant.MemosVersionSupport.MEMOS_V1_MAX_VERSION
+import me.mudkip.moememos.data.constant.MemosVersionSupport.MEMOS_V1_MIN_VERSION
+import me.mudkip.moememos.data.local.FileStorage
+import me.mudkip.moememos.data.local.MoeMemosDatabase
+import me.mudkip.moememos.data.local.entity.ResourceEntity
+import me.mudkip.moememos.data.model.Account
+import me.mudkip.moememos.data.model.LocalAccount
+import me.mudkip.moememos.data.model.User
+import me.mudkip.moememos.data.model.UserData
+import me.mudkip.moememos.data.model.UserSettings
+import me.mudkip.moememos.data.repository.AbstractMemoRepository
+import me.mudkip.moememos.data.repository.LocalDatabaseRepository
+import me.mudkip.moememos.data.repository.MemosV0Repository
+import me.mudkip.moememos.data.repository.MemosV1Repository
+import me.mudkip.moememos.data.repository.RemoteRepository
+import me.mudkip.moememos.data.repository.SyncingRepository
+import me.mudkip.moememos.ext.settingsDataStore
+import me.mudkip.moememos.ext.string
+>>>>>>> upstream/main
 import net.swiftzer.semver.SemVer
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -600,16 +624,16 @@ class AccountService @Inject constructor(
         return when (serverVersion.accountCase) {
             UserData.AccountCase.MEMOS_V0 -> {
                 when {
-                    versionName.equals(MEMOS_CANARY_VERSION_NAME, ignoreCase = true) -> VersionPolicy.SUPPORTED
-                    version == null -> VersionPolicy.TOO_LOW
+                    versionName.isEmpty() -> VersionPolicy.TOO_LOW
+                    version == null -> VersionPolicy.SUPPORTED
                     version < MEMOS_V0_MIN_VERSION -> VersionPolicy.TOO_LOW
                     else -> VersionPolicy.SUPPORTED
                 }
             }
             UserData.AccountCase.MEMOS_V1 -> {
                 when {
-                    versionName.equals(MEMOS_CANARY_VERSION_NAME, ignoreCase = true) -> VersionPolicy.V1_HIGHER
-                    version == null -> VersionPolicy.TOO_LOW
+                    versionName.isEmpty() -> VersionPolicy.TOO_LOW
+                    version == null -> VersionPolicy.V1_HIGHER
                     version < MEMOS_V1_MIN_VERSION -> VersionPolicy.TOO_LOW
                     version > MEMOS_V1_MAX_VERSION -> VersionPolicy.V1_HIGHER
                     else -> VersionPolicy.SUPPORTED

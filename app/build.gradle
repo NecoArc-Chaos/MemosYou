@@ -31,7 +31,7 @@ android {
         applicationId = "xyz.nachaos.memosyou"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
+        versionCode = 49
         versionName = System.getenv("GITHUB_TAG_NAME") ?: "dev"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
