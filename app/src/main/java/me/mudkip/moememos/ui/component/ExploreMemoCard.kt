@@ -82,6 +82,7 @@ import me.mudkip.moememos.data.model.Account
 import me.mudkip.moememos.data.model.Memo
 import me.mudkip.moememos.data.repository.MemosV1Repository
 import me.mudkip.moememos.data.repository.SyncingRepository
+import timber.log.Timber
 import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.viewmodel.LocalUserState
 
@@ -130,7 +131,7 @@ fun ExploreMemoCard(memo: Memo) {
                     val setting = remote.getInstanceSetting("instance/settings/MEMO_RELATED").getOrNull()
                     availableReactions = setting?.memoRelatedSetting?.reactions?.ifEmpty { null } ?: listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")
                 }
-            } catch (_: Exception) { }
+            } catch (e: Exception) { Timber.e(e, "reaction error") }
         }
     }
 
@@ -164,7 +165,7 @@ fun ExploreMemoCard(memo: Memo) {
                     val resp = remote.memosApi.listMemoReactions(name)
                     if (resp is ApiResponse.Success) reactions = resp.data.reactions
                 }
-            } catch (_: Exception) { }
+            } catch (e: Exception) { Timber.e(e, "reaction error") }
         }
     }
 
@@ -273,13 +274,20 @@ fun ExploreMemoCard(memo: Memo) {
                         }
                     }
                     Spacer(Modifier.width(4.dp))
-                    TextButton(onClick = {
+                    IconButton(onClick = {
                         showComments = !showComments
                         if (showComments && comments.isEmpty() && !loadingComments) loadComments()
                     }) {
-                        Icon(Icons.Outlined.ChatBubbleOutline, R.string.comment.string, Modifier.size(20.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text(R.string.comment.string, style = MaterialTheme.typography.labelMedium)
+                        Box {
+                            Icon(Icons.Outlined.ChatBubbleOutline, R.string.comment.string, Modifier.size(22.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                            if (comments.isNotEmpty()) {
+                                Box(Modifier.align(Alignment.TopEnd).background(
+                                    MaterialTheme.colorScheme.primary, CircleShape
+                                ).padding(horizontal = 4.dp)) {
+                                    Text("${comments.size}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onPrimary)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -316,7 +324,7 @@ fun ExploreMemoCard(memo: Memo) {
         onDismissRequest = { showDeleteDialog = false },
         title = { Text("Delete memo?") },
         confirmButton = { TextButton({ scope.launch {
-            try { userStateViewModel.accountService.getRepository().deleteMemo(memo.remoteId ?: ""); showDeleteDialog = false } catch (_: Exception) { }
+            try { userStateViewModel.accountService.getRepository().deleteMemo(memo.remoteId ?: ""); showDeleteDialog = false } catch (e: Exception) { Timber.e(e, "reaction error") }
         }}, colors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.error, containerColor = MaterialTheme.colorScheme.errorContainer)) { Text("Delete") } },
         dismissButton = { TextButton({ showDeleteDialog = false }) { Text("Cancel") } }
     )
