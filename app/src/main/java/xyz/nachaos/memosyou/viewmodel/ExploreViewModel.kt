@@ -19,7 +19,6 @@ import xyz.nachaos.memosyou.data.datasource.ExplorePagingSource
 import xyz.nachaos.memosyou.data.model.Account
 import xyz.nachaos.memosyou.data.model.Memo
 import xyz.nachaos.memosyou.data.service.AccountService
-import xyz.nachaos.memosyou.data.api.ApiResponse
 import javax.inject.Inject
 
 @HiltViewModel
