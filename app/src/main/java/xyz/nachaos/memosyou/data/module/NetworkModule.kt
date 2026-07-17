@@ -5,9 +5,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.JavaNetCookieJar
-import okhttp3.LoggingInterceptor
+import okhttp3.HttpLoggingInterceptor
 import okhttp3.OkHttpClient
-import xyz.nachaos.memosyou.BuildConfig
+
 import java.net.CookieManager
 import java.net.CookiePolicy
 
@@ -24,9 +24,9 @@ object NetworkModule {
             .cookieJar(JavaNetCookieJar(cookieManager))
         
         // Only enable logging in debug builds
-        if (BuildConfig.DEBUG) {
-            val loggingInterceptor = LoggingInterceptor("MemosYou-API").apply {
-                level = LoggingInterceptor.Level.BODY
+        if (com.skydoves.sandwich.BuildConfig.DEBUG) {
+            val loggingInterceptor = HttpLoggingInterceptor("MemosYou-API").apply {
+                level = HttpLoggingInterceptor.Level.BODY
             }
             builder.addInterceptor(loggingInterceptor)
         }
