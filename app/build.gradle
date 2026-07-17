@@ -31,8 +31,8 @@ android {
         applicationId = "me.mudkip.moememos"
         minSdk = 26
         targetSdk = 36
-        versionCode = try { Runtime.getRuntime().exec(arrayOf("git", "rev-list", "--count", "HEAD")).let { it.waitFor(); it.inputStream.bufferedReader().readText().trim().toInt() } } catch (_: Exception) { 1 }
-        versionName = try { Runtime.getRuntime().exec(arrayOf("git", "describe", "--tags", "--abbrev=0")).let { it.waitFor(); it.inputStream.bufferedReader().readText().trim() } } catch (_: Exception) { "dev" }
+        versionCode = 1
+        versionName = "0.0.3-beta"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
