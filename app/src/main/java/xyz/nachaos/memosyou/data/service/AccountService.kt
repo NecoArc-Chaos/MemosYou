@@ -1,3 +1,4 @@
+import xyz.nachaos.memosyou.BuildConfig
 package xyz.nachaos.memosyou.data.service
 
 import android.content.Context
@@ -45,7 +46,7 @@ import net.swiftzer.semver.SemVer
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -378,7 +379,7 @@ class AccountService @Inject constructor(
                 }
             }
             // Add logging interceptor in debug builds
-            if (BuildConfig.DEBUG) {
+            if (xyz.nachaos.memosyou.BuildConfig.DEBUG) {
                 val loggingInterceptor = HttpLoggingInterceptor("MemosYou-API").apply {
                     level = HttpLoggingInterceptor.Level.BODY
                 }
