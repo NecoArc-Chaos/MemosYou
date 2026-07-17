@@ -22,7 +22,6 @@ import xyz.nachaos.memosyou.R
 import xyz.nachaos.memosyou.data.api.MemosV0Api
 import xyz.nachaos.memosyou.data.api.MemosV1Api
 import xyz.nachaos.memosyou.data.constant.MemosVersionSupport
-import xyz.nachaos.memosyou.data.constant.MemosVersionSupport.MEMOS_CANARY_VERSION_NAME
 import xyz.nachaos.memosyou.data.constant.MemosVersionSupport.MEMOS_V0_MIN_VERSION
 import xyz.nachaos.memosyou.data.constant.MemosVersionSupport.MEMOS_V1_MAX_VERSION
 import xyz.nachaos.memosyou.data.constant.MemosVersionSupport.MEMOS_V1_MIN_VERSION
@@ -42,7 +41,6 @@ import xyz.nachaos.memosyou.data.repository.RemoteRepository
 import xyz.nachaos.memosyou.data.repository.SyncingRepository
 import xyz.nachaos.memosyou.ext.settingsDataStore
 import xyz.nachaos.memosyou.ext.string
->>>>>>> upstream/main
 import net.swiftzer.semver.SemVer
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
