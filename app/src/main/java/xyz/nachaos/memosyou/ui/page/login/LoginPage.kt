@@ -59,7 +59,7 @@ import xyz.nachaos.memosyou.R
 import xyz.nachaos.memosyou.ext.popBackStackIfLifecycleIsResumed
 import xyz.nachaos.memosyou.ext.string
 import xyz.nachaos.memosyou.ext.suspendOnErrorMessage
-import xyz.nachaos.memosyou.ui.component.Markdown
+import xyz.nachaos.memosyou.util.Markdown
 import xyz.nachaos.memosyou.ui.page.common.RouteName
 import xyz.nachaos.memosyou.viewmodel.LocalUserState
 import xyz.nachaos.memosyou.viewmodel.LoginCompatibility
