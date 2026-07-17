@@ -97,10 +97,11 @@ fun MoeMemosTheme(content: @Composable () -> Unit) {
         }
     }
 
-    MaterialTheme(
+    MaterialExpressiveTheme(
             colorScheme = animatedScheme,
             typography = ExpressiveTypography,
             shapes = ExpressiveShapes,
+            motionScheme = MotionScheme.expressive(),
             content = content
         )
 }
