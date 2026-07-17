@@ -1,11 +1,20 @@
 buildscript {
-    ext {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:9.1.0'
+    }
+}
+
+ext {
         // https://developer.android.com/jetpack/androidx/releases/compose-ui
         compose_version = '1.10.2'
         // https://developer.android.com/jetpack/androidx/releases/compose-material
         compose_material = '1.7.8'
         // https://developer.android.com/jetpack/androidx/releases/compose-material3
-        material3 = '1.4.0'
+        material3 = '1.5.0-alpha23'
         // https://developer.android.com/jetpack/androidx/releases/compose-material3-adaptive
         material3_adaptive = '1.2.0'
         // https://square.github.io/okhttp/changelogs/changelog/

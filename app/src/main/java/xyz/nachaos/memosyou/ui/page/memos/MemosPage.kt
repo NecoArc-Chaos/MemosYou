@@ -10,6 +10,8 @@ import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -23,7 +25,10 @@ import xyz.nachaos.memosyou.ui.component.SideDrawer
 @Composable
 fun MemosPage() {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerState = rememberDrawerState(
+            initialValue = DrawerValue.Closed,
+            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
+        )
     val scope = rememberCoroutineScope()
     val memosNavController = rememberNavController()
 
