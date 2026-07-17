@@ -1,6 +1,6 @@
 package xyz.nachaos.memosyou.ext
 
-import xyz.nachaos.memosyou.MoeMemosApp
+import xyz.nachaos.memosyou.MemosYouApp
 
 /**
  * Get the string resources by the R.string.xx.string
@@ -8,4 +8,4 @@ import xyz.nachaos.memosyou.MoeMemosApp
  * To support i18n
  * @author Xeu<thankrain@qq.com>
  */
-val Int.string get() = MoeMemosApp.CONTEXT.getString(this)
+val Int.string get() = MemosYouApp.CONTEXT.getString(this)
