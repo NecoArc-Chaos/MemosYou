@@ -1,14 +1,13 @@
 package xyz.nachaos.memosyou.ui.page.memos
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -20,6 +19,7 @@ import xyz.nachaos.memosyou.ui.component.ExpressiveSkeletonCard
 import xyz.nachaos.memosyou.ui.component.ExpressiveWaveProgress
 import xyz.nachaos.memosyou.ui.util.edgeToEdgeContentPadding
 import xyz.nachaos.memosyou.viewmodel.ExploreViewModel
+import xyz.nachaos.memosyou.viewmodel.LocalExploreViewModel
 
 @Composable
 fun ExploreList(
@@ -30,17 +30,20 @@ fun ExploreList(
     val listContentPadding = edgeToEdgeContentPadding(contentPadding)
     val isLoading = memos.loadState.refresh is LoadState.Loading && memos.itemCount == 0
 
-    Box(Modifier.fillMaxSize().consumeWindowInsets(contentPadding)) {
-        if (isLoading) {
-            // Skeleton loading
-            LazyColumn(contentPadding = listContentPadding) {
-                items(5) { ExpressiveSkeletonCard() }
-            }
-            ExpressiveWaveProgress(Modifier.align(Alignment.TopCenter).padding(top = 2.dp))
-        } else {
-            LazyColumn(contentPadding = listContentPadding) {
-                items(memos.itemCount) { index ->
-                    memos[index]?.let { ExploreMemoCard(it) }
+    CompositionLocalProvider(LocalExploreViewModel provides viewModel) {
+        Box(Modifier.fillMaxSize().consumeWindowInsets(contentPadding)) {
+            if (isLoading) {
+                LazyColumn(contentPadding = listContentPadding) {
+                    items(5) { ExpressiveSkeletonCard() }
+                }
+                ExpressiveWaveProgress(Modifier.align(Alignment.TopCenter).padding(top = 2.dp))
+            } else {
+                LazyColumn(contentPadding = listContentPadding) {
+                    items(memos.itemCount, key = { index ->
+                        memos[index]?.remoteId ?: index
+                    }) { index ->
+                        memos[index]?.let { ExploreMemoCard(it) }
+                    }
                 }
             }
         }

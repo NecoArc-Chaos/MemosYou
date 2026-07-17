@@ -63,6 +63,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -85,9 +86,10 @@ import xyz.nachaos.memosyou.data.repository.MemosV1Repository
 import xyz.nachaos.memosyou.data.repository.SyncingRepository
 import android.util.Log
 import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.viewmodel.LocalExploreViewModel
 import xyz.nachaos.memosyou.viewmodel.LocalUserState
 
-private fun memoCommentName(remoteId: String?): String {
+fun memoCommentName(remoteId: String?): String {
     if (remoteId == null) return ""
     val idx = remoteId.lastIndexOf("/memos/")
     return if (idx >= 0) {
@@ -111,30 +113,44 @@ private val QUICK_EMOJIS = listOf("👍", "❤️", "😄", "🎉", "😢", "�
 @Composable
 fun ExploreMemoCard(memo: Memo) {
     val userStateViewModel = LocalUserState.current
+    val exploreViewModel = LocalExploreViewModel.current
     val currentAccount by userStateViewModel.currentAccount.collectAsState()
     val host = userStateViewModel.host
     val isRemote = currentAccount !is Account.Local
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var showComments by remember { mutableStateOf(false) }
+
+    // Persistent state backed by ViewModel (survives scrolling)
+    val memoId = memo.remoteId ?: ""
+    val cachedComments = exploreViewModel.getComments(memoId)
+    val cachedCommentCount = exploreViewModel.getCommentCount(memoId)
+    val cachedReactions = exploreViewModel.getReactions(memoId)
+
+    var showComments by rememberSaveable(memoId) { mutableStateOf(false) }
     var commentText by remember { mutableStateOf("") }
-    var comments by remember { mutableStateOf<List<Memo>>(emptyList()) }
+    var comments by remember(memoId) { mutableStateOf(cachedComments) }
     var loadingComments by remember { mutableStateOf(false) }
-    var reactions by remember { mutableStateOf<List<ReactionItem>>(emptyList()) }
+    var reactions by remember(memoId) { mutableStateOf(cachedReactions) }
     var availableReactions by remember { mutableStateOf(listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")) }
     var menuExpanded by remember { mutableStateOf(false) }
     var reactionPickerExpanded by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    // Load reactions + available reactions for this memo
+    // Preload comment count + reactions in background
     LaunchedEffect(memo.remoteId) {
         if (isRemote && memo.remoteId != null) {
+            exploreViewModel.preloadMemoData(memoCommentName(memo.remoteId))
             try {
                 val name = memoCommentName(memo.remoteId)
                 val remote = userStateViewModel.accountService.getRemoteRepository()
                 if (remote is MemosV1Repository) {
-                    val resp = remote.memosApi.listMemoReactions(name)
-                    if (resp is ApiResponse.Success) reactions = resp.data.reactions
+                    if (cachedReactions.isEmpty()) {
+                        val resp = remote.memosApi.listMemoReactions(name)
+                        if (resp is ApiResponse.Success) {
+                            reactions = resp.data.reactions
+                            exploreViewModel.cacheReactions(memoId, resp.data.reactions)
+                        }
+                    }
                     val setting = remote.getInstanceSetting("instance/settings/MEMO_RELATED").getOrNull()
                     availableReactions = setting?.memoRelatedSetting?.reactions?.ifEmpty { null } ?: listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")
                 }
@@ -151,7 +167,10 @@ fun ExploreMemoCard(memo: Memo) {
                 userStateViewModel.accountService.getRepository()
                     .listMemoComments(name, pageSize = 20, pageToken = null)
                     .let { resp ->
-                        if (resp is ApiResponse.Success) comments = resp.data.first
+                        if (resp is ApiResponse.Success) {
+                            comments = resp.data.first
+                            exploreViewModel.cacheComments(memoId, resp.data.first)
+                        }
                     }
             } finally { loadingComments = false }
         }
@@ -298,11 +317,11 @@ fun ExploreMemoCard(memo: Memo) {
                     }) {
                         Box(modifier = Modifier.size(24.dp)) {
                             Icon(Icons.Outlined.ChatBubbleOutline, R.string.comment.string, Modifier.size(22.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                            if (comments.isNotEmpty()) {
+                            if (memo.commentCount > 0) {
                                 Box(Modifier.align(Alignment.TopEnd).background(
                                     MaterialTheme.colorScheme.primary, CircleShape
                                 ).size(14.dp), contentAlignment = Alignment.Center) {
-                                    Text("${comments.size}", style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = MaterialTheme.colorScheme.onPrimary)
+                                    Text("${memo.commentCount}", style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = MaterialTheme.colorScheme.onPrimary)
                                 }
                             }
                         }

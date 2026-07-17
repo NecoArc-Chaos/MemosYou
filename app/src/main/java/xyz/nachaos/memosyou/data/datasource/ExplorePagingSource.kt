@@ -2,10 +2,15 @@ package xyz.nachaos.memosyou.data.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.getOrThrow
 import com.skydoves.sandwich.mapSuccess
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import xyz.nachaos.memosyou.data.api.MemosV1Repository
 import xyz.nachaos.memosyou.data.model.Memo
 import xyz.nachaos.memosyou.data.repository.RemoteRepository
+import xyz.nachaos.memosyou.ui.component.memoCommentName
 
 const val EXPLORE_PAGE_SIZE = 20
 
@@ -21,11 +26,28 @@ class ExplorePagingSource(
         val response = remoteRepository.listWorkspaceMemos(EXPLORE_PAGE_SIZE, params.key)
 
         return try {
-            response.mapSuccess {
+            response.mapSuccess { (memos, nextPageToken) ->
+                // Fetch comment counts in parallel
+                val memosWithCounts = coroutineScope {
+                    memos.map { memo ->
+                        async {
+                            if (remoteRepository is MemosV1Repository) {
+                                val name = memoCommentName(memo.remoteId)
+                                val commentResp = remoteRepository.memosApi.listMemoComments(name, pageSize = 1, pageToken = null)
+                                val count = if (commentResp is ApiResponse.Success) {
+                                    commentResp.data.memos.size
+                                } else 0
+                                memo.copy(commentCount = count)
+                            } else {
+                                memo
+                            }
+                        }
+                    }.awaitAll()
+                }
                 LoadResult.Page(
-                    data = this.first,
+                    data = memosWithCounts,
                     prevKey = null,
-                    nextKey = this.second,
+                    nextKey = nextPageToken,
                 )
             }.getOrThrow()
         } catch (e: Exception) {
