@@ -1,11 +1,11 @@
-package me.mudkip.moememos.data.api
+package xyz.nachaos.memosyou.data.api
 
 import android.net.Uri
 import androidx.core.net.toUri
 import com.skydoves.sandwich.ApiResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import me.mudkip.moememos.data.model.User
+import xyz.nachaos.memosyou.data.model.User
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE

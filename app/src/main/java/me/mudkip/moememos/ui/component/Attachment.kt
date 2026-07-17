@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import android.content.ClipData
 import android.content.Context
@@ -31,13 +31,13 @@ import com.skydoves.sandwich.ApiResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.mudkip.moememos.MoeMemosFileProvider
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.local.entity.ResourceEntity
-import me.mudkip.moememos.data.model.ResourceRepresentable
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.viewmodel.LocalMemos
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.MoeMemosFileProvider
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
+import xyz.nachaos.memosyou.data.model.ResourceRepresentable
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.viewmodel.LocalMemos
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import timber.log.Timber

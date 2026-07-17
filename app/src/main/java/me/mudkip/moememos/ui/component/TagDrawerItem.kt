@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -13,7 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.ui.page.common.RouteName
+import xyz.nachaos.memosyou.ui.page.common.RouteName
 import java.net.URLEncoder
 
 @Composable

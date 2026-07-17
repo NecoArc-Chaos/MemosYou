@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -76,16 +76,16 @@ import coil3.compose.AsyncImage
 import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.getOrNull
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.api.ReactionItem
-import me.mudkip.moememos.data.api.UpsertReactionRequest
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.data.model.Memo
-import me.mudkip.moememos.data.repository.MemosV1Repository
-import me.mudkip.moememos.data.repository.SyncingRepository
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.api.ReactionItem
+import xyz.nachaos.memosyou.data.api.UpsertReactionRequest
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.data.model.Memo
+import xyz.nachaos.memosyou.data.repository.MemosV1Repository
+import xyz.nachaos.memosyou.data.repository.SyncingRepository
 import timber.log.Timber
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 
 private fun memoCommentName(remoteId: String?): String {
     if (remoteId == null) return ""

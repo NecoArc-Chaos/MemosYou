@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,8 +34,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import me.mudkip.moememos.viewmodel.LocalMemos
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.viewmodel.LocalMemos
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit

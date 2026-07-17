@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.common
+package xyz.nachaos.memosyou.ui.page.common
 
 import android.content.Intent
 import android.net.Uri
@@ -24,21 +24,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import me.mudkip.moememos.MainActivity
-import me.mudkip.moememos.data.model.ShareContent
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.page.account.AccountPage
-import me.mudkip.moememos.ui.page.account.AddAccountPage
-import me.mudkip.moememos.ui.page.login.LoginPage
-import me.mudkip.moememos.ui.page.memoinput.MemoInputPage
-import me.mudkip.moememos.ui.page.memos.MemoDetailPage
-import me.mudkip.moememos.ui.page.memos.MemosPage
-import me.mudkip.moememos.ui.page.memos.SearchPage
-import me.mudkip.moememos.ui.page.memos.TagMemoPage
-import me.mudkip.moememos.ui.page.resource.ResourceListPage
-import me.mudkip.moememos.ui.page.settings.SettingsPage
-import me.mudkip.moememos.ui.theme.MoeMemosTheme
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.MainActivity
+import xyz.nachaos.memosyou.data.model.ShareContent
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.page.account.AccountPage
+import xyz.nachaos.memosyou.ui.page.account.AddAccountPage
+import xyz.nachaos.memosyou.ui.page.login.LoginPage
+import xyz.nachaos.memosyou.ui.page.memoinput.MemoInputPage
+import xyz.nachaos.memosyou.ui.page.memos.MemoDetailPage
+import xyz.nachaos.memosyou.ui.page.memos.MemosPage
+import xyz.nachaos.memosyou.ui.page.memos.SearchPage
+import xyz.nachaos.memosyou.ui.page.memos.TagMemoPage
+import xyz.nachaos.memosyou.ui.page.resource.ResourceListPage
+import xyz.nachaos.memosyou.ui.page.settings.SettingsPage
+import xyz.nachaos.memosyou.ui.theme.MoeMemosTheme
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 
 @Composable
 fun Navigation() {
@@ -189,4 +189,4 @@ fun Navigation() {
 }
 
 val LocalRootNavController =
-    compositionLocalOf<NavHostController> { error(me.mudkip.moememos.R.string.nav_host_controller_not_found.string) }
+    compositionLocalOf<NavHostController> { error(xyz.nachaos.memosyou.R.string.nav_host_controller_not_found.string) }

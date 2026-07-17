@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.util
+package xyz.nachaos.memosyou.ui.util
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.unit.Dp

@@ -1,7 +1,7 @@
-package me.mudkip.moememos.data.local
+package xyz.nachaos.memosyou.data.local
 
 import androidx.room.TypeConverter
-import me.mudkip.moememos.data.model.MemoVisibility
+import xyz.nachaos.memosyou.data.model.MemoVisibility
 import java.time.Instant
 
 class Converters {

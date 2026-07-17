@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable

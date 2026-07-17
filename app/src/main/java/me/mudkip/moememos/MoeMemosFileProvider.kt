@@ -1,4 +1,4 @@
-package me.mudkip.moememos
+package xyz.nachaos.memosyou
 
 import android.content.Context
 import android.net.Uri

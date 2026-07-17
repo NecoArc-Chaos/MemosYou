@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import android.net.Uri
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -38,9 +38,9 @@ import com.mikepenz.markdown.model.markdownAnnotator
 import com.mikepenz.markdown.model.markdownAnnotatorConfig
 import com.mikepenz.markdown.model.rememberMarkdownState
 import com.mikepenz.markdown.utils.getUnescapedTextInNode
-import me.mudkip.moememos.util.findCustomTagMatches
-import me.mudkip.moememos.util.getCustomTagName
-import me.mudkip.moememos.util.isCustomTagSupportedNode
+import xyz.nachaos.memosyou.util.findCustomTagMatches
+import xyz.nachaos.memosyou.util.getCustomTagName
+import xyz.nachaos.memosyou.util.isCustomTagSupportedNode
 import org.intellij.markdown.MarkdownTokenTypes
 import com.mikepenz.markdown.m3.Markdown as M3Markdown
 

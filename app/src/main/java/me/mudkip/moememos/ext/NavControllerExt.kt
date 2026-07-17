@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ext
+package xyz.nachaos.memosyou.ext
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner

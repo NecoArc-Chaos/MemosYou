@@ -1,9 +1,9 @@
-package me.mudkip.moememos.widget
+package xyz.nachaos.memosyou.widget
 
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import me.mudkip.moememos.data.service.MemoService
+import xyz.nachaos.memosyou.data.service.MemoService
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)

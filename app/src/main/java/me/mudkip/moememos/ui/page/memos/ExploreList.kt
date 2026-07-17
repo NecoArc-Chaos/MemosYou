@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.memos
+package xyz.nachaos.memosyou.ui.page.memos
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,11 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import me.mudkip.moememos.ui.component.ExploreMemoCard
-import me.mudkip.moememos.ui.component.ExpressiveSkeletonCard
-import me.mudkip.moememos.ui.component.ExpressiveWaveProgress
-import me.mudkip.moememos.ui.util.edgeToEdgeContentPadding
-import me.mudkip.moememos.viewmodel.ExploreViewModel
+import xyz.nachaos.memosyou.ui.component.ExploreMemoCard
+import xyz.nachaos.memosyou.ui.component.ExpressiveSkeletonCard
+import xyz.nachaos.memosyou.ui.component.ExpressiveWaveProgress
+import xyz.nachaos.memosyou.ui.util.edgeToEdgeContentPadding
+import xyz.nachaos.memosyou.viewmodel.ExploreViewModel
 
 @Composable
 fun ExploreList(

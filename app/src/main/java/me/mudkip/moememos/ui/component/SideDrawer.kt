@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,14 +45,14 @@ import coil3.compose.AsyncImage
 import com.skydoves.sandwich.getOrNull
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.data.repository.SyncingRepository
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.page.common.LocalRootNavController
-import me.mudkip.moememos.ui.page.common.RouteName
-import me.mudkip.moememos.viewmodel.LocalMemos
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.data.repository.SyncingRepository
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.page.common.LocalRootNavController
+import xyz.nachaos.memosyou.ui.page.common.RouteName
+import xyz.nachaos.memosyou.viewmodel.LocalMemos
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 import java.net.URLEncoder
 import java.time.DayOfWeek
 import java.time.format.TextStyle

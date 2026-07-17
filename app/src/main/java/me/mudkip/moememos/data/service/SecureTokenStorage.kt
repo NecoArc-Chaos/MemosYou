@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.service
+package xyz.nachaos.memosyou.data.service
 
 import android.content.Context
 import android.content.SharedPreferences

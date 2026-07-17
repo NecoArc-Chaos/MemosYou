@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.memoinput
+package xyz.nachaos.memosyou.ui.page.memoinput
 
 import android.content.ActivityNotFoundException
 import android.net.Uri
@@ -31,17 +31,17 @@ import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.MoeMemosFileProvider
-import me.mudkip.moememos.data.model.MemoVisibility
-import me.mudkip.moememos.data.model.ShareContent
-import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
-import me.mudkip.moememos.ext.suspendOnErrorMessage
-import me.mudkip.moememos.ui.page.common.LocalRootNavController
-import me.mudkip.moememos.ui.util.PickMultipleImagesContract
-import me.mudkip.moememos.util.extractCustomTags
-import me.mudkip.moememos.viewmodel.LocalMemos
-import me.mudkip.moememos.viewmodel.LocalUserState
-import me.mudkip.moememos.viewmodel.MemoInputViewModel
+import xyz.nachaos.memosyou.MoeMemosFileProvider
+import xyz.nachaos.memosyou.data.model.MemoVisibility
+import xyz.nachaos.memosyou.data.model.ShareContent
+import xyz.nachaos.memosyou.ext.popBackStackIfLifecycleIsResumed
+import xyz.nachaos.memosyou.ext.suspendOnErrorMessage
+import xyz.nachaos.memosyou.ui.page.common.LocalRootNavController
+import xyz.nachaos.memosyou.ui.util.PickMultipleImagesContract
+import xyz.nachaos.memosyou.util.extractCustomTags
+import xyz.nachaos.memosyou.viewmodel.LocalMemos
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.viewmodel.MemoInputViewModel
 
 private const val MaxSelectableImages = 100
 

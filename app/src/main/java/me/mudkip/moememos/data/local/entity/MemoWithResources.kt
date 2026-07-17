@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.local.entity
+package xyz.nachaos.memosyou.data.local.entity
 
 import androidx.room.Embedded
 import androidx.room.Relation

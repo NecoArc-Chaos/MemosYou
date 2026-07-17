@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.api
+package xyz.nachaos.memosyou.data.api
 
 import android.net.Uri
 import androidx.core.net.toUri

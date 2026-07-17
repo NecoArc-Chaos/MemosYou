@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import android.content.Intent
 
@@ -19,14 +19,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.local.entity.ResourceEntity
-import me.mudkip.moememos.data.model.MemoRepresentable
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.page.common.LocalRootNavController
-import me.mudkip.moememos.ui.page.common.RouteName
-import me.mudkip.moememos.ui.media.MediaViewerActivity
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
+import xyz.nachaos.memosyou.data.model.MemoRepresentable
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.page.common.LocalRootNavController
+import xyz.nachaos.memosyou.ui.page.common.RouteName
+import xyz.nachaos.memosyou.ui.media.MediaViewerActivity
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 import org.intellij.markdown.IElementType
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes

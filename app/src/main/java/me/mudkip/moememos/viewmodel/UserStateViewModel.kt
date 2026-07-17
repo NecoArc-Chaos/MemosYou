@@ -1,4 +1,4 @@
-package me.mudkip.moememos.viewmodel
+package xyz.nachaos.memosyou.viewmodel
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
@@ -16,18 +16,18 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.api.MemosV0User
-import me.mudkip.moememos.data.api.MemosV1User
-import me.mudkip.moememos.data.constant.MoeMemosException
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.data.model.LocalAccount
-import me.mudkip.moememos.data.model.MemosAccount
-import me.mudkip.moememos.data.model.User
-import me.mudkip.moememos.data.model.UserData
-import me.mudkip.moememos.data.service.AccountService
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ext.suspendOnNotLogin
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.api.MemosV0User
+import xyz.nachaos.memosyou.data.api.MemosV1User
+import xyz.nachaos.memosyou.data.constant.MoeMemosException
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.data.model.LocalAccount
+import xyz.nachaos.memosyou.data.model.MemosAccount
+import xyz.nachaos.memosyou.data.model.User
+import xyz.nachaos.memosyou.data.model.UserData
+import xyz.nachaos.memosyou.data.service.AccountService
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ext.suspendOnNotLogin
 import okhttp3.OkHttpClient
 import java.time.Instant
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.theme
+package xyz.nachaos.memosyou.ui.theme
 
 import android.app.Activity
 import android.graphics.Color
@@ -21,9 +21,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import me.mudkip.moememos.data.model.DarkMode
-import me.mudkip.moememos.data.model.Settings
-import me.mudkip.moememos.ext.settingsDataStore
+import xyz.nachaos.memosyou.data.model.DarkMode
+import xyz.nachaos.memosyou.data.model.Settings
+import xyz.nachaos.memosyou.ext.settingsDataStore
 
 val ExpressiveShapes = Shapes(
     extraSmall = RoundedCornerShape(8.dp), small = RoundedCornerShape(12.dp),

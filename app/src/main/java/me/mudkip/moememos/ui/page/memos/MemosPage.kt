@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.memos
+package xyz.nachaos.memosyou.ui.page.memos
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowSizeClass
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.ui.component.SideDrawer
+import xyz.nachaos.memosyou.ui.component.SideDrawer
 
 @Composable
 fun MemosPage() {

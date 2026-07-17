@@ -1,4 +1,4 @@
-package me.mudkip.moememos
+package xyz.nachaos.memosyou
 
 import android.content.Intent
 import android.graphics.Color
@@ -10,12 +10,12 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.fragment.app.FragmentActivity
 import dagger.hilt.android.AndroidEntryPoint
-import me.mudkip.moememos.ui.page.common.Navigation
-import me.mudkip.moememos.ui.security.AppLockGate
-import me.mudkip.moememos.viewmodel.LocalMemos
-import me.mudkip.moememos.viewmodel.LocalUserState
-import me.mudkip.moememos.viewmodel.MemosViewModel
-import me.mudkip.moememos.viewmodel.UserStateViewModel
+import xyz.nachaos.memosyou.ui.page.common.Navigation
+import xyz.nachaos.memosyou.ui.security.AppLockGate
+import xyz.nachaos.memosyou.viewmodel.LocalMemos
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.viewmodel.MemosViewModel
+import xyz.nachaos.memosyou.viewmodel.UserStateViewModel
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
@@ -23,9 +23,9 @@ class MainActivity : FragmentActivity() {
     private val memosViewModel: MemosViewModel by viewModels()
 
     companion object {
-        const val ACTION_NEW_MEMO = "me.mudkip.moememos.action.NEW_MEMO"
-        const val ACTION_EDIT_MEMO = "me.mudkip.moememos.action.EDIT_MEMO"
-        const val ACTION_VIEW_MEMO = "me.mudkip.moememos.action.VIEW_MEMO"
+        const val ACTION_NEW_MEMO = "xyz.nachaos.memosyou.action.NEW_MEMO"
+        const val ACTION_EDIT_MEMO = "xyz.nachaos.memosyou.action.EDIT_MEMO"
+        const val ACTION_VIEW_MEMO = "xyz.nachaos.memosyou.action.VIEW_MEMO"
         const val EXTRA_MEMO_ID = "memoId"
     }
 

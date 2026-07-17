@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.memoinput
+package xyz.nachaos.memosyou.ui.page.memoinput
 
 import android.content.ClipData
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -60,16 +60,16 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.local.entity.ResourceEntity
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.data.model.MemoVisibility
-import me.mudkip.moememos.ext.icon
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ext.titleResource
-import me.mudkip.moememos.ui.component.Attachment
-import me.mudkip.moememos.ui.component.InputImage
-import me.mudkip.moememos.viewmodel.MemoInputViewModel
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.data.model.MemoVisibility
+import xyz.nachaos.memosyou.ext.icon
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ext.titleResource
+import xyz.nachaos.memosyou.ui.component.Attachment
+import xyz.nachaos.memosyou.ui.component.InputImage
+import xyz.nachaos.memosyou.viewmodel.MemoInputViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

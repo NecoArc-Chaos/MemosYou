@@ -28,11 +28,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "me.mudkip.moememos"
+        applicationId = "xyz.nachaos.memosyou"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
-        versionName = "0.0.3-beta"
+        versionName = System.getenv("GITHUB_TAG_NAME") ?: "dev"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

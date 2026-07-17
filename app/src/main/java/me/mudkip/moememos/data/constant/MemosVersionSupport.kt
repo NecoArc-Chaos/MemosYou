@@ -1,7 +1,7 @@
-package me.mudkip.moememos.data.constant
+package xyz.nachaos.memosyou.data.constant
 
 import android.content.Context
-import me.mudkip.moememos.R
+import xyz.nachaos.memosyou.R
 import net.swiftzer.semver.SemVer
 
 object MemosVersionSupport {

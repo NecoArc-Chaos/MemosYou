@@ -1,4 +1,4 @@
-package me.mudkip.moememos.widget
+package xyz.nachaos.memosyou.widget
 
 import android.content.Context
 import android.content.Intent
@@ -53,11 +53,11 @@ import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import me.mudkip.moememos.MainActivity
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.local.entity.MemoEntity
-import me.mudkip.moememos.data.model.MemoVisibility
-import me.mudkip.moememos.data.service.MemoService
+import xyz.nachaos.memosyou.MainActivity
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.local.entity.MemoEntity
+import xyz.nachaos.memosyou.data.model.MemoVisibility
+import xyz.nachaos.memosyou.data.service.MemoService
 import java.time.Instant
 
 class MoeMemosGlanceWidget : GlanceAppWidget() {

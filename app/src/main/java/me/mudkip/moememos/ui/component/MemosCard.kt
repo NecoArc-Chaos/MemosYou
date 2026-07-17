@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -60,17 +60,17 @@ import androidx.compose.ui.unit.dp
 import com.skydoves.sandwich.suspendOnSuccess
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.local.entity.MemoEntity
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.data.model.MemoEditGesture
-import me.mudkip.moememos.ext.icon
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ext.titleResource
-import me.mudkip.moememos.ui.page.common.LocalRootNavController
-import me.mudkip.moememos.ui.page.common.RouteName
-import me.mudkip.moememos.viewmodel.LocalMemos
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.local.entity.MemoEntity
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.data.model.MemoEditGesture
+import xyz.nachaos.memosyou.ext.icon
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ext.titleResource
+import xyz.nachaos.memosyou.ui.page.common.LocalRootNavController
+import xyz.nachaos.memosyou.ui.page.common.RouteName
+import xyz.nachaos.memosyou.viewmodel.LocalMemos
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 
 @Composable
 fun MemosCard(

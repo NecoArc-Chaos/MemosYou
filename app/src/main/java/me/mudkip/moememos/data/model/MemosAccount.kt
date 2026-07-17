@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.model
+package xyz.nachaos.memosyou.data.model
 
 import kotlinx.serialization.Serializable
 import java.net.URI

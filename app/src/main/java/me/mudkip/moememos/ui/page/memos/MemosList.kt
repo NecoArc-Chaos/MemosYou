@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.memos
+package xyz.nachaos.memosyou.ui.page.memos
 
 import android.net.Uri
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,20 +29,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.data.model.MemoEditGesture
-import me.mudkip.moememos.data.model.Settings
-import me.mudkip.moememos.ext.settingsDataStore
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.component.MemosCard
-import me.mudkip.moememos.ui.component.UserProfileHeader
-import me.mudkip.moememos.ui.page.common.LocalRootNavController
-import me.mudkip.moememos.ui.util.edgeToEdgeContentPadding
-import me.mudkip.moememos.ui.page.common.RouteName
-import me.mudkip.moememos.viewmodel.LocalMemos
-import me.mudkip.moememos.viewmodel.LocalUserState
-import me.mudkip.moememos.viewmodel.ManualSyncResult
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.data.model.MemoEditGesture
+import xyz.nachaos.memosyou.data.model.Settings
+import xyz.nachaos.memosyou.ext.settingsDataStore
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.component.MemosCard
+import xyz.nachaos.memosyou.ui.component.UserProfileHeader
+import xyz.nachaos.memosyou.ui.page.common.LocalRootNavController
+import xyz.nachaos.memosyou.ui.util.edgeToEdgeContentPadding
+import xyz.nachaos.memosyou.ui.page.common.RouteName
+import xyz.nachaos.memosyou.viewmodel.LocalMemos
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.viewmodel.ManualSyncResult
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -136,8 +136,8 @@ fun MemosList(
         ) {
             // Skeleton loading state
             if (filteredMemos.isEmpty() && isRefreshing) {
-                items(4) { me.mudkip.moememos.ui.component.ExpressiveSkeletonCard() }
-                item { me.mudkip.moememos.ui.component.ExpressiveWaveProgress(Modifier.fillMaxWidth()) }
+                items(4) { xyz.nachaos.memosyou.ui.component.ExpressiveSkeletonCard() }
+                item { xyz.nachaos.memosyou.ui.component.ExpressiveWaveProgress(Modifier.fillMaxWidth()) }
             }
 
             // ── Social-style profile header ──

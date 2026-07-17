@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.memos
+package xyz.nachaos.memosyou.ui.page.memos
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,10 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.delay
-import me.mudkip.moememos.R
-import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.page.common.RouteName
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.ext.popBackStackIfLifecycleIsResumed
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.page.common.RouteName
 import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,10 +1,10 @@
-package me.mudkip.moememos.data.repository
+package xyz.nachaos.memosyou.data.repository
 
 import com.skydoves.sandwich.ApiResponse
-import me.mudkip.moememos.data.model.Memo
-import me.mudkip.moememos.data.model.MemoVisibility
-import me.mudkip.moememos.data.model.Resource
-import me.mudkip.moememos.data.model.User
+import xyz.nachaos.memosyou.data.model.Memo
+import xyz.nachaos.memosyou.data.model.MemoVisibility
+import xyz.nachaos.memosyou.data.model.Resource
+import xyz.nachaos.memosyou.data.model.User
 import okhttp3.MediaType
 import java.io.InputStream
 import java.time.Instant

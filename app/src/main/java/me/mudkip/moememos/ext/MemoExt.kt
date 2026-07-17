@@ -1,12 +1,12 @@
-package me.mudkip.moememos.ext
+package xyz.nachaos.memosyou.ext
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.House
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.ui.graphics.vector.ImageVector
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.model.MemoVisibility
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.model.MemoVisibility
 
 val MemoVisibility.icon: ImageVector get() = when (this) {
     MemoVisibility.PRIVATE -> Icons.Outlined.Lock

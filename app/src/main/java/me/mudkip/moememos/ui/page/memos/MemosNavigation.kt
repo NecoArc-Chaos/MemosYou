@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.memos
+package xyz.nachaos.memosyou.ui.page.memos
 
 import android.net.Uri
 import androidx.compose.material3.DrawerState
@@ -9,9 +9,9 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.ui.page.common.RouteName
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.ui.page.common.RouteName
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 
 @Composable
 fun MemosNavigation(

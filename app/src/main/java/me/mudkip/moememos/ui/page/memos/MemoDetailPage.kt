@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.memos
+package xyz.nachaos.memosyou.ui.page.memos
 
 import android.text.format.DateUtils
 import androidx.compose.foundation.layout.Box
@@ -42,16 +42,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.ext.icon
-import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ext.titleResource
-import me.mudkip.moememos.ui.component.MemoContent
-import me.mudkip.moememos.ui.component.MemosCardActionButton
-import me.mudkip.moememos.viewmodel.LocalMemos
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.ext.icon
+import xyz.nachaos.memosyou.ext.popBackStackIfLifecycleIsResumed
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ext.titleResource
+import xyz.nachaos.memosyou.ui.component.MemoContent
+import xyz.nachaos.memosyou.ui.component.MemosCardActionButton
+import xyz.nachaos.memosyou.viewmodel.LocalMemos
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

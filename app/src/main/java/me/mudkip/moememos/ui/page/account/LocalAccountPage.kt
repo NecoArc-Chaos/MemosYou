@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.account
+package xyz.nachaos.memosyou.ui.page.account
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,8 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import me.mudkip.moememos.R
-import me.mudkip.moememos.ext.string
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.ext.string
 
 @Composable
 fun LocalAccountPage(

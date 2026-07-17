@@ -1,13 +1,13 @@
-package me.mudkip.moememos.data.local
+package xyz.nachaos.memosyou.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import me.mudkip.moememos.data.local.dao.MemoDao
-import me.mudkip.moememos.data.local.entity.MemoEntity
-import me.mudkip.moememos.data.local.entity.ResourceEntity
+import xyz.nachaos.memosyou.data.local.dao.MemoDao
+import xyz.nachaos.memosyou.data.local.entity.MemoEntity
+import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
 
 @Database(
     entities = [MemoEntity::class, ResourceEntity::class],

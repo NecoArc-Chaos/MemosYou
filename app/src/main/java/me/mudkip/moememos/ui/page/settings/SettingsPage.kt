@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.settings
+package xyz.nachaos.memosyou.ui.page.settings
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -41,21 +41,21 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.data.model.DarkMode as DarkModePref
-import me.mudkip.moememos.data.model.MemoEditGesture
-import me.mudkip.moememos.data.model.Settings
-import me.mudkip.moememos.data.model.displayTitle
-import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
-import me.mudkip.moememos.ext.settingsDataStore
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.component.MemosIcon
-import me.mudkip.moememos.ui.component.ThemePresetPicker
-import me.mudkip.moememos.ui.page.common.RouteName
-import me.mudkip.moememos.ui.security.AppLockAuthenticator
-import me.mudkip.moememos.ui.security.AppLockSession
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.data.model.DarkMode as DarkModePref
+import xyz.nachaos.memosyou.data.model.MemoEditGesture
+import xyz.nachaos.memosyou.data.model.Settings
+import xyz.nachaos.memosyou.data.model.displayTitle
+import xyz.nachaos.memosyou.ext.popBackStackIfLifecycleIsResumed
+import xyz.nachaos.memosyou.ext.settingsDataStore
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.component.MemosIcon
+import xyz.nachaos.memosyou.ui.component.ThemePresetPicker
+import xyz.nachaos.memosyou.ui.page.common.RouteName
+import xyz.nachaos.memosyou.ui.security.AppLockAuthenticator
+import xyz.nachaos.memosyou.ui.security.AppLockSession
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

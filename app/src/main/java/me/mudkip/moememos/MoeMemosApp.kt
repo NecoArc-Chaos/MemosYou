@@ -1,4 +1,4 @@
-package me.mudkip.moememos
+package xyz.nachaos.memosyou
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -7,7 +7,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import dagger.hilt.android.HiltAndroidApp
-import me.mudkip.moememos.ui.security.AppLockSession
+import xyz.nachaos.memosyou.ui.security.AppLockSession
 
 @HiltAndroidApp
 class MoeMemosApp: Application() {

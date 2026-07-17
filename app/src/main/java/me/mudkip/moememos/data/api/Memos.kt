@@ -1,8 +1,8 @@
-package me.mudkip.moememos.data.api
+package xyz.nachaos.memosyou.data.api
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import me.mudkip.moememos.data.model.MemoVisibility
+import xyz.nachaos.memosyou.data.model.MemoVisibility
 
 @Serializable
 enum class MemosRole {

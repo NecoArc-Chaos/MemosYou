@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.theme
+package xyz.nachaos.memosyou.ui.theme
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme

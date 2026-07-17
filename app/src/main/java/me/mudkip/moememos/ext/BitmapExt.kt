@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ext
+package xyz.nachaos.memosyou.ext
 
 import android.graphics.Bitmap
 import androidx.core.graphics.scale

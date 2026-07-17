@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.repository
+package xyz.nachaos.memosyou.data.repository
 
 import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.getOrNull
@@ -7,21 +7,21 @@ import com.skydoves.sandwich.onSuccess
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import me.mudkip.moememos.data.api.MemosV1Api
-import me.mudkip.moememos.data.api.MemosV1CreateMemoRequest
-import me.mudkip.moememos.data.api.MemosV1Memo
-import me.mudkip.moememos.data.api.MemosV1Resource
-import me.mudkip.moememos.data.api.MemosV1State
-import me.mudkip.moememos.data.api.MemosVisibility
-import me.mudkip.moememos.data.api.UpdateMemoRequest
-import me.mudkip.moememos.data.api.CreateMemoCommentBody
-import me.mudkip.moememos.data.api.InstanceSettingResponse
-import me.mudkip.moememos.data.constant.MoeMemosException
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.data.model.Memo
-import me.mudkip.moememos.data.model.MemoVisibility
-import me.mudkip.moememos.data.model.Resource
-import me.mudkip.moememos.data.model.User
+import xyz.nachaos.memosyou.data.api.MemosV1Api
+import xyz.nachaos.memosyou.data.api.MemosV1CreateMemoRequest
+import xyz.nachaos.memosyou.data.api.MemosV1Memo
+import xyz.nachaos.memosyou.data.api.MemosV1Resource
+import xyz.nachaos.memosyou.data.api.MemosV1State
+import xyz.nachaos.memosyou.data.api.MemosVisibility
+import xyz.nachaos.memosyou.data.api.UpdateMemoRequest
+import xyz.nachaos.memosyou.data.api.CreateMemoCommentBody
+import xyz.nachaos.memosyou.data.api.InstanceSettingResponse
+import xyz.nachaos.memosyou.data.constant.MoeMemosException
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.data.model.Memo
+import xyz.nachaos.memosyou.data.model.MemoVisibility
+import xyz.nachaos.memosyou.data.model.Resource
+import xyz.nachaos.memosyou.data.model.User
 import okhttp3.MediaType
 import java.time.Instant
 

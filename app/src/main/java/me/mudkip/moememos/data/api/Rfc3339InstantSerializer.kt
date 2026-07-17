@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.api
+package xyz.nachaos.memosyou.data.api
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

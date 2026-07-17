@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.util
+package xyz.nachaos.memosyou.ui.util
 
 import android.content.ClipData
 import android.content.Context

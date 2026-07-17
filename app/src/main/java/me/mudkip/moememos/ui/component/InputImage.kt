@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -28,11 +28,11 @@ import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.local.entity.ResourceEntity
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.viewmodel.LocalUserState
-import me.mudkip.moememos.viewmodel.MemoInputViewModel
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.viewmodel.MemoInputViewModel
 
 @Composable
 fun InputImage(

@@ -1,4 +1,4 @@
-package me.mudkip.moememos.viewmodel
+package xyz.nachaos.memosyou.viewmodel
 
 import android.content.Context
 import android.net.Uri
@@ -24,18 +24,18 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.mudkip.moememos.data.constant.MemosVersionSupport
-import me.mudkip.moememos.data.constant.MoeMemosException
-import me.mudkip.moememos.data.local.entity.MemoEntity
-import me.mudkip.moememos.data.local.entity.ResourceEntity
-import me.mudkip.moememos.data.model.DailyUsageStat
-import me.mudkip.moememos.data.model.MemoVisibility
-import me.mudkip.moememos.data.model.SyncStatus
-import me.mudkip.moememos.data.service.AccountService
-import me.mudkip.moememos.data.service.MemoService
-import me.mudkip.moememos.ext.getErrorMessage
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.widget.WidgetUpdater
+import xyz.nachaos.memosyou.data.constant.MemosVersionSupport
+import xyz.nachaos.memosyou.data.constant.MoeMemosException
+import xyz.nachaos.memosyou.data.local.entity.MemoEntity
+import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
+import xyz.nachaos.memosyou.data.model.DailyUsageStat
+import xyz.nachaos.memosyou.data.model.MemoVisibility
+import xyz.nachaos.memosyou.data.model.SyncStatus
+import xyz.nachaos.memosyou.data.service.AccountService
+import xyz.nachaos.memosyou.data.service.MemoService
+import xyz.nachaos.memosyou.ext.getErrorMessage
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.widget.WidgetUpdater
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import javax.inject.Inject
@@ -235,7 +235,7 @@ class MemosViewModel @Inject constructor(
 }
 
 val LocalMemos =
-    compositionLocalOf<MemosViewModel> { error(me.mudkip.moememos.R.string.memos_view_model_not_found.string) }
+    compositionLocalOf<MemosViewModel> { error(xyz.nachaos.memosyou.R.string.memos_view_model_not_found.string) }
 
 sealed class ManualSyncResult {
     object Completed : ManualSyncResult()

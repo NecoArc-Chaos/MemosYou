@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.local.dao
+package xyz.nachaos.memosyou.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -8,9 +8,9 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import me.mudkip.moememos.data.local.entity.MemoEntity
-import me.mudkip.moememos.data.local.entity.MemoWithResources
-import me.mudkip.moememos.data.local.entity.ResourceEntity
+import xyz.nachaos.memosyou.data.local.entity.MemoEntity
+import xyz.nachaos.memosyou.data.local.entity.MemoWithResources
+import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
 
 @Dao
 interface MemoDao {

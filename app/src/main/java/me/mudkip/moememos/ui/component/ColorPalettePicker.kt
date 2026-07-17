@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.LocalIndication
@@ -29,8 +29,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import me.mudkip.moememos.ui.theme.PresetTheme
-import me.mudkip.moememos.ui.theme.Presets
+import xyz.nachaos.memosyou.ui.theme.PresetTheme
+import xyz.nachaos.memosyou.ui.theme.Presets
 
 @Composable
 fun ThemePresetPicker(selectedId: String, onSelect: (String) -> Unit) {

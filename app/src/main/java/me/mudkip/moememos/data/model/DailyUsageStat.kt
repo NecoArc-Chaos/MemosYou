@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.model
+package xyz.nachaos.memosyou.data.model
 
 import java.time.LocalDate
 

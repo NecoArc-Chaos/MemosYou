@@ -1,6 +1,6 @@
-package me.mudkip.moememos.ext
+package xyz.nachaos.memosyou.ext
 
-import me.mudkip.moememos.MoeMemosApp
+import xyz.nachaos.memosyou.MoeMemosApp
 
 /**
  * Get the string resources by the R.string.xx.string

@@ -1,4 +1,4 @@
-package me.mudkip.moememos.widget
+package xyz.nachaos.memosyou.widget
 
 import android.appwidget.AppWidgetManager
 import android.content.Intent
@@ -52,10 +52,10 @@ import androidx.lifecycle.lifecycleScope
 import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.service.MemoService
-import me.mudkip.moememos.ui.security.AppLockGate
-import me.mudkip.moememos.ui.theme.MoeMemosTheme
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.service.MemoService
+import xyz.nachaos.memosyou.ui.security.AppLockGate
+import xyz.nachaos.memosyou.ui.theme.MoeMemosTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint

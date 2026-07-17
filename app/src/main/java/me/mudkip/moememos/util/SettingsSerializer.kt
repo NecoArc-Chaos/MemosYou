@@ -1,10 +1,10 @@
-package me.mudkip.moememos.util
+package xyz.nachaos.memosyou.util
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import me.mudkip.moememos.data.model.Settings
+import xyz.nachaos.memosyou.data.model.Settings
 import java.io.InputStream
 import java.io.OutputStream
 

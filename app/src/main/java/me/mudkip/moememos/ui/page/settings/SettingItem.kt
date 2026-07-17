@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.settings
+package xyz.nachaos.memosyou.ui.page.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

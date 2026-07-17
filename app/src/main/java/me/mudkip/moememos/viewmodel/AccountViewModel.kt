@@ -1,4 +1,4 @@
-package me.mudkip.moememos.viewmodel
+package xyz.nachaos.memosyou.viewmodel
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
@@ -16,11 +16,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
-import me.mudkip.moememos.data.api.MemosProfile
-import me.mudkip.moememos.data.api.MemosV0Api
-import me.mudkip.moememos.data.api.MemosV1Api
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.data.service.AccountService
+import xyz.nachaos.memosyou.data.api.MemosProfile
+import xyz.nachaos.memosyou.data.api.MemosV0Api
+import xyz.nachaos.memosyou.data.api.MemosV1Api
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.data.service.AccountService
 
 @HiltViewModel(assistedFactory = AccountViewModel.AccountViewModelFactory::class)
 class AccountViewModel @AssistedInject constructor(

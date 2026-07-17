@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.account
+package xyz.nachaos.memosyou.ui.page.account
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,13 +30,13 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.component.MemosIcon
-import me.mudkip.moememos.ui.page.common.RouteName
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.ext.popBackStackIfLifecycleIsResumed
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.component.MemosIcon
+import xyz.nachaos.memosyou.ui.page.common.RouteName
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

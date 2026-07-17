@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
     <application
-        android:name=".MoeMemosApp"
+        android:name=".MemosYouApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -64,8 +64,8 @@
         </activity>
         
         <provider
-            android:authorities="me.mudkip.moememos.fileprovider"
-            android:name=".MoeMemosFileProvider"
+            android:authorities="xyz.nachaos.memosyou.fileprovider"
+            android:name=".MemosYouFileProvider"
             android:grantUriPermissions="true"
             android:exported="false">
             <meta-data
@@ -75,7 +75,7 @@
         
         <!-- Widget Receiver -->
         <receiver
-            android:name=".widget.MoeMemosGlanceWidgetReceiver"
+            android:name=".widget.MemosYouGlanceWidgetReceiver"
             android:label="@string/memos_widget_title"
             android:exported="true">
             <intent-filter>
@@ -83,7 +83,7 @@
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/memos_you_glance_widget_info" />
+                android:resource="@xml/memosyou_glance_widget_info" />
         </receiver>
 
         <!-- Memory Widget Receiver -->

@@ -1,10 +1,10 @@
-package me.mudkip.moememos.data.local.entity
+package xyz.nachaos.memosyou.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import me.mudkip.moememos.data.model.ResourceRepresentable
+import xyz.nachaos.memosyou.data.model.ResourceRepresentable
 import java.time.Instant
 
 @Entity(

@@ -1,4 +1,4 @@
-package me.mudkip.moememos.widget
+package xyz.nachaos.memosyou.widget
 
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidgetManager

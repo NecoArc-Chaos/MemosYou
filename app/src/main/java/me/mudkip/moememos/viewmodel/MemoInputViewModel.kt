@@ -1,4 +1,4 @@
-package me.mudkip.moememos.viewmodel
+package xyz.nachaos.memosyou.viewmodel
 
 import android.app.Application
 import android.content.Context
@@ -16,12 +16,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.mudkip.moememos.data.local.entity.MemoEntity
-import me.mudkip.moememos.data.local.entity.ResourceEntity
-import me.mudkip.moememos.data.model.MemoVisibility
-import me.mudkip.moememos.data.service.MemoService
-import me.mudkip.moememos.ext.settingsDataStore
-import me.mudkip.moememos.widget.WidgetUpdater
+import xyz.nachaos.memosyou.data.local.entity.MemoEntity
+import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
+import xyz.nachaos.memosyou.data.model.MemoVisibility
+import xyz.nachaos.memosyou.data.service.MemoService
+import xyz.nachaos.memosyou.ext.settingsDataStore
+import xyz.nachaos.memosyou.widget.WidgetUpdater
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.util.UUID
 import javax.inject.Inject

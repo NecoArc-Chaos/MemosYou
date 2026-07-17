@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.account
+package xyz.nachaos.memosyou.ui.page.account
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,12 +27,12 @@ import coil3.ImageLoader
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.api.MemosProfile
-import me.mudkip.moememos.data.model.MemosAccount
-import me.mudkip.moememos.data.model.displayTitle
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.component.MemosIcon
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.api.MemosProfile
+import xyz.nachaos.memosyou.data.model.MemosAccount
+import xyz.nachaos.memosyou.data.model.displayTitle
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.component.MemosIcon
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 

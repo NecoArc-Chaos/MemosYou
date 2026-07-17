@@ -1,8 +1,8 @@
-package me.mudkip.moememos.ui.page.memoinput
+package xyz.nachaos.memosyou.ui.page.memoinput
 
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import me.mudkip.moememos.data.constant.LIST_ITEM_SYMBOL_LIST
+import xyz.nachaos.memosyou.data.constant.LIST_ITEM_SYMBOL_LIST
 
 internal enum class MarkdownFormat(
     val label: String,

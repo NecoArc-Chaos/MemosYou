@@ -1,7 +1,7 @@
-package me.mudkip.moememos.data.constant
+package xyz.nachaos.memosyou.data.constant
 
-import me.mudkip.moememos.R
-import me.mudkip.moememos.ext.string
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.ext.string
 
 class MoeMemosException(string: String) : Exception(string) {
     companion object {

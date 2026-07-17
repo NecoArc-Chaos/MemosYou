@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.service
+package xyz.nachaos.memosyou.data.service
 
 import com.skydoves.sandwich.ApiResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import me.mudkip.moememos.data.local.entity.MemoEntity
-import me.mudkip.moememos.data.model.SyncStatus
-import me.mudkip.moememos.data.repository.AbstractMemoRepository
+import xyz.nachaos.memosyou.data.local.entity.MemoEntity
+import xyz.nachaos.memosyou.data.model.SyncStatus
+import xyz.nachaos.memosyou.data.repository.AbstractMemoRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

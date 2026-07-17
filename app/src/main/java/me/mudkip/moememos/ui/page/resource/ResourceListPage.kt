@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.resource
+package xyz.nachaos.memosyou.ui.page.resource
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,12 +34,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
-import me.mudkip.moememos.R
-import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.component.Attachment
-import me.mudkip.moememos.ui.component.MemoImage
-import me.mudkip.moememos.viewmodel.ResourceListViewModel
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.ext.popBackStackIfLifecycleIsResumed
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.component.Attachment
+import xyz.nachaos.memosyou.ui.component.MemoImage
+import xyz.nachaos.memosyou.viewmodel.ResourceListViewModel
 import androidx.compose.foundation.lazy.items as lazyItems
 import androidx.compose.foundation.lazy.staggeredgrid.items as staggeredGridItems
 

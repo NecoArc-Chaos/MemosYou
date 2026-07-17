@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.module
+package xyz.nachaos.memosyou.data.module
 
 import dagger.Module
 import dagger.Provides

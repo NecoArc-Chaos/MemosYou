@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.theme
+package xyz.nachaos.memosyou.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import me.mudkip.moememos.R
+import xyz.nachaos.memosyou.R
 
 // ═══ Maruko Gothic CJK SC ═══
 val MaruGothicFontFamily = FontFamily(

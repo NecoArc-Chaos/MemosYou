@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.repository
+package xyz.nachaos.memosyou.data.repository
 
 import android.net.Uri
 import com.skydoves.sandwich.ApiResponse
@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
-import me.mudkip.moememos.data.local.entity.MemoEntity
-import me.mudkip.moememos.data.local.entity.ResourceEntity
-import me.mudkip.moememos.data.model.MemoVisibility
-import me.mudkip.moememos.data.model.SyncStatus
-import me.mudkip.moememos.data.model.User
+import xyz.nachaos.memosyou.data.local.entity.MemoEntity
+import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
+import xyz.nachaos.memosyou.data.model.MemoVisibility
+import xyz.nachaos.memosyou.data.model.SyncStatus
+import xyz.nachaos.memosyou.data.model.User
 import okhttp3.MediaType
 
 abstract class AbstractMemoRepository {
@@ -34,10 +34,10 @@ abstract class AbstractMemoRepository {
 
     abstract suspend fun getCurrentUser(): ApiResponse<User>
 
-    open suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<me.mudkip.moememos.data.model.Memo>, String?>> {
-        return ApiResponse.Success(emptyList<me.mudkip.moememos.data.model.Memo>() to null)
+    open suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<xyz.nachaos.memosyou.data.model.Memo>, String?>> {
+        return ApiResponse.Success(emptyList<xyz.nachaos.memosyou.data.model.Memo>() to null)
     }
-    open suspend fun createMemoComment(memoName: String, content: String): ApiResponse<me.mudkip.moememos.data.model.Memo> {
+    open suspend fun createMemoComment(memoName: String, content: String): ApiResponse<xyz.nachaos.memosyou.data.model.Memo> {
         return ApiResponse.exception(RuntimeException("Comments not supported"))
     }
 

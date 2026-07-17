@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.module
+package xyz.nachaos.memosyou.data.module
 
 import android.content.Context
 import dagger.Module
@@ -6,10 +6,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import me.mudkip.moememos.data.local.FileStorage
-import me.mudkip.moememos.data.local.MoeMemosDatabase
-import me.mudkip.moememos.data.local.dao.MemoDao
-import me.mudkip.moememos.data.repository.LocalDatabaseRepository
+import xyz.nachaos.memosyou.data.local.FileStorage
+import xyz.nachaos.memosyou.data.local.MoeMemosDatabase
+import xyz.nachaos.memosyou.data.local.dao.MemoDao
+import xyz.nachaos.memosyou.data.repository.LocalDatabaseRepository
 import javax.inject.Singleton
 
 @Module

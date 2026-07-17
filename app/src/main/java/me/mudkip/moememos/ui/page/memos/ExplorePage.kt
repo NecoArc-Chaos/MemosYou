@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.memos
+package xyz.nachaos.memosyou.ui.page.memos
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,10 +36,10 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.skydoves.sandwich.getOrNull
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.repository.SyncingRepository
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.repository.SyncingRepository
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

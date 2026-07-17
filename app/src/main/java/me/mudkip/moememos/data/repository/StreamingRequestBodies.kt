@@ -1,4 +1,4 @@
-package me.mudkip.moememos.data.repository
+package xyz.nachaos.memosyou.data.repository
 
 import android.util.Base64
 import android.util.Base64OutputStream

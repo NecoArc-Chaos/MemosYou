@@ -1,4 +1,4 @@
-package me.mudkip.moememos.util
+package xyz.nachaos.memosyou.util
 
 import org.intellij.markdown.IElementType
 import org.intellij.markdown.MarkdownElementTypes

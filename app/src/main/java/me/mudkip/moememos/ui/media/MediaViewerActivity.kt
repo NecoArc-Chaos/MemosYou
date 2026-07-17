@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.media
+package xyz.nachaos.memosyou.ui.media
 
 import android.net.Uri
 import android.os.Build
@@ -84,11 +84,11 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.mudkip.moememos.R
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.security.AppLockGate
-import me.mudkip.moememos.ui.theme.MoeMemosTheme
-import me.mudkip.moememos.viewmodel.UserStateViewModel
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.security.AppLockGate
+import xyz.nachaos.memosyou.ui.theme.MoeMemosTheme
+import xyz.nachaos.memosyou.viewmodel.UserStateViewModel
 import okhttp3.OkHttpClient
 import timber.log.Timber
 import java.io.File

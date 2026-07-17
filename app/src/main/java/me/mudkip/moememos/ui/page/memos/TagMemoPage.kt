@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.memos
+package xyz.nachaos.memosyou.ui.page.memos
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -14,9 +14,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.page.common.RouteName
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.page.common.RouteName
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,4 +1,4 @@
-package me.mudkip.moememos.viewmodel
+package xyz.nachaos.memosyou.viewmodel
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
@@ -11,10 +11,10 @@ import com.skydoves.sandwich.suspendOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.mudkip.moememos.data.local.entity.MemoEntity
-import me.mudkip.moememos.data.service.MemoService
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ext.suspendOnErrorMessage
+import xyz.nachaos.memosyou.data.local.entity.MemoEntity
+import xyz.nachaos.memosyou.data.service.MemoService
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ext.suspendOnErrorMessage
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,4 +51,4 @@ class ArchivedMemoListViewModel @Inject constructor(
 }
 
 val LocalArchivedMemos =
-    compositionLocalOf<ArchivedMemoListViewModel> { error(me.mudkip.moememos.R.string.archived_memo_list_view_model_not_found.string) }
+    compositionLocalOf<ArchivedMemoListViewModel> { error(xyz.nachaos.memosyou.R.string.archived_memo_list_view_model_not_found.string) }

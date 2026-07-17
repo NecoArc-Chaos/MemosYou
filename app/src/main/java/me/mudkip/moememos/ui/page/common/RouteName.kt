@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.common
+package xyz.nachaos.memosyou.ui.page.common
 
 object RouteName {
     const val MEMOS = "memos"

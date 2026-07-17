@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.component
+package xyz.nachaos.memosyou.ui.component
 
 import android.text.format.DateUtils
 import androidx.compose.foundation.layout.Box
@@ -36,11 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.local.entity.MemoEntity
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.viewmodel.LocalArchivedMemos
-import me.mudkip.moememos.viewmodel.LocalMemos
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.local.entity.MemoEntity
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.viewmodel.LocalArchivedMemos
+import xyz.nachaos.memosyou.viewmodel.LocalMemos
 
 @Composable
 fun ArchivedMemoCard(

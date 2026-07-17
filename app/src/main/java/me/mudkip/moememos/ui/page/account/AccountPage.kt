@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.account
+package xyz.nachaos.memosyou.ui.page.account
 
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -23,14 +23,14 @@ import androidx.navigation.NavHostController
 import com.skydoves.sandwich.onSuccess
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.model.Account
-import me.mudkip.moememos.data.model.MemosAccount
-import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ui.page.common.RouteName
-import me.mudkip.moememos.viewmodel.AccountViewModel
-import me.mudkip.moememos.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.model.Account
+import xyz.nachaos.memosyou.data.model.MemosAccount
+import xyz.nachaos.memosyou.ext.popBackStackIfLifecycleIsResumed
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ui.page.common.RouteName
+import xyz.nachaos.memosyou.viewmodel.AccountViewModel
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

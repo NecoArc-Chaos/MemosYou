@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.page.login
+package xyz.nachaos.memosyou.ui.page.login
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -55,14 +55,14 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.launch
-import me.mudkip.moememos.R
-import me.mudkip.moememos.ext.popBackStackIfLifecycleIsResumed
-import me.mudkip.moememos.ext.string
-import me.mudkip.moememos.ext.suspendOnErrorMessage
-import me.mudkip.moememos.ui.component.Markdown
-import me.mudkip.moememos.ui.page.common.RouteName
-import me.mudkip.moememos.viewmodel.LocalUserState
-import me.mudkip.moememos.viewmodel.LoginCompatibility
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.ext.popBackStackIfLifecycleIsResumed
+import xyz.nachaos.memosyou.ext.string
+import xyz.nachaos.memosyou.ext.suspendOnErrorMessage
+import xyz.nachaos.memosyou.ui.component.Markdown
+import xyz.nachaos.memosyou.ui.page.common.RouteName
+import xyz.nachaos.memosyou.viewmodel.LocalUserState
+import xyz.nachaos.memosyou.viewmodel.LoginCompatibility
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable

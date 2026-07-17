@@ -1,4 +1,4 @@
-package me.mudkip.moememos.ui.security
+package xyz.nachaos.memosyou.ui.security
 
 import android.content.Context
 import android.content.ContextWrapper
@@ -45,9 +45,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.flow.map
-import me.mudkip.moememos.R
-import me.mudkip.moememos.data.model.Settings as AppSettings
-import me.mudkip.moememos.ext.settingsDataStore
+import xyz.nachaos.memosyou.R
+import xyz.nachaos.memosyou.data.model.Settings as AppSettings
+import xyz.nachaos.memosyou.ext.settingsDataStore
 import timber.log.Timber
 
 private const val APP_LOCK_TIMEOUT_MILLIS = 60_000L
