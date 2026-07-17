@@ -18,6 +18,7 @@ import xyz.nachaos.memosyou.data.datasource.ExplorePagingSource
 import xyz.nachaos.memosyou.data.model.Account
 import xyz.nachaos.memosyou.data.model.Memo
 import xyz.nachaos.memosyou.data.service.AccountService
+import xyz.nachaos.memosyou.data.api.ApiResponse
 import javax.inject.Inject
 
 @HiltViewModel
@@ -71,7 +72,7 @@ class ExploreViewModel @Inject constructor(
                 val repo = accountService.getRepository()
                 // Load comment count
                 val commentResp = repo.listMemoComments(memoId, pageSize = 1, pageToken = null)
-                if (commentResp is xyz.nachaos.memosyou.data.api.ApiResponse.Success) {
+                if (commentResp is ApiResponse.Success) {
                     val count = commentResp.data.first.size
                     _commentCountCache[memoId] = if (commentResp.data.second != null) count + 1 else count
                 }
