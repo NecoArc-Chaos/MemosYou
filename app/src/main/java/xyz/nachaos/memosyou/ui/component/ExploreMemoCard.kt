@@ -94,8 +94,6 @@ fun memoCommentName(remoteId: String?): String {
     val idx = remoteId.lastIndexOf("/memos/")
     return if (idx >= 0) {
         remoteId.substring(idx + 1)
-    } else if (remoteId.startsWith("memos/")) {
-        remoteId.substring(6)
     } else {
         remoteId
     }
