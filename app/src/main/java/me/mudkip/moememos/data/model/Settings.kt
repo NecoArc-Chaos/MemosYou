@@ -8,8 +8,6 @@ enum class DarkMode {
 }
 
 @Serializable
-
-@Serializable
 data class Settings(
     val usersList: List<UserData> = emptyList(),
     val currentUser: String = "",

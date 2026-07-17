@@ -229,10 +229,6 @@ fun SettingsPage(
                     }
                 }
             }
-                }
-            }
-            }
-
             item {
                 SettingItem(
                     icon = Icons.Outlined.Edit,
