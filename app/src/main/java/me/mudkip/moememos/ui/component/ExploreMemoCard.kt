@@ -71,6 +71,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.getOrNull
@@ -284,7 +285,7 @@ fun ExploreMemoCard(memo: Memo) {
                                 Box(Modifier.align(Alignment.TopEnd).background(
                                     MaterialTheme.colorScheme.primary, CircleShape
                                 ).size(14.dp), contentAlignment = Alignment.Center) {
-                                    Text("${comments.size}", style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.dp.value), color = MaterialTheme.colorScheme.onPrimary)
+                                    Text("${comments.size}", style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = MaterialTheme.colorScheme.onPrimary)
                                 }
                             }
                         }

@@ -961,7 +961,7 @@ class SyncingRepository(
     }
     suspend fun upsertReaction(memoName: String, reactionType: String): ApiResponse<ReactionItem> {
         if (remoteRepository !is MemosV1Repository) return ApiResponse.exception(Exception("Not a V1 repo"))
-        return (remoteRepository as MemosV1Repository).memosApi.upsertMemoReaction(memoName, UpsertReactionRequest(reactionType))
+        return (remoteRepository as MemosV1Repository).memosApi.upsertMemoReaction(memoName, UpsertReactionRequest(contentId = memoName, reactionType = reactionType))
     }
     suspend fun deleteReaction(reactionName: String): ApiResponse<Unit> {
         if (remoteRepository !is MemosV1Repository) return ApiResponse.exception(Exception("Not a V1 repo"))
