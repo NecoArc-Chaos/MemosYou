@@ -1,5 +1,7 @@
 package xyz.nachaos.memosyou.ui.theme
 
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+
 import android.app.Activity
 import android.graphics.Color
 import android.os.Build
@@ -31,6 +33,7 @@ val ExpressiveShapes = Shapes(
     extraLarge = RoundedCornerShape(36.dp),
 )
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MoeMemosTheme(content: @Composable () -> Unit) {
     val context = LocalContext.current
