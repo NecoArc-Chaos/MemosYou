@@ -49,7 +49,6 @@ fun UserProfileHeader(
     val userStateViewModel = LocalUserState.current
     val user = userStateViewModel.currentUser
     val host = userStateViewModel.host
-    Log.d("UserProfileHeader", "user=$user, avatarUrl=${user?.avatarUrl}, host=$host")
 
     val days = remember(user, LocalDate.now()) {
         user?.let { currentUser ->

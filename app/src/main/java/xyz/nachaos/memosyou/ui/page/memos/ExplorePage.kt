@@ -78,7 +78,6 @@ fun ExplorePage(
         if (serverLogoUrl.startsWith("http")) serverLogoUrl
         else host.trimEnd('/') + "/" + serverLogoUrl.trimStart('/')
     } else ""
-    Log.d("ExplorePage", "serverLogoUrl=$serverLogoUrl, fullLogoUrl=$fullLogoUrl")
 
     Scaffold(
         topBar = {
