@@ -2,8 +2,8 @@ package xyz.nachaos.memosyou.data.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.getOrThrow
-import com.skydoves.sandwich.mapSuccess
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -26,30 +26,37 @@ class ExplorePagingSource(
         val response = remoteRepository.listWorkspaceMemos(EXPLORE_PAGE_SIZE, params.key)
 
         return try {
-            response.mapSuccess { (memos, nextPageToken) ->
-                // Fetch comment counts in parallel
-                val memosWithCounts = coroutineScope {
-                    memos.map { memo ->
-                        async {
-                            if (remoteRepository is MemosV1Repository) {
-                                val name = memoCommentName(memo.remoteId)
-                                val commentResp = remoteRepository.memosApi.listMemoComments(name, pageSize = 1, pageToken = null)
-                                val count = if (commentResp is com.skydoves.sandwich.ApiResponse.Success) {
-                                    commentResp.data.first.size
-                                } else 0
-                                memo.copy(commentCount = count)
-                            } else {
-                                memo
+            val memosWithCounts = when (response) {
+                is ApiResponse.Success -> {
+                    val (memos, nextPageToken) = response.data
+                    // Fetch comment counts in parallel
+                    coroutineScope {
+                        memos.map { memo ->
+                            async {
+                                if (remoteRepository is MemosV1Repository) {
+                                    val name = memoCommentName(memo.remoteId)
+                                    val commentResp = remoteRepository.memosApi.listMemoComments(name, pageSize = 1, pageToken = null)
+                                    val count = if (commentResp is ApiResponse.Success) {
+                                        commentResp.data.first.size
+                                    } else 0
+                                    memo.copy(commentCount = count)
+                                } else {
+                                    memo
+                                }
                             }
-                        }
-                    }.awaitAll()
+                        }.awaitAll()
+                    }.let { memosWithCounts ->
+                        LoadResult.Page(
+                            data = memosWithCounts,
+                            prevKey = null,
+                            nextKey = nextPageToken,
+                        )
+                    }
                 }
-                LoadResult.Page(
-                    data = memosWithCounts,
-                    prevKey = null,
-                    nextKey = nextPageToken,
-                )
-            }.getOrThrow()
+                is ApiResponse.Failure -> LoadResult.Error(response.apiError)
+                else -> LoadResult.Error(Exception("Unknown response type"))
+            }
+            memosWithCounts
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
