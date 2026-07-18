@@ -1,3 +1,4 @@
+import android.util.Log
 package xyz.nachaos.memosyou.ui.component
 
 import androidx.compose.foundation.background
@@ -48,6 +49,7 @@ fun UserProfileHeader(
     val userStateViewModel = LocalUserState.current
     val user = userStateViewModel.currentUser
     val host = userStateViewModel.host
+    Log.d("UserProfileHeader", "user=$user, avatarUrl=${user?.avatarUrl}, host=$host")
 
     val days = remember(user, LocalDate.now()) {
         user?.let { currentUser ->
@@ -87,6 +89,8 @@ fun UserProfileHeader(
                         contentScale = ContentScale.Crop
                     )
                 } else {
+                    // Show user initial if no avatar
+                    val initial = user?.displayName?.firstOrNull()?.toString() ?: "?"
                     Box(
                         modifier = Modifier
                             .size(56.dp)
@@ -101,11 +105,10 @@ fun UserProfileHeader(
                             ),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            Icons.Filled.Person,
-                            contentDescription = null,
-                            modifier = Modifier.size(32.dp),
-                            tint = Color.White
+                        Text(
+                            text = initial.uppercase(),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Color.White
                         )
                     }
                 }
