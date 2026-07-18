@@ -90,7 +90,7 @@ fun UserProfileHeader(
                     )
                 } else {
                     // Show user initial if no avatar
-                    val initial = user?.displayName?.firstOrNull()?.toString() ?: "?"
+                    val initial = user?.name?.firstOrNull()?.toString() ?: "?"
                     Box(
                         modifier = Modifier
                             .size(56.dp)
