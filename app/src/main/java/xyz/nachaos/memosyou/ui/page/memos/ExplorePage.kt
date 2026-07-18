@@ -102,9 +102,10 @@ fun ExplorePage(
                             )
                         } else {
                             Icon(
-                                Icons.Outlined.Dns,
+                                painter = painterResource(R.drawable.memos_logo),
                                 contentDescription = "Server",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(28.dp)
                             )
                         }
                     }
@@ -142,9 +143,10 @@ fun ExplorePage(
                                     )
                                 } else {
                                     Icon(
-                                        Icons.Outlined.Dns,
+                                        painter = painterResource(R.drawable.memos_logo),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(32.dp)
                                     )
                                 }
                             }

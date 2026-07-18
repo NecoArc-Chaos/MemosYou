@@ -167,7 +167,7 @@ fun SideDrawer(
                             modifier = Modifier.size(40.dp).clip(RoundedCornerShape(10.dp)),
                             contentScale = ContentScale.Fit)
                     } else {
-                        Icon(Icons.Outlined.Home, null, Modifier.size(40.dp).padding(4.dp),
+                        Icon(painter = painterResource(R.drawable.memos_logo), null, Modifier.size(40.dp).padding(4.dp),
                             tint = MaterialTheme.colorScheme.primary)
                     }
                     Spacer(Modifier.width(12.dp))
