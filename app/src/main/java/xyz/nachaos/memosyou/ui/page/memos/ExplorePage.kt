@@ -30,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -104,11 +103,11 @@ fun ExplorePage(
                                 contentScale = ContentScale.Fit
                             )
                         } else {
-                            Icon(
-                                painter = painterResource(R.drawable.memos_logo),
+                            AsyncImage(
+                                model = R.drawable.memos_logo,
                                 contentDescription = "Server",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(28.dp)
+                                modifier = Modifier.size(28.dp),
+                                contentScale = ContentScale.Fit
                             )
                         }
                     }
@@ -145,11 +144,11 @@ fun ExplorePage(
                                         contentScale = ContentScale.Fit
                                     )
                                 } else {
-                                    Icon(
-                                        painter = painterResource(R.drawable.memos_logo),
+                                    AsyncImage(
+                                        model = R.drawable.memos_logo,
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.size(32.dp)
+                                        modifier = Modifier.size(32.dp),
+                                        contentScale = ContentScale.Fit
                                     )
                                 }
                             }

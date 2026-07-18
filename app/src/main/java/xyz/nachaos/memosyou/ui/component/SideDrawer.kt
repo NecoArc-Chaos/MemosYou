@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -170,8 +169,12 @@ fun SideDrawer(
                             modifier = Modifier.size(40.dp).clip(RoundedCornerShape(10.dp)),
                             contentScale = ContentScale.Fit)
                     } else {
-                        Icon(painter = painterResource(R.drawable.memos_logo), null, Modifier.size(40.dp).padding(4.dp),
-                            tint = MaterialTheme.colorScheme.primary)
+                        AsyncImage(
+                            model = R.drawable.memos_logo,
+                            contentDescription = null,
+                            modifier = Modifier.size(40.dp).padding(4.dp),
+                            contentScale = ContentScale.Fit
+                        )
                     }
                     Spacer(Modifier.width(12.dp))
                     Column {
