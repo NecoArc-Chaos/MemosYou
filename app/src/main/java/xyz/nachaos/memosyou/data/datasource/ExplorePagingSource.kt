@@ -35,7 +35,7 @@ class ExplorePagingSource(
                             async {
                                 if (remoteRepository is MemosV1Repository) {
                                     val name = memoCommentName(memo.remoteId)
-                                    val commentResp = remoteRepository.memosApi.listMemoComments(name, pageSize = 1, pageToken = null)
+                                    val commentResp = remoteRepository.memosApi.listMemoComments(name, pageSize = 20, pageToken = null)
                                     val count = if (commentResp is ApiResponse.Success) {
                                         commentResp.data.memos.size
                                     } else 0
