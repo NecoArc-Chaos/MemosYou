@@ -37,7 +37,7 @@ class ExplorePagingSource(
                                     val name = memoCommentName(memo.remoteId)
                                     val commentResp = remoteRepository.memosApi.listMemoComments(name, pageSize = 1, pageToken = null)
                                     val count = if (commentResp is ApiResponse.Success) {
-                                        commentResp.data.first.size
+                                        commentResp.data.memos.size
                                     } else 0
                                     memo.copy(commentCount = count)
                                 } else {
@@ -53,7 +53,7 @@ class ExplorePagingSource(
                         )
                     }
                 }
-                is ApiResponse.Failure -> LoadResult.Error(response.apiError)
+                is ApiResponse.Failure -> LoadResult.Error(Exception(response.toString()))
                 else -> LoadResult.Error(Exception("Unknown response type"))
             }
             memosWithCounts
