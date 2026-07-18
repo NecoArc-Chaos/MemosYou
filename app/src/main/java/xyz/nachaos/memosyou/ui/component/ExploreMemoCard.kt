@@ -79,6 +79,7 @@ import com.skydoves.sandwich.getOrNull
 import kotlinx.coroutines.launch
 import xyz.nachaos.memosyou.R
 import xyz.nachaos.memosyou.data.api.ReactionItem
+import xyz.nachaos.memosyou.data.api.ReactionContent
 import xyz.nachaos.memosyou.data.api.UpsertReactionRequest
 import xyz.nachaos.memosyou.data.model.Account
 import xyz.nachaos.memosyou.data.model.Memo
@@ -185,7 +186,7 @@ fun ExploreMemoCard(memo: Memo) {
                     if (myReactions.isNotEmpty()) {
                         myReactions.forEach { remote.memosApi.deleteMemoReaction(it.name) }
                     } else {
-                        val requestBody = UpsertReactionRequest(contentId = name, reactionType = emoji)
+                        val requestBody = UpsertReactionRequest(name = name, reaction = ReactionContent(contentId = name, reactionType = emoji))
                         Log.d("ExploreMemoCard", "upsertMemoReaction request: name=$name, body=$requestBody")
                         val resp = remote.memosApi.upsertMemoReaction(name, requestBody)
                         Log.d("ExploreMemoCard", "upsertMemoReaction response: $resp")

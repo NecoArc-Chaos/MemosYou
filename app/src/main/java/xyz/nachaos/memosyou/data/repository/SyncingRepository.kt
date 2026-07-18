@@ -22,6 +22,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import xyz.nachaos.memosyou.data.constant.MoeMemosException
 import xyz.nachaos.memosyou.data.api.ReactionItem
+import xyz.nachaos.memosyou.data.api.ReactionContent
 import xyz.nachaos.memosyou.data.api.UpsertReactionRequest
 import xyz.nachaos.memosyou.data.local.FileStorage
 import xyz.nachaos.memosyou.data.local.dao.MemoDao
@@ -961,7 +962,7 @@ class SyncingRepository(
     }
     suspend fun upsertReaction(memoName: String, reactionType: String): ApiResponse<ReactionItem> {
         if (remoteRepository !is MemosV1Repository) return ApiResponse.exception(Exception("Not a V1 repo"))
-        return (remoteRepository as MemosV1Repository).memosApi.upsertMemoReaction(memoName, UpsertReactionRequest(contentId = memoName, reactionType = reactionType))
+        return (remoteRepository as MemosV1Repository).memosApi.upsertMemoReaction(memoName, UpsertReactionRequest(name = memoName, reaction = ReactionContent(contentId = memoName, reactionType = reactionType)))
     }
     suspend fun deleteReaction(reactionName: String): ApiResponse<Unit> {
         if (remoteRepository !is MemosV1Repository) return ApiResponse.exception(Exception("Not a V1 repo"))

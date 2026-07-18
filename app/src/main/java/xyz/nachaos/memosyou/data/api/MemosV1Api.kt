@@ -252,6 +252,12 @@ data class ReactionItem(
 
 @Serializable
 data class UpsertReactionRequest(
+    @SerialName("name") val name: String,
+    @SerialName("reaction") val reaction: ReactionContent
+)
+
+@Serializable
+data class ReactionContent(
     @SerialName("content_id") val contentId: String,
     @SerialName("reaction_type") val reactionType: String
 )
