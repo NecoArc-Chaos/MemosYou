@@ -1,4 +1,5 @@
 package xyz.nachaos.memosyou.ui.component
+import android.util.Log
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -159,6 +160,7 @@ fun SideDrawer(
                 if (serverLogoUrl.startsWith("http")) serverLogoUrl
                 else userStateViewModel.host.trimEnd('/') + "/" + serverLogoUrl.trimStart('/')
             } else ""
+            Log.d("SideDrawer", "serverLogoUrl=$serverLogoUrl, fullLogo=$fullLogo, showLogo=$showLogo")
             val displayHost = userStateViewModel.host.removePrefix("https://").removePrefix("http://").trimEnd('/')
 
             Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp)) {
