@@ -52,6 +52,7 @@ private fun MemosAccount.toUser(): User {
     return User(
         identifier = remoteIdentifier,
         name = name,
+        avatarUrl = avatarUrl.ifBlank { null },
         startDate = startDate,
         defaultVisibility = visibility
     )
