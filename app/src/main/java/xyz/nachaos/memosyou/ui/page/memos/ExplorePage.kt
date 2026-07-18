@@ -2,6 +2,7 @@ package xyz.nachaos.memosyou.ui.page.memos
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import android.util.Log
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -78,6 +79,7 @@ fun ExplorePage(
         if (serverLogoUrl.startsWith("http")) serverLogoUrl
         else host.trimEnd('/') + "/" + serverLogoUrl.trimStart('/')
     } else ""
+    Log.d("ExplorePage", "serverLogoUrl=$serverLogoUrl, fullLogoUrl=$fullLogoUrl")
 
     Scaffold(
         topBar = {
