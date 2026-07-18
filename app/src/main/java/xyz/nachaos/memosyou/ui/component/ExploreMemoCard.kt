@@ -186,12 +186,11 @@ fun ExploreMemoCard(memo: Memo) {
                         myReactions.forEach { remote.memosApi.deleteMemoReaction(it.name) }
                     } else {
                         val requestBody = UpsertReactionRequest(name = name, reaction = ReactionContent(contentId = name, reactionType = emoji))
-                        val resp = remote.memosApi.upsertMemoReaction(name, requestBody)
+                        remote.memosApi.upsertMemoReaction(name, requestBody)
                     }
-                    val resp = remote.memosApi.listMemoReactions(name)
-                    if (resp is ApiResponse.Success) {
-                        reactions = resp.data.reactions
-                    }
+                    val listResp = remote.memosApi.listMemoReactions(name)
+                    if (listResp is ApiResponse.Success) {
+                        reactions = listResp.data.reactions
                     }
                 } else {
                     Log.w("ExploreMemoCard", "toggleReaction skipped: remote is not MemosV1Repository")
