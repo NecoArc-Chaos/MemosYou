@@ -8,6 +8,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import xyz.nachaos.memosyou.data.api.MemosV1Api
 import xyz.nachaos.memosyou.data.api.MemosV1CreateMemoRequest
 import xyz.nachaos.memosyou.data.api.MemosV1Memo

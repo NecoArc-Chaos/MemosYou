@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
+import xyz.nachaos.memosyou.BuildConfig
 import xyz.nachaos.memosyou.R
 import xyz.nachaos.memosyou.data.api.MemosV0Api
 import xyz.nachaos.memosyou.data.api.MemosV1Api
