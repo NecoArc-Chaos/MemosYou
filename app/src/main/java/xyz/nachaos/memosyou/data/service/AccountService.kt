@@ -377,11 +377,13 @@ class AccountService @Inject constructor(
                     chain.proceed(request)
                 }
             }
-            // Add logging interceptor for debugging
-            val loggingInterceptor = HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
+            // Only enable HTTP logging in debug builds to avoid leaking sensitive data in release builds.
+            if (BuildConfig.DEBUG) {
+                val loggingInterceptor = HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+                addInterceptor(loggingInterceptor)
             }
-            addInterceptor(loggingInterceptor)
         }.build()
 
         return client to Retrofit.Builder()
