@@ -15,7 +15,6 @@
 
 # Keep Hilt generated classes
 -keep class dagger.hilt.** { *; }
--keep class xyz.nachaos.memosyou.** { *; }
 
 # Keep Room database
 -keep class xyz.nachaos.memosyou.data.local.MoeMemosDatabase { *; }

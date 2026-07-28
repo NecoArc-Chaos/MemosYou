@@ -16,7 +16,7 @@ object NetworkModule {
     @Provides
     fun provideOkHttpClient(): OkHttpClient {
         val cookieManager = CookieManager()
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER)
         return OkHttpClient.Builder()
             .cookieJar(JavaNetCookieJar(cookieManager))
             .build()

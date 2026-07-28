@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
+import xyz.nachaos.memosyou.BuildConfig
 import xyz.nachaos.memosyou.R
 import xyz.nachaos.memosyou.data.api.MemosV0Api
 import xyz.nachaos.memosyou.data.api.MemosV1Api
@@ -274,10 +275,12 @@ class AccountService @Inject constructor(
                             throw IllegalStateException("Missing resource file: ${resource.filename}")
                         }
                         val ext = exportFileExtension(resource, sourceFile)
+                        val safeBaseName = memoBaseName.replace(File.separatorChar, '_').replace('/', '_').replace('\\', '_')
+                        val safeFilename = resource.filename.replace(File.separatorChar, '_').replace('/', '_').replace('\\', '_')
                         val attachmentName = if (ext.isBlank()) {
-                            "$memoBaseName-${index + 1}"
+                            "$safeBaseName-${index + 1}"
                         } else {
-                            "$memoBaseName-${index + 1}.$ext"
+                            "$safeBaseName-${index + 1}.$ext"
                         }
                         zip.putNextEntry(ZipEntry(attachmentName))
                         sourceFile.inputStream().use { input -> input.copyTo(zip) }

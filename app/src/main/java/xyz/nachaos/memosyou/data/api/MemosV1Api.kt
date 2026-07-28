@@ -186,8 +186,10 @@ data class MemosV1Resource(
         if (!externalLink.isNullOrEmpty()) {
             return externalLink.toUri()
         }
+        val resourceName = name ?: return host.toUri()
+        val resourceFilename = filename ?: return host.toUri()
         return host.toUri()
-            .buildUpon().appendPath("file").appendEncodedPath(name ?: "").appendPath(filename ?: "").build()
+            .buildUpon().appendPath("file").appendEncodedPath(resourceName).appendPath(resourceFilename).build()
     }
 }
 
