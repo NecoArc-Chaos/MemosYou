@@ -205,7 +205,7 @@ class AccountService @Inject constructor(
             persistAccessToken(account)
             context.settingsDataStore.updateData { settings ->
                 val users = settings.usersList.toMutableList()
-                val index = users.indexOfFirst { it.accountKey == account.accountKey() }
+                val index = users.indexOfFirst { it.accountKey == account.accountKey }
                 val currentSettings = users.getOrNull(index)?.settings ?: UserSettings()
                 if (index != -1) {
                     users.removeAt(index)
@@ -377,11 +377,13 @@ class AccountService @Inject constructor(
                     chain.proceed(request)
                 }
             }
-            // Add logging interceptor for debugging
-            val loggingInterceptor = HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
+            // Only enable detailed logging in debug builds to avoid leaking sensitive data in production
+            if (BuildConfig.DEBUG) {
+                val loggingInterceptor = HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+                addInterceptor(loggingInterceptor)
             }
-            addInterceptor(loggingInterceptor)
         }.build()
 
         return client to Retrofit.Builder()
