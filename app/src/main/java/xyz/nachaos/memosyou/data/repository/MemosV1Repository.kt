@@ -7,6 +7,7 @@ import com.skydoves.sandwich.onSuccess
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Semaphore
 import xyz.nachaos.memosyou.data.api.MemosV1Api
 import xyz.nachaos.memosyou.data.api.MemosV1CreateMemoRequest
 import xyz.nachaos.memosyou.data.api.MemosV1Memo
@@ -26,6 +27,7 @@ import okhttp3.MediaType
 import java.time.Instant
 
 private const val PAGE_SIZE = 200
+private const val USER_CONCURRENT_LIMIT = 5
 
 class MemosV1Repository(
     internal val memosApi: MemosV1Api,
@@ -103,9 +105,14 @@ class MemosV1Repository(
             return resp.mapSuccess { emptyList<Memo>() to null }
         }
         val users = resp.data.memos.mapNotNull { it.creator }.map { getId(it) }.toSet()
+        val semaphore = Semaphore(USER_CONCURRENT_LIMIT)
         val userResp = coroutineScope {
             users.map { userId ->
-                async { memosApi.getUser(userId).getOrNull() }
+                async {
+                    semaphore.withPermit {
+                        memosApi.getUser(userId).getOrNull()
+                    }
+                }
             }.awaitAll()
         }.filterNotNull()
         val userMap = mapOf(*userResp.map { user -> user.name to user }.toTypedArray())
@@ -224,11 +231,16 @@ class MemosV1Repository(
         if (resp !is ApiResponse.Success) {
             return resp.mapSuccess { emptyList<Memo>() to null }
         }
-        // Fetch user info for comment creators (same pattern as listWorkspaceMemos)
+        // Fetch user info for comment creators with bounded concurrency.
         val users = resp.data.memos.mapNotNull { it.creator }.map { getId(it) }.toSet()
+        val semaphore = Semaphore(USER_CONCURRENT_LIMIT)
         val userResp = coroutineScope {
             users.map { userId ->
-                async { memosApi.getUser(userId).getOrNull() }
+                async {
+                    semaphore.withPermit {
+                        memosApi.getUser(userId).getOrNull()
+                    }
+                }
             }.awaitAll()
         }.filterNotNull()
         val userMap = mapOf(*userResp.map { user -> user.name to user }.toTypedArray())
