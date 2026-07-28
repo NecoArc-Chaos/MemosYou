@@ -274,10 +274,12 @@ class AccountService @Inject constructor(
                             throw IllegalStateException("Missing resource file: ${resource.filename}")
                         }
                         val ext = exportFileExtension(resource, sourceFile)
+                        val safeBaseName = memoBaseName.replace(File.separatorChar, '_').replace('/', '_').replace('\\', '_')
+                        val safeFilename = resource.filename.replace(File.separatorChar, '_').replace('/', '_').replace('\\', '_')
                         val attachmentName = if (ext.isBlank()) {
-                            "$memoBaseName-${index + 1}"
+                            "$safeBaseName-${index + 1}"
                         } else {
-                            "$memoBaseName-${index + 1}.$ext"
+                            "$safeBaseName-${index + 1}.$ext"
                         }
                         zip.putNextEntry(ZipEntry(attachmentName))
                         sourceFile.inputStream().use { input -> input.copyTo(zip) }
