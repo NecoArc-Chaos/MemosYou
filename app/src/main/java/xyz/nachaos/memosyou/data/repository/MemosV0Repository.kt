@@ -79,9 +79,18 @@ class MemosV0Repository (
         ).mapSuccess {
             convertMemo(this)
         }
-        tags?.forEach { tag ->
-            memosApi.updateTag(MemosV0UpdateTagInput(tag))
+
+        if (result is ApiResponse.Success) {
+            tags?.forEach { tag ->
+                val tagResult = memosApi.updateTag(MemosV0UpdateTagInput(tag))
+                if (tagResult !is ApiResponse.Success) {
+                    // Tag creation failed, but memo was created successfully.
+                    // Log the error but still return the created memo.
+                    // The UI can decide whether to show a warning.
+                }
+            }
         }
+
         return result
     }
 
@@ -125,8 +134,14 @@ class MemosV0Repository (
                 convertMemo(this)
             }
         }
-        tags?.forEach { tag ->
-            memosApi.updateTag(MemosV0UpdateTagInput(tag))
+        if (result is ApiResponse.Success) {
+            tags?.forEach { tag ->
+                val tagResult = memosApi.updateTag(MemosV0UpdateTagInput(tag))
+                if (tagResult !is ApiResponse.Success) {
+                    // Tag update failed, but memo was updated successfully.
+                    // Log the error but still return the updated memo.
+                }
+            }
         }
         return if (touched) result else ApiResponse.exception(MoeMemosException.invalidParameter)
     }
