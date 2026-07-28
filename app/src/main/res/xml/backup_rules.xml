@@ -2,6 +2,4 @@
 <full-backup-content>
     <!-- Exclude sensitive shared preferences that contain encrypted tokens -->
     <exclude domain="sharedpref" path="secure_tokens" />
-    <!-- Exclude DataStore files which may contain account settings -->
-    <exclude domain="datastore" path="." />
 </full-backup-content>

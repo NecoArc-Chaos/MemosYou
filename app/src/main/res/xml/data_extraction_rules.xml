@@ -3,11 +3,8 @@
     <cloud-backup>
         <!-- Exclude sensitive shared preferences that contain encrypted tokens -->
         <exclude domain="sharedpref" path="secure_tokens" />
-        <!-- Exclude DataStore files which may contain account settings -->
-        <exclude domain="datastore" path="." />
     </cloud-backup>
     <device-transfer>
         <include domain="sharedpref" path="." />
-        <include domain="datastore" path="." />
     </device-transfer>
 </data-extraction-rules>
