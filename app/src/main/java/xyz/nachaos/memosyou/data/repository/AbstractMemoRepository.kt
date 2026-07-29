@@ -9,14 +9,27 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import xyz.nachaos.memosyou.data.local.entity.MemoEntity
 import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
+import xyz.nachaos.memosyou.data.model.Memo
+import xyz.nachaos.memosyou.data.model.MemoRelation
 import xyz.nachaos.memosyou.data.model.MemoVisibility
 import xyz.nachaos.memosyou.data.model.SyncStatus
 import xyz.nachaos.memosyou.data.model.User
+import xyz.nachaos.memosyou.data.api.MemosV1MemoShare
 import okhttp3.MediaType
 
+/**
+ * Abstract base class for memo repositories.
+ *
+ * Subclasses that support syncing MUST override [syncStatus] to provide
+ * their own sync status flow. The default implementation returns a
+ * static idle status for repositories that don't sync (e.g. local-only).
+ */
 abstract class AbstractMemoRepository {
-    private val _syncStatus = MutableStateFlow(SyncStatus())
-    open val syncStatus: StateFlow<SyncStatus> = _syncStatus.asStateFlow()
+    /**
+     * Sync status for this repository. Override in syncing repositories
+     * to provide live sync state. Non-syncing repositories return idle.
+     */
+    open val syncStatus: StateFlow<SyncStatus> = MutableStateFlow(SyncStatus()).asStateFlow()
 
     abstract suspend fun listMemos(): ApiResponse<List<MemoEntity>>
     abstract suspend fun listArchivedMemos(): ApiResponse<List<MemoEntity>>
@@ -34,11 +47,39 @@ abstract class AbstractMemoRepository {
 
     abstract suspend fun getCurrentUser(): ApiResponse<User>
 
-    open suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<xyz.nachaos.memosyou.data.model.Memo>, String?>> {
-        return ApiResponse.Success(emptyList<xyz.nachaos.memosyou.data.model.Memo>() to null)
+    open suspend fun getMemo(memoName: String): ApiResponse<Memo> {
+        return ApiResponse.exception(RuntimeException("Get memo detail not supported"))
     }
-    open suspend fun createMemoComment(memoName: String, content: String): ApiResponse<xyz.nachaos.memosyou.data.model.Memo> {
+
+    open suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<Memo>, String?>> {
+        return ApiResponse.Success(emptyList<Memo>() to null)
+    }
+    open suspend fun createMemoComment(memoName: String, content: String): ApiResponse<Memo> {
         return ApiResponse.exception(RuntimeException("Comments not supported"))
+    }
+
+    open suspend fun getSharedMemo(shareToken: String): ApiResponse<Memo> {
+        return ApiResponse.exception(RuntimeException("Shared memo not supported"))
+    }
+
+    open suspend fun createMemoShare(parentMemoName: String): ApiResponse<Unit> {
+        return ApiResponse.exception(RuntimeException("Shared memo not supported"))
+    }
+
+    open suspend fun listMemoShares(parentMemoName: String): ApiResponse<List<MemosV1MemoShare>> {
+        return ApiResponse.Success(emptyList())
+    }
+
+    open suspend fun deleteMemoShare(shareName: String): ApiResponse<Unit> {
+        return ApiResponse.exception(RuntimeException("Shared memo not supported"))
+    }
+
+    open suspend fun setMemoRelations(memoName: String, relations: List<MemoRelation>): ApiResponse<Unit> {
+        return ApiResponse.exception(RuntimeException("Relations not supported"))
+    }
+
+    open suspend fun listMemoRelations(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<MemoRelation>, String?>> {
+        return ApiResponse.Success(emptyList<MemoRelation>() to null)
     }
 
     open fun observeMemos(): Flow<List<MemoEntity>> = emptyFlow()

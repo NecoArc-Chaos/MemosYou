@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Decode Keystore (if secret exists)
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > app/memosyou.jks
+            echo "ANDROID_SIGNING_STORE_FILE=memosyou.jks" >> $GITHUB_ENV
+            echo "ANDROID_SIGNING_STORE_PASSWORD=$KS_PASS" >> $GITHUB_ENV
+            echo "ANDROID_SIGNING_KEY_ALIAS=$KS_ALIAS" >> $GITHUB_ENV
+            echo "ANDROID_SIGNING_KEY_PASSWORD=$KEY_PASS" >> $GITHUB_ENV
+            echo "Keystore decoded, signing enabled"
+          else
+            echo "No keystore, building unsigned APK"
+          fi
+
+      - name: Run unit tests
+        run: ./gradlew test --no-daemon
+
+      - name: Build debug APK
+        run: ./gradlew :app:assembleDebug --no-daemon
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: memosyou-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7

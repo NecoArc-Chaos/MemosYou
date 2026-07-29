@@ -1,7 +1,9 @@
 package xyz.nachaos.memosyou.data.repository
 
 import com.skydoves.sandwich.ApiResponse
+import xyz.nachaos.memosyou.data.api.MemosV1MemoShare
 import xyz.nachaos.memosyou.data.model.Memo
+import xyz.nachaos.memosyou.data.model.MemoRelation
 import xyz.nachaos.memosyou.data.model.MemoVisibility
 import xyz.nachaos.memosyou.data.model.Resource
 import xyz.nachaos.memosyou.data.model.User
@@ -49,4 +51,11 @@ abstract class RemoteRepository {
 
     abstract suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<Memo>, String?>>
     abstract suspend fun createMemoComment(memoName: String, content: String): ApiResponse<Memo>
+    abstract suspend fun getMemo(memoName: String): ApiResponse<Memo>
+    abstract suspend fun getSharedMemo(shareToken: String): ApiResponse<Memo>
+    abstract suspend fun createMemoShare(parentMemoName: String): ApiResponse<Unit>
+    abstract suspend fun listMemoShares(parentMemoName: String): ApiResponse<List<MemosV1MemoShare>>
+    abstract suspend fun deleteMemoShare(shareName: String): ApiResponse<Unit>
+    abstract suspend fun setMemoRelations(memoName: String, relations: List<MemoRelation>): ApiResponse<Unit>
+    abstract suspend fun listMemoRelations(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<MemoRelation>, String?>>
 }

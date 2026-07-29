@@ -67,6 +67,9 @@
     <string name="unsupported_memos_version_title">Unsupported Memos Version</string>
     <string name="memos_login_version_higher_warning">Your Memos version is higher than the versions supported by MemosYou. Compatibility issues may happen. Check the MemosYou website before continuing.</string>
     <string name="memos_sync_version_higher_warning">Your Memos version is higher than the versions supported by MemosYou. Force sync may corrupt unsynced data. Check the MemosYou website before continuing.</string>
+    <string name="shared_memo">Shared Memo</string>
+    <string name="relations">Relations</string>
+    <string name="location">Location</string>
     <string name="still_login">Still login</string>
     <string name="still_sync">Still Sync</string>
     <string name="pin">Pin</string>

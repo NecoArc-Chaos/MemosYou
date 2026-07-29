@@ -275,8 +275,8 @@ class AccountService @Inject constructor(
                             throw IllegalStateException("Missing resource file: ${resource.filename}")
                         }
                         val ext = exportFileExtension(resource, sourceFile)
-                        val safeBaseName = memoBaseName.replace(File.separatorChar, '_').replace('/', '_').replace('\\', '_')
-                        val safeFilename = resource.filename.replace(File.separatorChar, '_').replace('/', '_').replace('\\', '_')
+                        val safeBaseName = sanitizePathComponent(memoBaseName)
+                        val safeFilename = sanitizePathComponent(resource.filename)
                         val attachmentName = if (ext.isBlank()) {
                             "$safeBaseName-${index + 1}"
                         } else {
@@ -289,6 +289,26 @@ class AccountService @Inject constructor(
                 }
             }
         } ?: throw IllegalStateException("Unable to open export destination")
+    }
+
+    /**
+     * Sanitize a filename or path component for safe use in ZIP entries.
+     *
+     * Strips null bytes, path separators, parent-directory sequences,
+     * and leading dots (which create hidden files on Unix).
+     * If the result is blank, returns "unnamed" as a fallback.
+     */
+    private fun sanitizePathComponent(name: String): String {
+        val sanitized = name
+            .replace("\u0000", "")        // null byte
+            .replace('/', '_')            // Unix separator
+            .replace('\\', '_')           // Windows separator
+            .replace(File.separatorChar, '_')
+            .replace("..", "__")          // parent directory traversal
+            .trimStart('.')               // hidden files
+            .take(200)                    // reasonable length limit
+            .trim()
+        return sanitized.ifBlank { "unnamed" }
     }
 
     private fun uniqueMemoBaseName(date: Instant, collisionMap: MutableMap<String, Int>): String {

@@ -31,6 +31,7 @@ import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
 import xyz.nachaos.memosyou.data.model.DailyUsageStat
 import xyz.nachaos.memosyou.data.model.MemoVisibility
 import xyz.nachaos.memosyou.data.model.SyncStatus
+import xyz.nachaos.memosyou.data.repository.RemoteRepository
 import xyz.nachaos.memosyou.data.service.AccountService
 import xyz.nachaos.memosyou.data.service.MemoService
 import xyz.nachaos.memosyou.ext.getErrorMessage
@@ -211,6 +212,10 @@ class MemosViewModel @Inject constructor(
             is ApiResponse.Success -> response.data.firstOrNull { it.identifier == resourceIdentifier }
             else -> null
         }
+    }
+
+    suspend fun getRemoteRepository(): RemoteRepository? = withContext(viewModelScope.coroutineContext) {
+        accountService.getRemoteRepository()
     }
 
     private fun updateMemo(memo: MemoEntity) {
