@@ -206,7 +206,8 @@ class AccountService @Inject constructor(
             persistAccessToken(account)
             context.settingsDataStore.updateData { settings ->
                 val users = settings.usersList.toMutableList()
-                val index = users.indexOfFirst { userData: UserData -> userData.accountKey == account.accountKey() }
+                val currentAccountKey = account.accountKey()
+                val index = users.indexOfFirst { userData: UserData -> userData.accountKey == currentAccountKey }
                 val currentSettings = users.getOrNull(index)?.settings ?: UserSettings()
                 if (index != -1) {
                     users.removeAt(index)
@@ -214,7 +215,7 @@ class AccountService @Inject constructor(
                 users.add(account.toPersistedUserData(currentSettings))
                 settings.copy(
                     usersList = users,
-                    currentUser = account.accountKey(),
+                    currentUser = currentAccountKey,
                 )
             }
             updateCurrentAccount(account)
