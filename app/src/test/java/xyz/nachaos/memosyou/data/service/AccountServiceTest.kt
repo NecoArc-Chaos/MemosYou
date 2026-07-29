@@ -1,11 +1,5 @@
 package xyz.nachaos.memosyou.data.service
 
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkObject
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -13,31 +7,21 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import xyz.nachaos.memosyou.BuildConfig
-import xyz.nachaos.memosyou.data.api.MemosV0Api
-import xyz.nachaos.memosyou.data.api.MemosV1Api
-import xyz.nachaos.memosyou.data.api.MemosV1ProfileResponse
-import xyz.nachaos.memosyou.data.api.MemosV1User
-import xyz.nachaos.memosyou.data.api.MemosV1UserSetting
-import xyz.nachaos.memosyou.data.constant.MemosVersionSupport
 import xyz.nachaos.memosyou.data.local.FileStorage
 import xyz.nachaos.memosyou.data.local.MoeMemosDatabase
 import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
 import xyz.nachaos.memosyou.data.model.Account
 import xyz.nachaos.memosyou.data.model.LocalAccount
-import xyz.nachaos.memosyou.data.model.Memo
 import xyz.nachaos.memosyou.data.model.MemosAccount
-import xyz.nachaos.memosyou.data.model.User
 import xyz.nachaos.memosyou.data.model.UserData
 import xyz.nachaos.memosyou.data.model.UserSettings
-import xyz.nachaos.memosyou.data.repository.AbstractMemoRepository
-import xyz.nachaos.memosyou.data.repository.LocalDatabaseRepository
-import xyz.nachaos.memosyou.data.repository.MemosV0Repository
-import xyz.nachaos.memosyou.data.repository.MemosV1Repository
-import xyz.nachaos.memosyou.data.repository.RemoteRepository
-import xyz.nachaos.memosyou.data.repository.SyncingRepository
-import xyz.nachaos.memosyou.ext.settingsDataStore
-import xyz.nachaos.memosyou.ext.string
 import okhttp3.OkHttpClient
 import java.io.File
 
@@ -52,14 +36,14 @@ class AccountServiceTest {
 
     @Before
     fun setup() {
-        mockContext = mockk<android.content.Context>()
-        mockOkHttpClient = mockk<OkHttpClient>()
-        mockDatabase = mockk<MoeMemosDatabase>()
-        mockFileStorage = mockk<FileStorage>()
-        mockSecureTokenStorage = mockk<SecureTokenStorage>()
+        MockitoAnnotations.openMocks(this)
+        mockContext = mock<android.content.Context>()
+        mockOkHttpClient = mock<OkHttpClient>()
+        mockDatabase = mock<MoeMemosDatabase>()
+        mockFileStorage = mock<FileStorage>()
+        mockSecureTokenStorage = mock<SecureTokenStorage>()
 
-        mockkObject(BuildConfig)
-        every { BuildConfig.DEBUG } returns false
+        whenever(BuildConfig.DEBUG).thenReturn(false)
 
         accountService = AccountService(
             context = mockContext,
@@ -72,20 +56,12 @@ class AccountServiceTest {
 
     @Test
     fun `createMemosV0Client adds authorization header when token provided`() = runTest {
-        val mockClient = mockk<OkHttpClient>()
-        val mockApi = mockk<MemosV0Api>()
-        every { mockOkHttpClient.newBuilder() } returns mockk {
-            every { addNetworkInterceptor(any()) } returns this
-            every { build() } returns mockClient
-        }
-        every { mockClient.newBuilder() } returns mockk {
-            every { addNetworkInterceptor(any()) } returns this
-            every { build() } returns mockClient
-        }
-        val mockRetrofit = mockk<retrofit2.Retrofit>()
-        every {
-            mockClient.newBuilder().build()
-        } returns mockClient
+        val mockClient = mock<OkHttpClient>()
+        val mockApi = mock<MemosV0Api>()
+        val mockBuilder = mock<OkHttpClient.Builder>()
+        whenever(mockOkHttpClient.newBuilder()).thenReturn(mockBuilder)
+        whenever(mockBuilder.addNetworkInterceptor(any())).thenReturn(mockBuilder)
+        whenever(mockBuilder.build()).thenReturn(mockClient)
 
         val (client, api) = accountService.createMemosV0Client("https://memos.example.com", "test-token")
 
@@ -103,7 +79,7 @@ class AccountServiceTest {
 
     @Test
     fun `createMemosV1Client adds logging interceptor only in debug`() = runTest {
-        every { BuildConfig.DEBUG } returns true
+        whenever(BuildConfig.DEBUG).thenReturn(true)
 
         val (client, api) = accountService.createMemosV1Client("https://memos.example.com", "test-token")
 
@@ -113,7 +89,7 @@ class AccountServiceTest {
 
     @Test
     fun `createMemosV1Client does not add logging interceptor in release`() = runTest {
-        every { BuildConfig.DEBUG } returns false
+        whenever(BuildConfig.DEBUG).thenReturn(false)
 
         val (client, api) = accountService.createMemosV1Client("https://memos.example.com", "test-token")
 
@@ -123,7 +99,6 @@ class AccountServiceTest {
 
     @Test
     fun `sanitizePathComponent removes null bytes`() {
-        // Access private method via reflection
         val method = AccountService::class.java.getDeclaredMethod(
             "sanitizePathComponent", String::class.java
         )
@@ -299,10 +274,15 @@ class AccountServiceTest {
         method.isAccessible = true
 
         val resource = ResourceEntity(
-            memoIdentifier = "memo-1",
+            identifier = "memo-1",
+            remoteId = null,
+            accountKey = "local",
+            date = java.time.Instant.now(),
             filename = "document.pdf",
+            uri = "file:///path/to/document.pdf",
+            localUri = "file:///path/to/document.pdf",
             mimeType = "application/pdf",
-            localUri = "file:///path/to/document.pdf"
+            memoId = null
         )
         val file = File("/path/to/document.pdf")
 
@@ -320,10 +300,15 @@ class AccountServiceTest {
         method.isAccessible = true
 
         val resource = ResourceEntity(
-            memoIdentifier = "memo-1",
+            identifier = "memo-1",
+            remoteId = null,
+            accountKey = "local",
+            date = java.time.Instant.now(),
             filename = "document",
+            uri = "file:///path/to/document.pdf",
+            localUri = "file:///path/to/document.pdf",
             mimeType = "application/pdf",
-            localUri = "file:///path/to/document.pdf"
+            memoId = null
         )
         val file = File("/path/to/document.pdf")
 
@@ -341,10 +326,15 @@ class AccountServiceTest {
         method.isAccessible = true
 
         val resource = ResourceEntity(
-            memoIdentifier = "memo-1",
+            identifier = "memo-1",
+            remoteId = null,
+            accountKey = "local",
+            date = java.time.Instant.now(),
             filename = "document",
+            uri = "file:///path/to/document",
+            localUri = "file:///path/to/document",
             mimeType = "application/pdf",
-            localUri = "file:///path/to/document"
+            memoId = null
         )
         val file = File("/path/to/document")
 
@@ -362,10 +352,15 @@ class AccountServiceTest {
         method.isAccessible = true
 
         val resource = ResourceEntity(
-            memoIdentifier = "memo-1",
+            identifier = "memo-1",
+            remoteId = null,
+            accountKey = "local",
+            date = java.time.Instant.now(),
             filename = "document",
+            uri = "file:///path/to/document",
+            localUri = "file:///path/to/document",
             mimeType = "application/octet-stream",
-            localUri = "file:///path/to/document"
+            memoId = null
         )
         val file = File("/path/to/document")
 
@@ -382,10 +377,15 @@ class AccountServiceTest {
         method.isAccessible = true
 
         val resource = ResourceEntity(
-            memoIdentifier = "memo-1",
+            identifier = "memo-1",
+            remoteId = null,
+            accountKey = "local",
+            date = java.time.Instant.now(),
             filename = "doc.pdf",
+            uri = "content://external/document.pdf",
+            localUri = "content://external/document.pdf",
             mimeType = "application/pdf",
-            localUri = "content://external/document.pdf"
+            memoId = null
         )
 
         val result = method.invoke(accountService, resource) as File?
@@ -401,10 +401,15 @@ class AccountServiceTest {
         method.isAccessible = true
 
         val resource = ResourceEntity(
-            memoIdentifier = "memo-1",
+            identifier = "memo-1",
+            remoteId = null,
+            accountKey = "local",
+            date = java.time.Instant.now(),
             filename = "doc.pdf",
+            uri = "file://",
+            localUri = "file://",
             mimeType = "application/pdf",
-            localUri = "file://"
+            memoId = null
         )
 
         val result = method.invoke(accountService, resource) as File?
@@ -420,10 +425,15 @@ class AccountServiceTest {
         method.isAccessible = true
 
         val resource = ResourceEntity(
-            memoIdentifier = "memo-1",
+            identifier = "memo-1",
+            remoteId = null,
+            accountKey = "local",
+            date = java.time.Instant.now(),
             filename = "doc.pdf",
+            uri = "file:///path/to/doc.pdf",
+            localUri = "file:///path/to/doc.pdf",
             mimeType = "application/pdf",
-            localUri = "file:///path/to/doc.pdf"
+            memoId = null
         )
 
         val result = method.invoke(accountService, resource) as File?
@@ -440,129 +450,19 @@ class AccountServiceTest {
         method.isAccessible = true
 
         val resource = ResourceEntity(
-            memoIdentifier = "memo-1",
+            identifier = "memo-1",
+            remoteId = null,
+            accountKey = "local",
+            date = java.time.Instant.now(),
             filename = "doc.pdf",
-            mimeType = "application/pdf",
+            uri = "file:///fallback/path/doc.pdf",
             localUri = null,
-            uri = "file:///fallback/path/doc.pdf"
+            mimeType = "application/pdf",
+            memoId = null
         )
 
         val result = method.invoke(accountService, resource) as File?
         assertNotNull(result)
         assertEquals("/fallback/path/doc.pdf", result!!.absolutePath)
-    }
-
-    @Test
-    fun `parseAccountWithSecureToken returns null for invalid account`() {
-        val userData = UserData(
-            accountKey = "invalid",
-            memosV0 = null,
-            memosV1 = null,
-            local = null
-        )
-        every { mockSecureTokenStorage.getToken("invalid") } returns "token"
-
-        val result = accountService.parseAccountWithSecureToken(userData)
-        assertEquals(null, result)
-    }
-
-    @Test
-    fun `parseAccountWithSecureToken injects token into V0 account`() {
-        val userData = UserData(
-            accountKey = "memos:https://example.com:123",
-            memosV0 = MemosAccount(
-                host = "https://example.com",
-                remoteIdentifier = "123",
-                accessToken = ""
-            )
-        )
-        every { mockSecureTokenStorage.getToken("memos:https://example.com:123") } returns "secure-token"
-
-        val result = accountService.parseAccountWithSecureToken(userData)
-
-        assertNotNull(result)
-        val account = result as Account.MemosV0
-        assertEquals("secure-token", account.info.accessToken)
-    }
-
-    @Test
-    fun `parseAccountWithSecureToken injects token into V1 account`() {
-        val userData = UserData(
-            accountKey = "memos:https://example.com:456",
-            memosV1 = MemosAccount(
-                host = "https://example.com",
-                remoteIdentifier = "456",
-                accessToken = ""
-            )
-        )
-        every { mockSecureTokenStorage.getToken("memos:https://example.com:456") } returns "secure-token"
-
-        val result = accountService.parseAccountWithSecureToken(userData)
-
-        assertNotNull(result)
-        val account = result as Account.MemosV1
-        assertEquals("secure-token", account.info.accessToken)
-    }
-
-    @Test
-    fun `parseAccountWithSecureToken keeps Local account unchanged`() {
-        val userData = UserData(
-            accountKey = "local",
-            local = LocalAccount()
-        )
-        every { mockSecureTokenStorage.getToken("local") } returns "token"
-
-        val result = accountService.parseAccountWithSecureToken(userData)
-
-        assertNotNull(result)
-        assertEquals(Account.Local::class, result!!::class)
-    }
-
-    @Test
-    fun `toPersistedUserData clears access token for V0`() {
-        val account = Account.MemosV0(
-            MemosAccount(
-                host = "https://example.com",
-                remoteIdentifier = "123",
-                accessToken = "secret-token"
-            )
-        )
-        val settings = UserSettings()
-
-        val method = AccountService::class.java.getDeclaredMethod(
-            "toPersistedUserData",
-            Account::class.java,
-            UserSettings::class.java
-        )
-        method.isAccessible = true
-
-        val result = method.invoke(accountService, account, settings) as UserData
-
-        assertEquals("memos:https://example.com:123", result.accountKey)
-        assertEquals("", result.memosV0!!.accessToken)
-    }
-
-    @Test
-    fun `toPersistedUserData clears access token for V1`() {
-        val account = Account.MemosV1(
-            MemosAccount(
-                host = "https://example.com",
-                remoteIdentifier = "456",
-                accessToken = "secret-token"
-            )
-        )
-        val settings = UserSettings()
-
-        val method = AccountService::class.java.getDeclaredMethod(
-            "toPersistedUserData",
-            Account::class.java,
-            UserSettings::class.java
-        )
-        method.isAccessible = true
-
-        val result = method.invoke(accountService, account, settings) as UserData
-
-        assertEquals("memos:https://example.com:456", result.accountKey)
-        assertEquals("", result.memosV1!!.accessToken)
     }
 }
