@@ -68,8 +68,8 @@ class MemoryGlanceWidget : GlanceAppWidget() {
                         error = null
                     }
                 } catch (e: Exception) {
-                    error = e.message ?: "Unknown error"
                     android.util.Log.e("MemoryWidget", "Exception in memory widget", e)
+                    error = context.getString(R.string.error_unknown)
                 } finally {
                     isLoading = false
                 }

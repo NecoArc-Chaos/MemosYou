@@ -52,7 +52,8 @@ class Converters {
     @TypeConverter
     fun toMemoRelationRef(value: String?): MemoRelationRef? {
         return value?.let {
-            val obj = json.parseToJsonElement(it) as JsonObject
+            val obj = json.parseToJsonElement(it)
+            if (obj !is JsonObject) return null
             MemoRelationRef(
                 name = obj["name"]?.toString()?.trim('"') ?: "",
                 snippet = obj["snippet"]?.toString()?.trim('"') ?: ""
@@ -80,7 +81,8 @@ class Converters {
     @TypeConverter
     fun toMemoRelation(value: String?): MemoRelation? {
         return value?.let {
-            val obj = json.parseToJsonElement(it) as JsonObject
+            val obj = json.parseToJsonElement(it)
+            if (obj !is JsonObject) return null
             MemoRelation(
                 memo = MemoRelationRef(
                     name = obj["memo"]?.let { it as JsonObject }?.get("name")?.toString()?.trim('"') ?: "",
@@ -127,7 +129,8 @@ class Converters {
     @TypeConverter
     fun toMemoLocation(value: String?): MemoLocation? {
         return value?.let {
-            val obj = json.parseToJsonElement(it) as JsonObject
+            val obj = json.parseToJsonElement(it)
+            if (obj !is JsonObject) return null
             MemoLocation(
                 placeholder = obj["placeholder"]?.toString()?.trim('"'),
                 latitude = obj["latitude"]?.toString()?.toDoubleOrNull(),
