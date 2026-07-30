@@ -4,6 +4,8 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import xyz.nachaos.memosyou.data.model.MemoLocation
+import xyz.nachaos.memosyou.data.model.MemoRelation
 import xyz.nachaos.memosyou.data.model.MemoRepresentable
 import xyz.nachaos.memosyou.data.model.MemoVisibility
 import java.time.Instant
@@ -25,6 +27,8 @@ data class MemoEntity(
     override val visibility: MemoVisibility,
     override val pinned: Boolean,
     override val archived: Boolean = false,
+    override val relations: List<MemoRelation> = emptyList(),
+    override val location: MemoLocation? = null,
     val needsSync: Boolean = true,
     val isDeleted: Boolean = false,
     val lastModified: Instant = Instant.now(),

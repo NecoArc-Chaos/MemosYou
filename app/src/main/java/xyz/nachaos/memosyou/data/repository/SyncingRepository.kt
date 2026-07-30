@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import xyz.nachaos.memosyou.data.constant.MoeMemosException
+import xyz.nachaos.memosyou.data.api.MemosV1MemoShare
 import xyz.nachaos.memosyou.data.api.ReactionItem
 import xyz.nachaos.memosyou.data.api.ReactionContent
 import xyz.nachaos.memosyou.data.api.UpsertReactionRequest
@@ -31,14 +32,17 @@ import xyz.nachaos.memosyou.data.local.entity.MemoWithResources
 import xyz.nachaos.memosyou.data.local.entity.ResourceEntity
 import xyz.nachaos.memosyou.data.model.Account
 import xyz.nachaos.memosyou.data.model.Memo
+import xyz.nachaos.memosyou.data.model.MemoRelation
 import xyz.nachaos.memosyou.data.model.MemoVisibility
 import xyz.nachaos.memosyou.data.model.Resource
 import xyz.nachaos.memosyou.data.model.SyncStatus
 import xyz.nachaos.memosyou.data.model.User
+import xyz.nachaos.memosyou.data.repository.MemosV1Repository
 import xyz.nachaos.memosyou.ext.getErrorMessage
 import xyz.nachaos.memosyou.util.extractCustomTags
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import timber.log.Timber
 import java.io.File
 import java.time.Instant
 import java.util.UUID
@@ -407,6 +411,7 @@ class SyncingRepository(
             } catch (e: Throwable) {
                 val failure = ApiResponse.Failure.Exception(e)
                 setSyncError(failure.getErrorMessage())
+                Timber.e(e, "Sync failed for account %s", accountKey)
                 refreshUnsyncedCount()
                 failure
             } finally {
@@ -590,6 +595,7 @@ class SyncingRepository(
         val uploadedResources = ensureUploadedResources(local)
         if (uploadedResources.failedUploads > 0) {
             pendingDetailedSyncError = ATTACHMENT_UPLOAD_FAILED_MESSAGE
+            Timber.w("Attachment upload failed for memo %s: %d uploads failed", local.identifier, uploadedResources.failedUploads)
             return false
         }
         val remoteResourceIds = uploadedResources.remoteResourceIds
@@ -739,6 +745,8 @@ class SyncingRepository(
                 visibility = remoteMemo.visibility,
                 pinned = remoteMemo.pinned,
                 archived = remoteMemo.archived,
+                relations = remoteMemo.relations,
+                location = remoteMemo.location,
                 needsSync = false,
                 isDeleted = false,
                 lastModified = remoteUpdatedAt,
@@ -788,6 +796,8 @@ class SyncingRepository(
                 needsSync = false,
                 isDeleted = false,
                 archived = remoteMemo.archived,
+                relations = remoteMemo.relations,
+                location = remoteMemo.location,
                 lastSyncedAt = remoteMemo.updatedAt ?: remoteMemo.date
             )
         )
@@ -874,6 +884,7 @@ class SyncingRepository(
                     }
                 } catch (e: Throwable) {
                     setSyncError(e.localizedMessage ?: defaultErrorMessage)
+                    Timber.w(e, "Background operation failed: %s", defaultErrorMessage)
                 } finally {
                     refreshUnsyncedCount()
                     setSyncing(false)
@@ -955,28 +966,40 @@ class SyncingRepository(
     override suspend fun listMemoComments(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<Memo>, String?>> = remoteRepository.listMemoComments(memoName, pageSize, pageToken)
     override suspend fun createMemoComment(memoName: String, content: String): ApiResponse<Memo> = remoteRepository.createMemoComment(memoName, content)
 
-    // ─── Reactions (delegate to remote) ───
+    override suspend fun getMemo(memoName: String): ApiResponse<Memo> = remoteRepository.getMemo(memoName)
+
+    // ─── Shared Memo (delegate to remote) ───
+    override suspend fun getSharedMemo(shareToken: String): ApiResponse<Memo> = remoteRepository.getSharedMemo(shareToken)
+    override suspend fun createMemoShare(parentMemoName: String): ApiResponse<Unit> = remoteRepository.createMemoShare(parentMemoName).mapSuccess { Unit }
+    override suspend fun listMemoShares(parentMemoName: String): ApiResponse<List<MemosV1MemoShare>> = remoteRepository.listMemoShares(parentMemoName)
+    override suspend fun deleteMemoShare(shareName: String): ApiResponse<Unit> = remoteRepository.deleteMemoShare(shareName)
+
+    // ─── Relations (delegate to remote) ───
+    override suspend fun setMemoRelations(memoName: String, relations: List<MemoRelation>): ApiResponse<Unit> = remoteRepository.setMemoRelations(memoName, relations)
+    override suspend fun listMemoRelations(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<MemoRelation>, String?>> = remoteRepository.listMemoRelations(memoName, pageSize, pageToken)
+
+    // ─── Reactions (delegate to V1 remote) ───
     suspend fun listReactions(memoName: String): ApiResponse<List<ReactionItem>> {
-        if (remoteRepository !is MemosV1Repository) return ApiResponse.Success(emptyList())
-        return (remoteRepository as MemosV1Repository).memosApi.listMemoReactions(memoName).mapSuccess { reactions }
+        val v1Repo = remoteRepository as? MemosV1Repository ?: return ApiResponse.Success(emptyList())
+        return v1Repo.memosApi.listMemoReactions(memoName).mapSuccess { reactions }
     }
     suspend fun upsertReaction(memoName: String, reactionType: String): ApiResponse<ReactionItem> {
-        if (remoteRepository !is MemosV1Repository) return ApiResponse.exception(Exception("Not a V1 repo"))
-        return (remoteRepository as MemosV1Repository).memosApi.upsertMemoReaction(memoName, UpsertReactionRequest(name = memoName, reaction = ReactionContent(contentId = memoName, reactionType = reactionType)))
+        val v1Repo = remoteRepository as? MemosV1Repository ?: return ApiResponse.exception(Exception("Not a V1 repo"))
+        return v1Repo.memosApi.upsertMemoReaction(memoName, UpsertReactionRequest(name = memoName, reaction = ReactionContent(contentId = memoName, reactionType = reactionType)))
     }
     suspend fun deleteReaction(reactionName: String): ApiResponse<Unit> {
-        if (remoteRepository !is MemosV1Repository) return ApiResponse.exception(Exception("Not a V1 repo"))
-        return (remoteRepository as MemosV1Repository).memosApi.deleteMemoReaction(reactionName)
+        val v1Repo = remoteRepository as? MemosV1Repository ?: return ApiResponse.exception(Exception("Not a V1 repo"))
+        return v1Repo.memosApi.deleteMemoReaction(reactionName)
     }
     suspend fun getAvailableReactions(): List<String> {
-        if (remoteRepository !is MemosV1Repository) return listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")
-        val setting = (remoteRepository as MemosV1Repository).getInstanceSetting("instance/settings/MEMO_RELATED").getOrNull()
+        val v1Repo = remoteRepository as? MemosV1Repository ?: return listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")
+        val setting = v1Repo.getInstanceSetting("instance/settings/MEMO_RELATED").getOrNull()
         return setting?.memoRelatedSetting?.reactions?.ifEmpty { null } ?: listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")
     }
 
     suspend fun getServerBranding(): Pair<String, String> {
-        if (remoteRepository !is MemosV1Repository) return "" to ""
-        val setting = (remoteRepository as MemosV1Repository).getInstanceSetting("instance/settings/GENERAL").getOrNull()
+        val v1Repo = remoteRepository as? MemosV1Repository ?: return "" to ""
+        val setting = v1Repo.getInstanceSetting("instance/settings/GENERAL").getOrNull()
         val title = setting?.generalSetting?.customProfile?.title ?: ""
         val logo = setting?.generalSetting?.customProfile?.logoUrl ?: ""
         return title to logo

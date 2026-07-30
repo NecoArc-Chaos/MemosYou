@@ -36,6 +36,9 @@ interface MemosV1Api {
     @PATCH("api/v1/memos/{id}")
     suspend fun updateMemo(@Path("id") memoId: String, @Body body: UpdateMemoRequest): ApiResponse<MemosV1Memo>
 
+    @GET("api/v1/{name=memos/*}")
+    suspend fun getMemo(@Path("name", encoded = true) name: String): ApiResponse<MemosV1Memo>
+
     @DELETE("api/v1/memos/{id}")
     suspend fun deleteMemo(@Path("id") memoId: String): ApiResponse<Unit>
 
@@ -93,6 +96,42 @@ interface MemosV1Api {
     suspend fun deleteMemoReaction(
         @Path("name", encoded = true) name: String
     ): ApiResponse<Unit>
+
+    // ─── Shared Memo ───
+    @GET("api/v1/shares/{shareToken}/memo")
+    suspend fun getSharedMemo(
+        @Path("shareToken") shareToken: String
+    ): ApiResponse<MemosV1Memo>
+
+    @POST("api/v1/{parent=memos/*}/shares")
+    suspend fun createMemoShare(
+        @Path("parent", encoded = true) parent: String,
+        @Body body: MemosV1CreateMemoShareRequest
+    ): ApiResponse<MemosV1MemoShare>
+
+    @GET("api/v1/{parent=memos/*}/shares")
+    suspend fun listMemoShares(
+        @Path("parent", encoded = true) parent: String
+    ): ApiResponse<MemosV1ListMemoSharesResponse>
+
+    @DELETE("api/v1/{name=memos/*/shares/*}")
+    suspend fun deleteMemoShare(
+        @Path("name", encoded = true) name: String
+    ): ApiResponse<Unit>
+
+    // ─── Relations ───
+    @PATCH("api/v1/{name=memos/*}/relations")
+    suspend fun setMemoRelations(
+        @Path("name", encoded = true) name: String,
+        @Body body: MemosV1SetMemoRelationsRequest
+    ): ApiResponse<Unit>
+
+    @GET("api/v1/{name=memos/*}/relations")
+    suspend fun listMemoRelations(
+        @Path("name", encoded = true) name: String,
+        @Query("pageSize") pageSize: Int? = null,
+        @Query("pageToken") pageToken: String? = null
+    ): ApiResponse<MemosV1ListMemoRelationsResponse>
 }
 
 @Serializable
@@ -168,7 +207,52 @@ data class MemosV1Memo(
     val visibility: MemosVisibility? = null,
     val pinned: Boolean? = null,
     val attachments: List<MemosV1Resource>? = null,
-    val tags: List<String>? = null
+    val tags: List<String>? = null,
+    val relations: List<MemosV1MemoRelation>? = null,
+    val reactions: List<ReactionItem>? = null,
+    val property: MemosV1MemoProperty? = null,
+    val parent: String? = null,
+    val snippet: String? = null,
+    val location: MemosV1Location? = null
+)
+
+@Serializable
+data class MemosV1MemoRelation(
+    val memo: MemosV1RelationMemo? = null,
+    val relatedMemo: MemosV1RelationMemo? = null,
+    val type: MemosV1RelationType? = null
+)
+
+@Serializable
+data class MemosV1RelationMemo(
+    val name: String? = null,
+    val snippet: String? = null
+)
+
+@Serializable
+enum class MemosV1RelationType {
+    @SerialName("TYPE_UNSPECIFIED")
+    TYPE_UNSPECIFIED,
+    @SerialName("REFERENCE")
+    REFERENCE,
+    @SerialName("COMMENT")
+    COMMENT
+}
+
+@Serializable
+data class MemosV1MemoProperty(
+    val hasLink: Boolean? = null,
+    val hasTaskList: Boolean? = null,
+    val hasCode: Boolean? = null,
+    val hasIncompleteTasks: Boolean? = null,
+    val title: String? = null
+)
+
+@Serializable
+data class MemosV1Location(
+    val placeholder: String? = null,
+    val latitude: Double? = null,
+    val longitude: Double? = null
 )
 
 @Serializable
@@ -286,4 +370,42 @@ data class InstanceGeneralSetting(
 data class InstanceCustomProfile(
     val title: String = "",
     val logoUrl: String = ""
+)
+
+// ─── Shared Memo ───
+@Serializable
+data class MemosV1CreateMemoShareRequest(
+    val memoShare: MemosV1MemoShare
+)
+
+@Serializable
+data class MemosV1MemoShare(
+    val name: String = "",
+    @Serializable(with = Rfc3339InstantSerializer::class)
+    val createTime: Instant? = null,
+    val expireTime: MemosV1Timestamp? = null
+)
+
+@Serializable
+data class MemosV1Timestamp(
+    @Serializable(with = Rfc3339InstantSerializer::class)
+    val seconds: Long? = null,
+    val nanos: Int? = null
+)
+
+@Serializable
+data class MemosV1ListMemoSharesResponse(
+    val memoShares: List<MemosV1MemoShare>? = null
+)
+
+// ─── Relations ───
+@Serializable
+data class MemosV1SetMemoRelationsRequest(
+    val relations: List<MemosV1MemoRelation>? = null
+)
+
+@Serializable
+data class MemosV1ListMemoRelationsResponse(
+    val relations: List<MemosV1MemoRelation>? = null,
+    val nextPageToken: String? = null
 )

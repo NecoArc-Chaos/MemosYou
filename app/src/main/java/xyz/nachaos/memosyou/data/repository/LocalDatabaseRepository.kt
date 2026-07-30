@@ -23,7 +23,7 @@ class LocalDatabaseRepository(
     private val fileStorage: FileStorage,
     private val account: Account.Local = Account.Local(),
 ) : AbstractMemoRepository() {
-    private val accountKey = account.accountKey()
+    private val accountKey: String by lazy { account.accountKey() }
 
     override fun observeMemos(): Flow<List<MemoEntity>> {
         return memoDao.observeAllMemos(accountKey).map { memos ->
