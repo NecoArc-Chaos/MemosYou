@@ -117,7 +117,7 @@ class UserStateViewModel @Inject constructor(
         accountLabel: String,
     ): ApiResponse<Unit> = withContext(viewModelScope.coroutineContext) {
         try {
-            val resp = accountService.createMemosV0ClientWithToken(host, accessToken).second.me()
+            val resp = accountService.createMemosV0Client(host, accessToken).second.me()
             if (resp !is ApiResponse.Success) {
                 return@withContext resp.mapSuccess {}
             }
@@ -135,7 +135,7 @@ class UserStateViewModel @Inject constructor(
         accountLabel: String,
     ): ApiResponse<Unit> = withContext(viewModelScope.coroutineContext) {
         try {
-            val resp = accountService.createMemosV1ClientWithToken(host, accessToken).second.getCurrentUser()
+            val resp = accountService.createMemosV1Client(host, accessToken).second.getCurrentUser()
             if (resp !is ApiResponse.Success) {
                 return@withContext resp.mapSuccess {}
             }

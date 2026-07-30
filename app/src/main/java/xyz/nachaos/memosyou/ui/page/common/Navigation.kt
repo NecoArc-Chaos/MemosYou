@@ -34,7 +34,6 @@ import xyz.nachaos.memosyou.ui.page.memoinput.MemoInputPage
 import xyz.nachaos.memosyou.ui.page.memos.MemoDetailPage
 import xyz.nachaos.memosyou.ui.page.memos.MemosPage
 import xyz.nachaos.memosyou.ui.page.memos.SearchPage
-import xyz.nachaos.memosyou.ui.page.memos.SharedMemoPage
 import xyz.nachaos.memosyou.ui.page.memos.TagMemoPage
 import xyz.nachaos.memosyou.ui.page.resource.ResourceListPage
 import xyz.nachaos.memosyou.ui.page.settings.SettingsPage
@@ -116,13 +115,6 @@ fun Navigation() {
                     val memoId = entry.arguments?.getString("memoId")
                     if (memoId != null) {
                         MemoDetailPage(navController = navController, memoIdentifier = Uri.decode(memoId))
-                    }
-                }
-
-                composable("${RouteName.SHARED_MEMO}?shareToken={shareToken}") { entry ->
-                    val shareToken = entry.arguments?.getString("shareToken")
-                    if (shareToken != null) {
-                        SharedMemoPage(navController = navController, shareToken = Uri.decode(shareToken))
                     }
                 }
             }

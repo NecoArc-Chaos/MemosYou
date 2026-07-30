@@ -159,7 +159,7 @@ class AccountService @Inject constructor(
                 httpClient = okHttpClient
             }
             is Account.MemosV0 -> {
-                val (client, memosApi) = createMemosV0Client(account.info.host, account.accountKey())
+                val (client, memosApi) = createMemosV0Client(account.info.host, account.info.accessToken)
                 val remote = MemosV0Repository(memosApi, account)
                 this.repository = SyncingRepository(
                     database.memoDao(),
@@ -173,7 +173,7 @@ class AccountService @Inject constructor(
                 this.httpClient = client
             }
             is Account.MemosV1 -> {
-                val (client, memosApi) = createMemosV1Client(account.info.host, account.accountKey())
+                val (client, memosApi) = createMemosV1Client(account.info.host, account.info.accessToken)
                 val remote = MemosV1Repository(memosApi, account)
                 this.repository = SyncingRepository(
                     database.memoDao(),
@@ -206,8 +206,7 @@ class AccountService @Inject constructor(
             persistAccessToken(account)
             context.settingsDataStore.updateData { settings ->
                 val users = settings.usersList.toMutableList()
-                val currentAccountKey = account.accountKey()
-                val index = users.indexOfFirst { userData: UserData -> userData.accountKey == currentAccountKey }
+                val index = users.indexOfFirst { it.accountKey == account.accountKey }
                 val currentSettings = users.getOrNull(index)?.settings ?: UserSettings()
                 if (index != -1) {
                     users.removeAt(index)
@@ -215,7 +214,7 @@ class AccountService @Inject constructor(
                 users.add(account.toPersistedUserData(currentSettings))
                 settings.copy(
                     usersList = users,
-                    currentUser = currentAccountKey,
+                    currentUser = account.accountKey(),
                 )
             }
             updateCurrentAccount(account)
@@ -276,8 +275,8 @@ class AccountService @Inject constructor(
                             throw IllegalStateException("Missing resource file: ${resource.filename}")
                         }
                         val ext = exportFileExtension(resource, sourceFile)
-                        val safeBaseName = sanitizePathComponent(memoBaseName)
-                        val safeFilename = sanitizePathComponent(resource.filename)
+                        val safeBaseName = memoBaseName.replace(File.separatorChar, '_').replace('/', '_').replace('\\', '_')
+                        val safeFilename = resource.filename.replace(File.separatorChar, '_').replace('/', '_').replace('\\', '_')
                         val attachmentName = if (ext.isBlank()) {
                             "$safeBaseName-${index + 1}"
                         } else {
@@ -290,19 +289,6 @@ class AccountService @Inject constructor(
                 }
             }
         } ?: throw IllegalStateException("Unable to open export destination")
-    }
-
-    private fun sanitizePathComponent(name: String): String {
-        val sanitized = name
-            .replace("\u0000", "")
-            .replace('/', '_')
-            .replace('\\', '_')
-            .replace(File.separatorChar, '_')
-            .replace("..", "__")
-            .trimStart('.')
-            .take(200)
-            .trim()
-        return sanitized.ifBlank { "unnamed" }
     }
 
     private fun uniqueMemoBaseName(date: Instant, collisionMap: MutableMap<String, Int>): String {
@@ -358,12 +344,7 @@ class AccountService @Inject constructor(
         }
     }
 
-    fun createMemosV0Client(host: String, accountKey: String): Pair<OkHttpClient, MemosV0Api> {
-        val accessToken = secureTokenStorage.getToken(accountKey)
-        return createMemosV0ClientWithToken(host, accessToken)
-    }
-
-    fun createMemosV0ClientWithToken(host: String, accessToken: String?): Pair<OkHttpClient, MemosV0Api> {
+    fun createMemosV0Client(host: String, accessToken: String?): Pair<OkHttpClient, MemosV0Api> {
         var client = okHttpClient
 
         if (!accessToken.isNullOrEmpty()) {
@@ -386,12 +367,7 @@ class AccountService @Inject constructor(
             .create(MemosV0Api::class.java)
     }
 
-    fun createMemosV1Client(host: String, accountKey: String): Pair<OkHttpClient, MemosV1Api> {
-        val accessToken = secureTokenStorage.getToken(accountKey)
-        return createMemosV1ClientWithToken(host, accessToken)
-    }
-
-    fun createMemosV1ClientWithToken(host: String, accessToken: String?): Pair<OkHttpClient, MemosV1Api> {
+    fun createMemosV1Client(host: String, accessToken: String?): Pair<OkHttpClient, MemosV1Api> {
         val client = okHttpClient.newBuilder().apply {
             if (!accessToken.isNullOrBlank()) {
                 addNetworkInterceptor { chain ->
@@ -404,6 +380,7 @@ class AccountService @Inject constructor(
                     chain.proceed(request)
                 }
             }
+            // Only enable detailed logging in debug builds to avoid leaking sensitive data in production
             if (BuildConfig.DEBUG) {
                 val loggingInterceptor = HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
@@ -527,13 +504,13 @@ class AccountService @Inject constructor(
     }
 
     private suspend fun detectAccountCaseAndVersion(host: String): ServerVersionInfo {
-        val memosV0Status = createMemosV0ClientWithToken(host, null).second.status().getOrNull()
+        val memosV0Status = createMemosV0Client(host, null).second.status().getOrNull()
         val memosV0Version = memosV0Status?.profile?.version?.trim().orEmpty()
         if (memosV0Version.isNotEmpty()) {
             return ServerVersionInfo(UserData.AccountCase.MEMOS_V0, memosV0Version)
         }
 
-        val memosV1Profile = createMemosV1ClientWithToken(host, null).second.getProfile().getOrThrow()
+        val memosV1Profile = createMemosV1Client(host, null).second.getProfile().getOrThrow()
         val memosV1Version = memosV1Profile.version.trim()
         if (memosV1Version.isNotEmpty()) {
             return ServerVersionInfo(UserData.AccountCase.MEMOS_V1, memosV1Version)
@@ -545,7 +522,7 @@ class AccountService @Inject constructor(
     private suspend fun fetchVersionForAccount(account: Account): ServerVersionInfo? {
         return when (account) {
             is Account.MemosV0 -> {
-                val version = createMemosV0Client(account.info.host, account.accountKey())
+                val version = createMemosV0Client(account.info.host, account.info.accessToken)
                     .second
                     .status()
                     .getOrNull()
@@ -556,7 +533,7 @@ class AccountService @Inject constructor(
                 if (version.isBlank()) null else ServerVersionInfo(UserData.AccountCase.MEMOS_V0, version)
             }
             is Account.MemosV1 -> {
-                val version = createMemosV1Client(account.info.host, account.accountKey())
+                val version = createMemosV1Client(account.info.host, account.info.accessToken)
                     .second
                     .getProfile()
                     .getOrNull()

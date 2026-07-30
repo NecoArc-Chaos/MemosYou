@@ -10,12 +10,10 @@ import xyz.nachaos.memosyou.data.api.MemosV0PatchMemoInput
 import xyz.nachaos.memosyou.data.api.MemosV0Resource
 import xyz.nachaos.memosyou.data.api.MemosV0UpdateMemoOrganizerInput
 import xyz.nachaos.memosyou.data.api.MemosV0UpdateTagInput
-import xyz.nachaos.memosyou.data.api.MemosV1MemoShare
 import xyz.nachaos.memosyou.data.api.MemosVisibility
 import xyz.nachaos.memosyou.data.constant.MoeMemosException
 import xyz.nachaos.memosyou.data.model.Account
 import xyz.nachaos.memosyou.data.model.Memo
-import xyz.nachaos.memosyou.data.model.MemoRelation
 import xyz.nachaos.memosyou.data.model.MemoVisibility
 import xyz.nachaos.memosyou.data.model.Resource
 import xyz.nachaos.memosyou.data.model.User
@@ -205,35 +203,5 @@ class MemosV0Repository (
     }
     override suspend fun createMemoComment(memoName: String, content: String): ApiResponse<Memo> {
         return ApiResponse.exception(MoeMemosException("Comments not supported in Memos V0 API"))
-    }
-
-    override suspend fun getMemo(memoName: String): ApiResponse<Memo> {
-        return ApiResponse.exception(MoeMemosException("getMemo not supported in Memos V0 API"))
-    }
-
-    override suspend fun getSharedMemo(shareToken: String): ApiResponse<Memo> {
-        return ApiResponse.exception(MoeMemosException("getSharedMemo not supported in Memos V0 API"))
-    }
-
-    // ─── Shares (not supported in V0) ───
-    override suspend fun createMemoShare(parentMemoName: String): ApiResponse<Unit> {
-        return ApiResponse.exception(MoeMemosException("createMemoShare not supported in Memos V0 API"))
-    }
-
-    override suspend fun listMemoShares(parentMemoName: String): ApiResponse<List<MemosV1MemoShare>> {
-        return ApiResponse.Success(emptyList<MemosV1MemoShare>())
-    }
-
-    override suspend fun deleteMemoShare(shareName: String): ApiResponse<Unit> {
-        return ApiResponse.exception(MoeMemosException("deleteMemoShare not supported in Memos V0 API"))
-    }
-
-    // ─── Relations (not supported in V0) ───
-    override suspend fun setMemoRelations(memoName: String, relations: List<MemoRelation>): ApiResponse<Unit> {
-        return ApiResponse.exception(MoeMemosException("setMemoRelations not supported in Memos V0 API"))
-    }
-
-    override suspend fun listMemoRelations(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<MemoRelation>, String?>> {
-        return ApiResponse.Success(emptyList<MemoRelation>() to null)
     }
 }

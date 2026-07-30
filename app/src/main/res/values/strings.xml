@@ -67,9 +67,6 @@
     <string name="unsupported_memos_version_title">Unsupported Memos Version</string>
     <string name="memos_login_version_higher_warning">Your Memos version is higher than the versions supported by MemosYou. Compatibility issues may happen. Check the MemosYou website before continuing.</string>
     <string name="memos_sync_version_higher_warning">Your Memos version is higher than the versions supported by MemosYou. Force sync may corrupt unsynced data. Check the MemosYou website before continuing.</string>
-    <string name="shared_memo">Shared Memo</string>
-    <string name="relations">Relations</string>
-    <string name="location">Location</string>
     <string name="still_login">Still login</string>
     <string name="still_sync">Still Sync</string>
     <string name="pin">Pin</string>
@@ -133,13 +130,6 @@
     <string name="error_unknown">Unknown error</string>
     <string name="no_memos">No memos found</string>
     <string name="memo_not_found">Memo not found</string>
-    <string name="network_error">Network error</string>
-    <string name="timeout_error">Timeout</string>
-    <string name="server_error">Server error</string>
-    <string name="forbidden_error">Forbidden</string>
-    <string name="not_found_error">Not found</string>
-    <string name="conflict_error">Conflict</string>
-    <string name="too_many_requests_error">Too many requests</string>
     <string name="filter_by_tag">Filter by tag</string>
     <string name="pinned_only">Show only pinned items.</string>
     <string name="max_items">Maximum items to show</string>

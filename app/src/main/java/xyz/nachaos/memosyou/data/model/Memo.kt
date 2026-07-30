@@ -18,8 +18,6 @@ data class Memo(
     val tags: List<String>,
     val creator: User? = null,
     override val archived: Boolean = false,
-    override val relations: List<MemoRelation> = emptyList(),
-    override val location: MemoLocation? = null,
     val updatedAt: Instant? = null,
     val commentCount: Int = 0,
 ) : MemoRepresentable

@@ -11,17 +11,8 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import xyz.nachaos.memosyou.data.api.MemosV1Api
 import xyz.nachaos.memosyou.data.api.MemosV1CreateMemoRequest
-import xyz.nachaos.memosyou.data.api.MemosV1CreateMemoShareRequest
-import xyz.nachaos.memosyou.data.api.MemosV1ListMemoSharesResponse
-import xyz.nachaos.memosyou.data.api.MemosV1ListMemoRelationsResponse
-import xyz.nachaos.memosyou.data.api.MemosV1Location
 import xyz.nachaos.memosyou.data.api.MemosV1Memo
-import xyz.nachaos.memosyou.data.api.MemosV1MemoRelation
-import xyz.nachaos.memosyou.data.api.MemosV1MemoShare
-import xyz.nachaos.memosyou.data.api.MemosV1RelationMemo
-import xyz.nachaos.memosyou.data.api.MemosV1RelationType
 import xyz.nachaos.memosyou.data.api.MemosV1Resource
-import xyz.nachaos.memosyou.data.api.MemosV1SetMemoRelationsRequest
 import xyz.nachaos.memosyou.data.api.MemosV1State
 import xyz.nachaos.memosyou.data.api.MemosVisibility
 import xyz.nachaos.memosyou.data.api.UpdateMemoRequest
@@ -30,11 +21,7 @@ import xyz.nachaos.memosyou.data.api.InstanceSettingResponse
 import xyz.nachaos.memosyou.data.constant.MoeMemosException
 import xyz.nachaos.memosyou.data.model.Account
 import xyz.nachaos.memosyou.data.model.Memo
-import xyz.nachaos.memosyou.data.model.MemoLocation
-import xyz.nachaos.memosyou.data.model.MemoRelation
-import xyz.nachaos.memosyou.data.model.MemoRelationRef
 import xyz.nachaos.memosyou.data.model.MemoVisibility
-import xyz.nachaos.memosyou.data.model.RelationType
 import xyz.nachaos.memosyou.data.model.Resource
 import xyz.nachaos.memosyou.data.model.User
 import okhttp3.MediaType
@@ -42,7 +29,6 @@ import java.time.Instant
 
 private const val PAGE_SIZE = 200
 private const val USER_CONCURRENT_LIMIT = 5
-private const val MAX_PAGINATION_PAGES = 50 // 50 * 200 = 10,000 memos max
 
 class MemosV1Repository(
     internal val memosApi: MemosV1Api,
@@ -70,51 +56,15 @@ class MemosV1Repository(
             resources = memo.attachments?.map { convertResource(it) } ?: emptyList(),
             tags = emptyList(),
             archived = memo.state == MemosV1State.ARCHIVED,
-            relations = memo.relations?.map { convertRelation(it) } ?: emptyList(),
-            location = memo.location?.let { convertLocation(it) },
             updatedAt = memo.updateTime
-        )
-    }
-
-    private fun convertRelation(relation: MemosV1MemoRelation): MemoRelation {
-        return MemoRelation(
-            memo = MemoRelationRef(
-                name = relation.memo?.name.orEmpty(),
-                snippet = relation.memo?.snippet.orEmpty()
-            ),
-            relatedMemo = MemoRelationRef(
-                name = relation.relatedMemo?.name.orEmpty(),
-                snippet = relation.relatedMemo?.snippet.orEmpty()
-            ),
-            type = when (relation.type) {
-                MemosV1RelationType.REFERENCE -> RelationType.REFERENCE
-                MemosV1RelationType.COMMENT -> RelationType.COMMENT
-                else -> RelationType.UNKNOWN
-            }
-        )
-    }
-
-    private fun convertLocation(location: MemosV1Location): MemoLocation {
-        return MemoLocation(
-            placeholder = location.placeholder,
-            latitude = location.latitude,
-            longitude = location.longitude
         )
     }
 
     private suspend fun listMemosByFilter(state: MemosV1State, filter: String): ApiResponse<List<Memo>> {
         var nextPageToken = ""
         val memos = arrayListOf<Memo>()
-        var pageCount = 0
 
         do {
-            if (pageCount >= MAX_PAGINATION_PAGES) {
-                return ApiResponse.Failure.Exception(
-                    RuntimeException("Exceeded maximum pagination limit ($MAX_PAGINATION_PAGES pages)")
-                )
-            }
-            pageCount++
-
             val resp = memosApi.listMemos(PAGE_SIZE, nextPageToken, state, filter)
                 .onSuccess { nextPageToken = data.nextPageToken.orEmpty() }
                 .mapSuccess { this.memos.map { convertMemo(it) } }
@@ -324,66 +274,5 @@ class MemosV1Repository(
     // ─── Instance Settings ───
     suspend fun getInstanceSetting(name: String): ApiResponse<InstanceSettingResponse> {
         return memosApi.getInstanceSetting(name)
-    }
-
-    override suspend fun getMemo(memoName: String): ApiResponse<Memo> {
-        return memosApi.getMemo(memoName).mapSuccess { convertMemo(this) }
-    }
-
-    // ─── Shared Memo ───
-    override suspend fun getSharedMemo(shareToken: String): ApiResponse<Memo> {
-        return memosApi.getSharedMemo(shareToken).mapSuccess { convertMemo(this) }
-    }
-
-    override suspend fun createMemoShare(parentMemoName: String): ApiResponse<Unit> {
-        memosApi.createMemoShare(parentMemoName, MemosV1CreateMemoShareRequest(MemosV1MemoShare()))
-        return ApiResponse.Success(Unit)
-    }
-
-    override suspend fun listMemoShares(parentMemoName: String): ApiResponse<List<MemosV1MemoShare>> {
-        return memosApi.listMemoShares(parentMemoName).mapSuccess { this.memoShares.orEmpty() }
-    }
-
-    override suspend fun deleteMemoShare(shareName: String): ApiResponse<Unit> {
-        return memosApi.deleteMemoShare(shareName)
-    }
-
-    // ─── Relations ───
-    override suspend fun setMemoRelations(memoName: String, relations: List<MemoRelation>): ApiResponse<Unit> {
-        val apiRelations = relations.map {
-            MemosV1MemoRelation(
-                memo = MemosV1RelationMemo(name = it.memo.name, snippet = it.memo.snippet),
-                relatedMemo = MemosV1RelationMemo(name = it.relatedMemo.name, snippet = it.relatedMemo.snippet),
-                type = when (it.type) {
-                    RelationType.REFERENCE -> MemosV1RelationType.REFERENCE
-                    RelationType.COMMENT -> MemosV1RelationType.COMMENT
-                    else -> MemosV1RelationType.TYPE_UNSPECIFIED
-                }
-            )
-        }
-        return memosApi.setMemoRelations(memoName, MemosV1SetMemoRelationsRequest(relations = apiRelations))
-    }
-
-    override suspend fun listMemoRelations(memoName: String, pageSize: Int?, pageToken: String?): ApiResponse<Pair<List<MemoRelation>, String?>> {
-        return memosApi.listMemoRelations(memoName, pageSize, pageToken).mapSuccess {
-            val relations = this.relations?.map { relation ->
-                MemoRelation(
-                    memo = MemoRelationRef(
-                        name = relation.memo?.name.orEmpty(),
-                        snippet = relation.memo?.snippet.orEmpty()
-                    ),
-                    relatedMemo = MemoRelationRef(
-                        name = relation.relatedMemo?.name.orEmpty(),
-                        snippet = relation.relatedMemo?.snippet.orEmpty()
-                    ),
-                    type = when (relation.type) {
-                        MemosV1RelationType.REFERENCE -> RelationType.REFERENCE
-                        MemosV1RelationType.COMMENT -> RelationType.COMMENT
-                        else -> RelationType.UNKNOWN
-                    }
-                )
-            } ?: emptyList()
-            relations to this.nextPageToken
-        }
     }
 }

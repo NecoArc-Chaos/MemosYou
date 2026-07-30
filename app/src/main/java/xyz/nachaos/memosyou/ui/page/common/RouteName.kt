@@ -15,5 +15,4 @@ object RouteName {
     const val SHARE = "share"
     const val EXPLORE = "explore"
     const val ACCOUNT = "account"
-    const val SHARED_MEMO = "shared-memo"
 }
