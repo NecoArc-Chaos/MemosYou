@@ -31,6 +31,13 @@ abstract class MoeMemosDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * Register migrations here as the schema evolves.
+         *
+         * Destructive migration is disabled to prevent accidental data loss.
+         * If schema changes require migration, implement a proper Migration
+         * and add it to ALL_MIGRATIONS.
+         */
         val ALL_MIGRATIONS: Array<Migration> = arrayOf(
             MIGRATION_1_2,
         )
@@ -43,7 +50,7 @@ abstract class MoeMemosDatabase : RoomDatabase() {
                     "moememos_database_localfirst"
                 )
                     .addMigrations(*ALL_MIGRATIONS)
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigrationOnDowngrade()
                     .build()
                 INSTANCE = instance
                 instance

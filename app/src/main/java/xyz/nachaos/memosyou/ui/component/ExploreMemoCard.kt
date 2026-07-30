@@ -85,7 +85,7 @@ import xyz.nachaos.memosyou.data.model.Account
 import xyz.nachaos.memosyou.data.model.Memo
 import xyz.nachaos.memosyou.data.repository.MemosV1Repository
 import xyz.nachaos.memosyou.data.repository.SyncingRepository
-import android.util.Log
+import timber.log.Timber
 import xyz.nachaos.memosyou.ext.string
 import xyz.nachaos.memosyou.viewmodel.LocalExploreViewModel
 import xyz.nachaos.memosyou.viewmodel.LocalUserState
@@ -153,7 +153,7 @@ fun ExploreMemoCard(memo: Memo) {
                     val setting = remote.getInstanceSetting("instance/settings/MEMO_RELATED").getOrNull()
                     availableReactions = setting?.memoRelatedSetting?.reactions?.ifEmpty { null } ?: listOf("👍", "❤️", "😄", "🎉", "😢", "🔥", "👀", "💯")
                 }
-            } catch (e: Exception) { Log.e("ExploreMemoCard", "reaction error", e) }
+            } catch (e: Exception) { Timber.e(e, "ExploreMemoCard: reaction/preload error") }
         }
     }
 
@@ -193,9 +193,9 @@ fun ExploreMemoCard(memo: Memo) {
                         reactions = listResp.data.reactions
                     }
                 } else {
-                    Log.w("ExploreMemoCard", "toggleReaction skipped: remote is not MemosV1Repository")
+                    Timber.w("ExploreMemoCard: toggleReaction skipped, remote is not MemosV1Repository")
                 }
-            } catch (e: Exception) { Log.e("ExploreMemoCard", "reaction error", e) }
+            } catch (e: Exception) { Timber.e(e, "ExploreMemoCard: reaction/preload error") }
         }
     }
 
@@ -354,7 +354,7 @@ fun ExploreMemoCard(memo: Memo) {
         onDismissRequest = { showDeleteDialog = false },
         title = { Text("Delete memo?") },
         confirmButton = { TextButton({ scope.launch {
-            try { userStateViewModel.accountService.getRepository().deleteMemo(memo.remoteId ?: ""); showDeleteDialog = false } catch (e: Exception) { Log.e("ExploreMemoCard", "reaction error", e) }
+            try { userStateViewModel.accountService.getRepository().deleteMemo(memo.remoteId ?: ""); showDeleteDialog = false } catch (e: Exception) { Timber.e(e, "ExploreMemoCard: delete memo error") }
         }}, colors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.error, containerColor = MaterialTheme.colorScheme.errorContainer)) { Text("Delete") } },
         dismissButton = { TextButton({ showDeleteDialog = false }) { Text("Cancel") } }
     )
